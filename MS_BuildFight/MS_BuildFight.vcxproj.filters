@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\Maneger.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\form\form.cpp">
+      <Filter>source\form</Filter>
+    </ClCompile>
+    <ClCompile Include="source\form\form2D.cpp">
+      <Filter>source\form</Filter>
+    </ClCompile>
+    <ClCompile Include="source\form\form3D.cpp">
+      <Filter>source\form</Filter>
+    </ClCompile>
+    <ClCompile Include="source\form\formBillBoard.cpp">
+      <Filter>source\form</Filter>
+    </ClCompile>
+    <ClCompile Include="source\form\formX.cpp">
+      <Filter>source\form</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\Game.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\GameClear.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\Result.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\Select.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\Title.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\Tutorial.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\scene\Vsend.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\Debugproc.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\FrustumCulling.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\Input.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\netClient.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\Sound.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\field\Dome.cpp">
+      <Filter>source\module\field</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\field\Field.cpp">
+      <Filter>source\module\field</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\robot\EnemyM.cpp">
+      <Filter>source\module\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\robot\Model.cpp">
+      <Filter>source\module\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\robot\PlayerBace.cpp">
+      <Filter>source\module\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\robot\PlayerGun1.cpp">
+      <Filter>source\module\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\robot\PlayerM.cpp">
+      <Filter>source\module\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\BackGround.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Bar.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\CharPicture.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Count.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Effect.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Gauge.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Icon.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Lock.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Number.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\ResultScore.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Score.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Timer.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\etc\Camera.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\etc\Fade.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\etc\Light.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\etc\LocusEffect.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\field\Domeunder.cpp">
+      <Filter>source\module\field</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\administer\Maneger.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\common.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\form\form.h">
+      <Filter>source\form</Filter>
+    </ClInclude>
+    <ClInclude Include="source\form\form2D.h">
+      <Filter>source\form</Filter>
+    </ClInclude>
+    <ClInclude Include="source\form\form3D.h">
+      <Filter>source\form</Filter>
+    </ClInclude>
+    <ClInclude Include="source\form\formBillBoard.h">
+      <Filter>source\form</Filter>
+    </ClInclude>
+    <ClInclude Include="source\form\formX.h">
+      <Filter>source\form</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\Game.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\GameClear.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\Result.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\Select.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\Title.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\Tutorial.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\Vsend.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\data.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\Debugproc.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\FrustumCulling.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\Input.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\netClient.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\Sound.h">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\field\Dome.h">
+      <Filter>source\module\field</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\field\Field.h">
+      <Filter>source\module\field</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\field\meshfielddata.h">
+      <Filter>source\module\field</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\EnemyM.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\Model.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\PlayerBace.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\PlayerGun1.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\PlayerM.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\robotmotiondata.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\robot\robotMotiondataGN3.h">
+      <Filter>source\module\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\BackGround.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Bar.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\CharPicture.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Count.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Effect.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Gauge.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Icon.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Lock.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Number.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\ResultScore.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Score.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Timer.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\scene\scene.h">
+      <Filter>source\administer\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\Camera.h">
+      <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\Fade.h">
+      <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\Light.h">
+      <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\LocusEffect.h">
+      <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\field\Domeunder.h">
+      <Filter>source\module\field</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{40a3ad5a-8bd1-42f4-b932-48afecb46b98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\administer">
+      <UniqueIdentifier>{63ab7bbb-ccbf-4032-a536-8547058e0e30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\form">
+      <UniqueIdentifier>{6fc609f1-c1e7-43e6-b93b-9ca01e7d441b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module">
+      <UniqueIdentifier>{47631f82-0886-455d-9ead-e8516d87491a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\shader">
+      <UniqueIdentifier>{4352b802-e5b4-4d7d-9a97-f0e9bccb2083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\administer\scene">
+      <UniqueIdentifier>{376f23b3-760f-4d5b-87f3-434679199366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\parts">
+      <UniqueIdentifier>{8d656717-da7c-42e8-9410-95e3c24467e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\field">
+      <UniqueIdentifier>{c0ca8ef9-2c12-4a75-827c-463885463956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\robot">
+      <UniqueIdentifier>{f2f4e5c5-ca78-438f-b084-96a7af8e1aa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\ui">
+      <UniqueIdentifier>{8fe3251b-38b1-4298-9f7e-78c199010f56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\etc">
+      <UniqueIdentifier>{e6135403-b361-449f-90f0-af9bc863cfb4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\shader\basicPS.hlsl">
+      <Filter>source\shader</Filter>
+    </None>
+    <None Include="source\shader\basicVS.hlsl">
+      <Filter>source\shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
