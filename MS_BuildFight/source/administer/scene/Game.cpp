@@ -43,8 +43,11 @@
 #include "../../module/robot/PlayerGun1.h"
 
 #include "../../module/etc/Fade.h"
+#include "../../module/etc/Ball.h"
 #include "../../module/etc/LocusEffect.h"
 
+
+#define PLAYER_MAX	(2)	//プレイヤー数
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -55,7 +58,6 @@ CEnemyM *CGame::m_pEnemy = NULL;
 int CGame::m_nGameStartCount = 0;
 bool CGame::m_bReplayFlag =false;
 bool CGame::m_bVsSelectFlag = false;
-
 
 key2Con K2CList[8]={
 	{DIK_Z, COMMAND_SHOT},
@@ -93,6 +95,8 @@ CGame :: CGame(void)
 
 	m_pIcon = NULL;
 	m_pIconEnemy = NULL;
+
+	m_pBall[1] = {};
 }
 //=============================================================================
 // デストラクタ
@@ -111,9 +115,9 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	//地面の作成
 	m_pMeshField = CMeshField::Create(pDevice, 6, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100, 100, 50, 50);
+
 	//空の作成
 	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
 	//空の作成
 	m_pDome2 = CDomeU::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
@@ -131,7 +135,6 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	//インターフェース画面の作成
 	m_nIFtype=rand()%2;
-
 	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f));
 	//5番ゲージ
 	//スコアの作成
@@ -141,18 +144,20 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pCountBoost=CCount::Create(pDevice,D3DXVECTOR3(835.0f,565.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),100);	//ブースト
 	//タイマー（時間）の作成
 	m_pTimer=CTimer::Create(pDevice,D3DXVECTOR3(1035.0f,35.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-
 	m_nTimerCount=0;
 
 	//キャラクターの作成
 	m_nPnum = CScene::GetFrame();
 	m_nEnum = CScene::GetEnemy();
 
-	m_pPlayer = CPGunNight1::Create(pDevice, D3DXVECTOR3(0, 50, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), false);
+	//m_pPlayer = CPGunNight1::Create(pDevice, D3DXVECTOR3(0, 50, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), false);
 
-	m_pPlayer->SetVsFlag(m_bVsSelectFlag);
+	//m_pPlayer->SetVsFlag(m_bVsSelectFlag);
 
-	m_pEnemy = CEnemyM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 50, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f), !m_bVsSelectFlag);
+	//m_pEnemy = CEnemyM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 50, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f), !m_bVsSelectFlag);
+
+	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//エフェクトの作成
 
@@ -166,7 +171,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pEffect[13]=CEffect::Create(pDevice,Gready,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
 	m_pEffect[14]=CEffect::Create(pDevice,Gstart,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
 
-	m_pEffect[15] = CEffect::Create(pDevice, GReplay, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[15] = CEffect::Create(pDevice, effect003, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//Pause
 	//背景の作成
@@ -193,9 +198,13 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_nClearType=0;
 
-	m_bJudge = true;
+	m_bJudge = false;
 
 	m_nSwitchCount = 0;
+
+	m_nPlayerNum = 0;
+
+	m_nTurnCount = 0;
 
 	//サウンド再生の作成
 	//pSound->Play(SOUND_LABEL_BGM001);
@@ -254,6 +263,8 @@ void CGame :: Update(void)
 		case 4:		charachange();
 					break;
 	}
+
+	CDebugProc::Print(" X = %f\n Y = %f\n Z = %f\n", m_MovePow.x, m_MovePow.y, m_MovePow.z);
 
 	//エスケープキーが押された場合／Ｐキーが押された時ポーズ画面へ
 	if((pInputKeyboard->GetKeyTrigger(DIK_P)||pInputKeyboard->GetKeyTrigger(DIK_ESCAPE))&&!m_bChangeFlag&&!m_bReplayFlag)
@@ -432,8 +443,8 @@ void CGame :: Draw(void)
 			m_pLocusEffect[i]->Draw();
 		}
 
-		m_pPlayer->Draw();
-		//m_pEnemy->Draw();
+		m_pBall[0]->Draw();
+		m_pBall[1]->Draw();
 
 		m_pUI->Draw();
 		m_pScore->Draw();
@@ -499,20 +510,19 @@ void CGame::SetTimer(int time)
 void CGame::TurnStart()
 {
 	//始まります
-	if (m_nGameStartCount <= 180)
+	if (m_nGameStartCount > 60)
 	{
-		if (m_nGameStartCount == 60)
+		if (m_nPlayerNum == 0)
 		{
-			m_pEffect[13]->SetViewFlag(true, 120);
+			m_nTurnCount++;
 		}
-		if (m_nGameStartCount == 180)
-		{
-			m_pEffect[14]->SetViewFlag(true, 10);
-			CManager::SetgameEndFlag(false);
-			m_nSwitchCount++;
-		}
-		m_nGameStartCount++;
+		m_MovePow = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_pEffect[13]->SetViewFlag(true, 30);
+		CManager::SetgameEndFlag(false);
+		m_nSwitchCount++;
 	}
+
+	m_nGameStartCount++;
 }
 //球打ち開始
 void CGame::ShotStart()
@@ -521,7 +531,35 @@ void CGame::ShotStart()
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
-	m_pEffect[10]->SetViewFlag(true, 120);
+	m_pEffect[10]->SetViewFlag(true, 1);
+
+	//弾のスピード調節
+	if (pInputKeyboard->GetKeyPress(DIK_Q))
+	{
+		m_MovePow.y+=1.0f;
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_A))
+	{
+		m_MovePow.y -= 1.0f;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_W))
+	{
+		m_MovePow.x += 1.0f;
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_S))
+	{
+		m_MovePow.x -= 1.0f;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_E))
+	{
+		m_MovePow.z += 1.0f;
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_D))
+	{
+		m_MovePow.z -= 1.0f;
+	}
+
+	//仮　スピード決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
 		m_nSwitchCount++;
@@ -530,26 +568,37 @@ void CGame::ShotStart()
 //弾移動
 void CGame::BallMove()
 {
-	//キーボードインプットの受け取り
-	CInputKeyboard *pInputKeyboard;
-	pInputKeyboard = CManager::GetInputKeyboard();
+	//スピードによって球が移動
+	D3DXVECTOR3 pos = m_pBall[m_nPlayerNum]->GetPos();
 
-	m_pEffect[11]->SetViewFlag(true, 120);
+	pos += m_MovePow;
 
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	m_MovePow *= 0.5;
+
+	m_pBall[m_nPlayerNum]->SetPos(pos);
+
+	if (m_MovePow.x < 0.1f || m_MovePow.y < 0.1f || m_MovePow.z < 0.1f)
 	{
+		m_pEffect[11]->SetViewFlag(true, 30);
 		m_nSwitchCount++;
 	}
 }
 //結果判定
 void CGame::Judge()
 {
-	//終了判定
-	if ((m_pTimer->GetTimer() <= 0)||(m_bJudge) && !(m_bChangeFlag))
+	m_pEffect[12]->SetViewFlag(true, 1);
+
+	//もしゴールしたら終了
+	if ((m_pBall[0]->GetGoalFlag() || m_pBall[1]->GetGoalFlag()) && !m_bJudge)
+	{
+		m_bJudge = true;
+	}
+
+	//終了判定  ターン数：時間経過：ゴール入った
+	if ((m_nTurnCount>5) || (m_pTimer->GetTimer() <= 0) || (m_bJudge) && !(m_bChangeFlag))
 	{
 		CManager::SetgameEndFlag(true);
 
-		m_pEffect[12]->SetViewFlag(true, 33);
 		m_nClearType = 2;
 
 		//ＶＳモードなら
@@ -563,19 +612,30 @@ void CGame::Judge()
 		m_bChangeFlag = true;
 	}
 
-}
-//キャラ変更
-void CGame::charachange()	
-{
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
-	m_pEffect[11]->SetViewFlag(true, 120);
-
+	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
-		m_nSwitchCount=0;
+		m_nSwitchCount++;
 	}
+}
+//キャラ変更
+void CGame::charachange()	
+{
+	//プレイヤー切り換え
+	m_nPlayerNum++;
+
+	//プレイヤーが全部回った
+	if (m_nPlayerNum >= PLAYER_MAX)
+	{
+		m_nPlayerNum = 0;
+	}
+
+	m_pEffect[15]->SetViewFlag(true, 30);
+
+	m_nSwitchCount=0;
 }
 /////////////EOF////////////

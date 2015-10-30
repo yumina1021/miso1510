@@ -51,18 +51,19 @@ class CformX  : public Cform
 		void SetTexture(LPSTR pTexName,int num);
 		void SetTextureNum(int num){nTextureNum=num;};
 		void SetViewFlag(bool	change){m_bDeathFlag=change;};
-
 		void ResetCount(int nCount){m_nDeathCount=nCount;};
+
+		void SetShader(SHADER_SET shader){ m_shader = shader;};
 
 	protected:
 		LPD3DXMESH			m_pD3DXMeshModel;		//メッシュ情報へのポインタ
 	private:
-		//LPDIRECT3DTEXTURE9	m_pD3DTex;				//テクスチャ表示用
+
 		LPDIRECT3DTEXTURE9	m_pD3DTex[TEXTURE_MAX];	//テクスチャ表示用
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)	
 
 		D3DXMATRIX			m_MtxView;				//ビューマトリクス
-
+		D3DXMATRIX			m_mtxWorld;				// ワールドマトリックス
 
 		LPD3DXBUFFER		m_pD3DXBuffMatModel;	//マテリアル情報へのポインタ
 		DWORD				m_nNumMatModel;			//マテリアル情報の数
@@ -81,6 +82,8 @@ class CformX  : public Cform
 		int					m_nDeathCount;
 
 		bool				m_bEnemyFlag;
+
+		SHADER_SET			m_shader;
 
 };
 

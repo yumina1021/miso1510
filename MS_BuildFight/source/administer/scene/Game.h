@@ -31,6 +31,7 @@ class CLocusEffect;
 class CIcon;
 class CDome;
 class CDomeU;
+class CBall;
 
 
 class CGame  : public CScene
@@ -66,6 +67,7 @@ class CGame  : public CScene
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
+		CBall *GetBall(int i){ return m_pBall[i]; };
 
 		void SetTimer(int time);
 
@@ -97,6 +99,7 @@ class CGame  : public CScene
 		CDome*			m_pDome;
 		CDomeU*			m_pDome2;
 		Cform2D*		m_pUI;
+		CBall*			m_pBall[2];
 
 		int				m_nCount;
 		int				m_nClearType;
@@ -114,7 +117,8 @@ class CGame  : public CScene
 		bool			m_bJudge;
 		int				m_nTurnCount;
 		int				m_nSwitchCount;
-
+		int				m_nPlayerNum;
+		D3DXVECTOR3		m_MovePow;
 };
 
 #endif
