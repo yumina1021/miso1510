@@ -22,11 +22,11 @@
 #include "../../form/formX.h"
 
 #include "../../administer/Maneger.h"
-#include "../../administer/netClient.h"
 #include "../../administer/debugproc.h"
 #include "../../administer/Sound.h"
 
 #include "../../administer/scene/Game.h"
+#include "../../exten_common.h"
 //*****************************************************************************
 // Ã“I•Ï”
 //*****************************************************************************
@@ -322,26 +322,12 @@ void CEnemyM :: Update(void)
 		}
 
 		// –Ú“I‚ÌŠp“x‚Ü‚Å‚Ì·•ª
-		fDiffRotY = m_rotDestModel.y - m_Rot.y;
-		if(fDiffRotY > D3DX_PI)
-		{
-			fDiffRotY -= D3DX_PI * 2.0f;
-		}
-		if(fDiffRotY < -D3DX_PI)
-		{
-			fDiffRotY += D3DX_PI * 2.0f;
-		}
+		fDiffRotY = Rotation_Normalizer(m_rotDestModel.y - m_Rot.y);
 
 		// –Ú“I‚ÌŠp“x‚Ü‚ÅŠµ«‚ð‚©‚¯‚é
 		m_Rot.y += fDiffRotY * RATE_ROTATE_PLAYER;
-		if(m_Rot.y > D3DX_PI)
-		{
-			m_Rot.y -= D3DX_PI * 2.0f;
-		}
-		if(m_Rot.y < -D3DX_PI)
-		{
-			m_Rot.y += D3DX_PI * 2.0f;
-		}
+
+		m_Rot.y = Rotation_Normalizer(m_Rot.y);
 		// d—Í‚ð‚©‚¯‚é
 		m_Move.y -= GRAVITY * 0.05f;
 
@@ -678,68 +664,20 @@ void CEnemyM::UpdateMotion(void)
 				fPosZ = pKey->fPosZ + (fDiffMotion * fRateMotion);
 
 				// X‰ñ“]
-				fDiffMotion = pKeyNext->fRotX - pKey->fRotX;
+				fDiffMotion = Rotation_Normalizer(pKeyNext->fRotX - pKey->fRotX);
 
-				if(fDiffMotion > D3DX_PI)
-				{
-					fDiffMotion -= D3DX_PI * 2.0f;
-				}
-				if(fDiffMotion < -D3DX_PI)
-				{
-					fDiffMotion += D3DX_PI * 2.0f;
-				}
-
-				fRotX = pKey->fRotX + (fDiffMotion * fRateMotion);
-				if(fRotX > D3DX_PI)
-				{
-					fRotX -= D3DX_PI * 2.0f;
-				}
-				if(fRotX < -D3DX_PI)
-				{
-					fRotX += D3DX_PI * 2.0f;
-				}
+				fRotX = Rotation_Normalizer(pKey->fRotX + (fDiffMotion * fRateMotion));
 
 				// Y‰ñ“]
-				fDiffMotion = pKeyNext->fRotY - pKey->fRotY;
-				if(fDiffMotion > D3DX_PI)
-				{
-					fDiffMotion -= D3DX_PI * 2.0f;
-				}
-				if(fDiffMotion < -D3DX_PI)
-				{
-					fDiffMotion += D3DX_PI * 2.0f;
-				}
+				fDiffMotion = Rotation_Normalizer(pKeyNext->fRotY - pKey->fRotY);
 
-				fRotY = pKey->fRotY + (fDiffMotion * fRateMotion);
-				if(fRotY > D3DX_PI)
-				{
-					fRotY -= D3DX_PI * 2.0f;
-				}
-				if(fRotY < -D3DX_PI)
-				{
-					fRotY += D3DX_PI * 2.0f;
-				}
+				fRotY = Rotation_Normalizer(pKey->fRotY + (fDiffMotion * fRateMotion));
 
 				// Z‰ñ“]
-				fDiffMotion = pKeyNext->fRotZ - pKey->fRotZ;
-				if(fDiffMotion > D3DX_PI)
-				{
-					fDiffMotion -= D3DX_PI * 2.0f;
-				}
-				if(fDiffMotion < -D3DX_PI)
-				{
-					fDiffMotion += D3DX_PI * 2.0f;
-				}
+				fDiffMotion = Rotation_Normalizer(pKeyNext->fRotZ - pKey->fRotZ);
 
-				fRotZ = pKey->fRotZ + (fDiffMotion * fRateMotion);
-				if(fRotZ > D3DX_PI)
-				{
-					fRotZ -= D3DX_PI * 2.0f;
-				}
-				if(fRotZ < -D3DX_PI)
-				{
-					fRotZ += D3DX_PI * 2.0f;
-				}
+				fRotZ = Rotation_Normalizer(pKey->fRotZ + (fDiffMotion * fRateMotion));
+
 				if((nCntModel==0)&&((m_motionType==MOTIONTYPE_ATTACK)||(m_motionType==MOTIONTYPE_ATTACKDAMEGE)))
 				{
 					m_Pos.x+=fPosX;

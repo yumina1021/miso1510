@@ -24,11 +24,12 @@
 
 #include "../../administer/Input.h"
 #include "../../administer/Maneger.h"
-#include "../../administer/netClient.h"
 #include "../../administer/debugproc.h"
 #include "../../administer/Sound.h"
 
 #include "../../administer/scene/Game.h"
+
+#include "../../exten_common.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -287,26 +288,12 @@ void CPlayerM :: Update(void)
 	if (m_bPause == false)
 	{
 		// 目的の角度までの差分
-		fDiffRotY = m_rotDestModel.y - m_Rot.y;
-		if (fDiffRotY > D3DX_PI)
-		{
-			fDiffRotY -= D3DX_PI * 2.0f;
-		}
-		if (fDiffRotY < -D3DX_PI)
-		{
-			fDiffRotY += D3DX_PI * 2.0f;
-		}
+		fDiffRotY = Rotation_Normalizer(m_rotDestModel.y - m_Rot.y);
 
 		// 目的の角度まで慣性をかける
-		m_Rot.y += fDiffRotY * RATE_ROTATE_PLAYER;
-		if (m_Rot.y > D3DX_PI)
-		{
-			m_Rot.y -= D3DX_PI * 2.0f;
-		}
-		if (m_Rot.y < -D3DX_PI)
-		{
-			m_Rot.y += D3DX_PI * 2.0f;
-		}
+		m_Rot.y +=fDiffRotY * RATE_ROTATE_PLAYER;
+
+		m_Rot.y = Rotation_Normalizer(m_Rot.y);
 
 		// 重力をかける
 		m_Move.y -= GRAVITY * 0.05f;
@@ -424,27 +411,6 @@ void CPlayerM :: Update(void)
 		
 		// アニメーション更新
 		UpdateMotion();
-
-		if (m_bVsFlag)
-		{
-			// データ送信
-			DATA data;
-
-			data.Type = DATA_TYPE_POSITION;
-			data.Position.x = m_Pos.x;
-			data.Position.y = m_Pos.y;
-			data.Position.z = m_Pos.z;
-
-			CNetClient::SendData(data);
-
-
-			data.Type = DATA_TYPE_ROTATION;
-			data.Rotation.x = m_Rot.x;
-			data.Rotation.y = m_Rot.y;
-			data.Rotation.z = m_Rot.z;
-
-			CNetClient::SendData(data);
-		}
 	}
 
 }
@@ -607,24 +573,6 @@ void CPlayerM::SetMotion(MOTIONTYPE motionType)
 											m_pKeyInfo->aKey[nCntModel].fRotY,
 											m_pKeyInfo->aKey[nCntModel].fRotZ);
 	}
-
-	// データ送信
-	DATA data;
-
-	data.Type = DATA_TYPE_MOTION;
-
-	data.Motion.motion = (int)motionType;
-
-	CNetClient::SendData( data );
-
-	if(m_motionType==MOTIONTYPE_OVER_LOAD||m_motionType==MOTIONTYPE_OVER_LOAD2)
-	{
-		data.Type = DATA_TYPE_OVERLOAD;
-
-		data.Motion.motion = m_nType;
-
-		CNetClient::SendData( data );
-	}
 }
 
 //=============================================================================
@@ -666,68 +614,20 @@ void CPlayerM::UpdateMotion(void)
 				fPosZ = pKey->fPosZ + (fDiffMotion * fRateMotion);
 
 				// X回転
-				fDiffMotion = pKeyNext->fRotX - pKey->fRotX;
+				fDiffMotion = Rotation_Normalizer(pKeyNext->fRotX - pKey->fRotX);
 
-				if(fDiffMotion > D3DX_PI)
-				{
-					fDiffMotion -= D3DX_PI * 2.0f;
-				}
-				if(fDiffMotion < -D3DX_PI)
-				{
-					fDiffMotion += D3DX_PI * 2.0f;
-				}
 
-				fRotX = pKey->fRotX + (fDiffMotion * fRateMotion);
-				if(fRotX > D3DX_PI)
-				{
-					fRotX -= D3DX_PI * 2.0f;
-				}
-				if(fRotX < -D3DX_PI)
-				{
-					fRotX += D3DX_PI * 2.0f;
-				}
+				fRotX = Rotation_Normalizer(pKey->fRotX + (fDiffMotion * fRateMotion));
 
 				// Y回転
-				fDiffMotion = pKeyNext->fRotY - pKey->fRotY;
-				if(fDiffMotion > D3DX_PI)
-				{
-					fDiffMotion -= D3DX_PI * 2.0f;
-				}
-				if(fDiffMotion < -D3DX_PI)
-				{
-					fDiffMotion += D3DX_PI * 2.0f;
-				}
+				fDiffMotion = Rotation_Normalizer(pKeyNext->fRotY - pKey->fRotY);
 
-				fRotY = pKey->fRotY + (fDiffMotion * fRateMotion);
-				if(fRotY > D3DX_PI)
-				{
-					fRotY -= D3DX_PI * 2.0f;
-				}
-				if(fRotY < -D3DX_PI)
-				{
-					fRotY += D3DX_PI * 2.0f;
-				}
+				fRotY = Rotation_Normalizer(pKey->fRotY + (fDiffMotion * fRateMotion));
 
 				// Z回転
-				fDiffMotion = pKeyNext->fRotZ - pKey->fRotZ;
-				if(fDiffMotion > D3DX_PI)
-				{
-					fDiffMotion -= D3DX_PI * 2.0f;
-				}
-				if(fDiffMotion < -D3DX_PI)
-				{
-					fDiffMotion += D3DX_PI * 2.0f;
-				}
+				fDiffMotion = Rotation_Normalizer(pKeyNext->fRotZ - pKey->fRotZ);
 
-				fRotZ = pKey->fRotZ + (fDiffMotion * fRateMotion);
-				if(fRotZ > D3DX_PI)
-				{
-					fRotZ -= D3DX_PI * 2.0f;
-				}
-				if(fRotZ < -D3DX_PI)
-				{
-					fRotZ += D3DX_PI * 2.0f;
-				}
+				fRotZ = Rotation_Normalizer(pKey->fRotZ + (fDiffMotion * fRateMotion));
 				if((nCntModel==0)&&((m_motionType==MOTIONTYPE_ATTACK)||(m_motionType==MOTIONTYPE_ATTACKDAMEGE)))
 				{
 					m_Pos.x+=fPosX;

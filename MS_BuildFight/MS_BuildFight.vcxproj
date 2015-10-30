@@ -91,6 +91,7 @@
     <ClCompile Include="source\administer\scene\Tutorial.cpp" />
     <ClCompile Include="source\administer\scene\Vsend.cpp" />
     <ClCompile Include="source\administer\Sound.cpp" />
+    <ClCompile Include="source\exten_common.cpp" />
     <ClCompile Include="source\form\form.cpp" />
     <ClCompile Include="source\form\form2D.cpp" />
     <ClCompile Include="source\form\form3D.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="source\administer\scene\Vsend.h" />
     <ClInclude Include="source\administer\Sound.h" />
     <ClInclude Include="source\common.h" />
+    <ClInclude Include="source\exten_common.h" />
     <ClInclude Include="source\form\form.h" />
     <ClInclude Include="source\form\form2D.h" />
     <ClInclude Include="source\form\form3D.h" />

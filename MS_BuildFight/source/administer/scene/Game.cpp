@@ -16,7 +16,6 @@
 #include "../Input.h"
 #include "../Maneger.h"
 #include "../Sound.h"
-#include "../netClient.h"
 #include "../Debugproc.h"
 
 #include "../../form/form2D.h"
@@ -250,24 +249,27 @@ void CGame :: Update(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//更新本体
-	switch (m_nSwitchCount)
+	if (!m_bChangeFlag)
 	{
+		switch (m_nSwitchCount)
+		{
 		case 0:		TurnStart();
-					break;
+			break;
 		case 1:		ShotStart();
-					break;
+			break;
 		case 2:		BallMove();
-					break;
+			break;
 		case 3:		Judge();
-					break;
+			break;
 		case 4:		charachange();
-					break;
+			break;
+		}
 	}
 
 	CDebugProc::Print(" X = %f\n Y = %f\n Z = %f\n", m_MovePow.x, m_MovePow.y, m_MovePow.z);
 
 	//エスケープキーが押された場合／Ｐキーが押された時ポーズ画面へ
-	if((pInputKeyboard->GetKeyTrigger(DIK_P)||pInputKeyboard->GetKeyTrigger(DIK_ESCAPE))&&!m_bChangeFlag&&!m_bReplayFlag)
+	if(pInputKeyboard->GetKeyTrigger(DIK_P)&&!m_bChangeFlag&&!m_bReplayFlag)
 	{
 		if(!CManager::GetpauseFlag())
 		{
@@ -355,13 +357,6 @@ void CGame :: Update(void)
 		{
 			m_pTimer->AddTimer(-1);
 			m_nTimerCount=0;
-
-			DATA data;
-			data.ID = DATA_TYPE_TIME;
-
-			data.Time.Time = m_pTimer->GetTimer();
-
-			CNetClient::SendData( data );
 		}
 	}
 

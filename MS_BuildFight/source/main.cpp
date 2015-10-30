@@ -13,7 +13,6 @@
 #include "administer/Maneger.h"
 #include "administer/Renderer.h"
 #include "administer/debugproc.h"
-#include "administer/netClient.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -72,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	hwnd=CreateWindowEx(
 				0,
 				"window",
-				"起動外骨格ガンナイト-オーバードバーサス-通信ver",
+				"起動外骨格ガンナイト-オーバードバーサス",
 				WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME,
 				CW_USEDEFAULT,
 				CW_USEDEFAULT,
@@ -93,9 +92,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//マネージャーの初期化
 	pManeger = new CManager;
 	pManeger->Init(hInstance,hwnd,TRUE);
-
-	//通信の初期化
-	CNetClient::Init();
 
 	//ウインドウの表示
 	ShowWindow(hwnd,nCmdShow);
@@ -159,9 +155,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ウィンドウクラスの登録を解除
 	UnregisterClass("window", wcex.hInstance);
 
-
-	CNetClient::Uninit();
-
 	pManeger->Uninit();
 
 	if(pManeger!=NULL)
@@ -189,7 +182,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)//関
 	case WM_DESTROY:
 		PostQuitMessage(0);									// "WM_QUIT"メッセージを返す
 		break;
-	case WM_KEYDOWN:break;
+
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_ESCAPE:
+			DestroyWindow(hWnd);
+			break;
+		}
+		break;
 	default:
 		break;
 	}

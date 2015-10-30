@@ -30,6 +30,8 @@ class CTitle  : public CScene
 		void Update(void);					//更新
 		void Draw(void);					//描画
 	private:
+		void KeyCommand(void);				//入力系
+
 		CBackGround*	m_pBackGround;		//背景
 		CFade*			m_pFade;			//フェード
 		CCharPicture*	m_pCharPicture[4];	//メニュー用画像

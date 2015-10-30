@@ -14,6 +14,7 @@
 #include "../administer/scene/Game.h"
 #include "../module/etc/Camera.h"
 #include "../administer/Maneger.h"
+#include "../exten_common.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -221,14 +222,7 @@ void CformX :: Update(void)
 		}
 	}
 	//正規化
-	if(m_rotDestModel.y<-(D3DX_PI))
-	{
-		m_rotDestModel.y =(D3DX_PI);
-	}
-	if(m_rotDestModel.y>(D3DX_PI))
-	{
-		m_rotDestModel.y =-(D3DX_PI);
-	}
+	m_rotDestModel.y=Rotation_Normalizer(m_rotDestModel.y);
 
 	float fDiffRotY;
 
@@ -243,16 +237,8 @@ void CformX :: Update(void)
 
 	//変更値代入
 	m_Rot.y += fDiffRotY*0.15f;
-
 	//正規化
-	if(m_Rot.y<-(D3DX_PI))
-	{
-		m_Rot.y =(D3DX_PI);
-	}
-	if(m_Rot.y>(D3DX_PI))
-	{
-		m_Rot.y =-(D3DX_PI);
-	}
+	m_Rot.y = Rotation_Normalizer(m_Rot.y);
 
 	//高さ
 	if(m_Pos.y<0)

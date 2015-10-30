@@ -133,6 +133,9 @@
     <ClCompile Include="source\module\etc\Ball.cpp">
       <Filter>source\module\etc</Filter>
     </ClCompile>
+    <ClCompile Include="source\exten_common.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -281,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="source\module\etc\Ball.h">
       <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\exten_common.h">
+      <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,6 @@
 
 #include "../../administer/Input.h"
 #include "../../administer/Maneger.h"
-#include "../../administer/netClient.h"
 #include "../../administer/Sound.h"
 
 #include "../../administer/scene/Game.h"
@@ -152,17 +151,6 @@ void CPGunNight1 :: Update(void)
 	//弾発射
 	if(pInputKeyboard->GetKeyTrigger(DIK_Z)||pInputKeyboard->GetReplayKey(DIK_Z))
 	{
-		if (m_bVsFlag)
-		{
-			// データ送信
-			DATA data;
-			data.Type = DATA_TYPE_SHOT;
-
-			data.Motion.motion = 0;
-
-			CNetClient::SendData(data);
-		}
-
 		SetMotion(MOTIONTYPE_SHOT);
 		//pSound->Play(SOUND_LABEL_SE_HIT000);
 

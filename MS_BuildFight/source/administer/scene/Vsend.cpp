@@ -13,7 +13,6 @@
 #include "../Input.h"
 #include "../Maneger.h"
 #include "../Sound.h"
-#include "../netClient.h"
 
 #include "../../module/etc/Fade.h"
 
@@ -72,11 +71,6 @@ HRESULT CVsend :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pFade=CFade::Create(pDevice,1);
 
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
-
-	CNetClient::SetEndGameFlag(false);
-	CNetClient::SetEndGameTimeFlag(false);
-	CNetClient::SetStartFlag(false);
-	CNetClient::SetEndGameLoseFlag(false);
 
 	return S_OK;
 }

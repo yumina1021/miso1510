@@ -13,7 +13,6 @@
 #include "../Input.h"
 #include "../Maneger.h"
 #include "../Sound.h"
-#include "../netClient.h"
 
 #include "../../module/etc/Fade.h"
 #include "../../module/ui/BackGround.h"
@@ -99,7 +98,7 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
 	m_bSendData=false;
-
+	m_bChangeFlag = false;
 	return S_OK;
 }
 //=============================================================================
@@ -131,18 +130,8 @@ void CSelect :: Update(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//エスケープキーが押された場合
-	if(pInputKeyboard->GetKeyTrigger(DIK_ESCAPE))
+	if(pInputKeyboard->GetKeyTrigger(DIK_BACKSPACE))
 	{
-		// データ送信
-		DATA data;
-
-		data.Type = DATA_TYPE_EVENT;
-
-		data.Event.Type = DATA_EVENT_TYPE_NONE;
-		data.Event.Frame = 0;
-
-		CNetClient::SendData( data );
-
 		m_bTitleBackFlag=true;
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
@@ -202,16 +191,6 @@ void CSelect :: Update(void)
 			}
 		}else
 		{
-			if(m_bSendData==false)
-			{
-				// データ送信
-				DATA data;
-				data.Type = DATA_TYPE_EVENT;
-				data.Event.Type = DATA_EVENT_TYPE_START;
-				data.Event.Frame = m_nCursor;
-				CNetClient::SendData( data );
-				m_bSendData=true;
-			}
 			m_pEffect[5]->SetViewFlag(true,90000);
 		}
 	}
@@ -252,12 +231,6 @@ void CSelect :: Update(void)
 
 	m_pEffect[m_nCursor]->SetViewFlag(true,1);
 
-	if(CNetClient::GetStartFlag()==true&&m_bChangeFlag==true)
-	{
-		//pSound->Play(SOUND_LABEL_SE_SELECT002);
-		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-		m_bChangeFlag=false;
-	}
 
 	//フェードインが終わったら
 	if(m_pFade->GetFade()==FADE_IN_END)
@@ -271,6 +244,11 @@ void CSelect :: Update(void)
 			//次のフェーズを変える
 			CManager::SetAfterScene(PHASETYPE_TITLE);
 		}
+	}
+	if (m_bChangeFlag == true && m_pFade->GetFade() == FADE_NONE)
+	{
+		//pSound->Play(SOUND_LABEL_SE_SELECT002);
+		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
 	}
 }
 //=============================================================================

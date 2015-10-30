@@ -132,7 +132,6 @@ void Cform2D :: Uninit(void)
 		m_pD3DVtxBuff->Release();
 		m_pD3DVtxBuff=NULL;
 	}
-
 	Cform::Release();
 }
 //=============================================================================
