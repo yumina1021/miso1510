@@ -125,40 +125,11 @@ HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)
 	LPD3DXBUFFER err;
 	LPD3DXBUFFER code;
 
-	//ピクセルシェーダー用に変換
-	hr = D3DXCompileShaderFromFile("source/shader/basicPS.hlsl", NULL, NULL, "PS_DIFFUSE", "ps_2_0", 0, &code, &err, &m_shader.psc);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "D3DXCompileShaderFromFile", MB_OK);
-		err->Release();
-		return false;
-	}
-	//シェーダーの登録
-	hr = pDevice->CreatePixelShader((DWORD*)code->GetBufferPointer(), &m_shader.ps);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "FAILED", "CreatePixelShader", MB_OK);
-		return false;
-	}
+	//ピクセルシェーダー用に変換1
+	Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &m_shader.ps, &m_shader.psc, m_pDevice);
 
 	//バーテックスシェーダー用に変換1
-	hr = D3DXCompileShaderFromFile("source/shader/basicVS.hlsl", NULL, NULL, "VS", "vs_2_0", 0, &code, &err, &m_shader.vsc);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "D3DXCompileShaderFromFile", MB_OK);
-		err->Release();
-		return false;
-	}
-	//シェーダーの登録
-	hr = pDevice->CreateVertexShader((DWORD*)code->GetBufferPointer(), &m_shader.vs);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "FAILED", "CreateVertexShader", MB_OK);
-		return false;
-	}
-
+	Create_VS("source/shader/basicVS.hlsl", "VS", &m_shader.vs, &m_shader.vsc, m_pDevice);
 	return S_OK;
 }
 //=============================================================================
