@@ -130,6 +130,9 @@
     <ClCompile Include="source\module\field\Domeunder.cpp">
       <Filter>source\module\field</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\etc\Ball.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -275,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="source\module\field\Domeunder.h">
       <Filter>source\module\field</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\Ball.h">
+      <Filter>source\module\etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

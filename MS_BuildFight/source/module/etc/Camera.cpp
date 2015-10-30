@@ -81,17 +81,17 @@ void CCamera :: Update(void)
 		pPlayerM = CGame::GetPlayer();
 
 		//プレイヤーの位置＆向き取得
-		D3DXVECTOR3 posModel = pPlayerM->GetPos();
-		D3DXVECTOR3 rotModel = pPlayerM->GetRot();
-		D3DXVECTOR3 moveModel = pPlayerM->GetMove();
+		D3DXVECTOR3 posModel = D3DXVECTOR3(0, 0, 0);
+		D3DXVECTOR3 rotModel = D3DXVECTOR3(0, 0, 0);
+		D3DXVECTOR3 moveModel = D3DXVECTOR3(0, 0, 0);
 
 		//エネミーの受け取り
 		CEnemyM *pEnemyM;
 		pEnemyM = CGame::GetEnemy(0);
 
 		//エネミーの位置＆向き取得
-		D3DXVECTOR3 EposModel = pEnemyM->GetPos();
-		D3DXVECTOR3 ErotModel = pEnemyM->GetRot();
+		D3DXVECTOR3 EposModel = D3DXVECTOR3(0, 0, 0);
+		D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
 
 		Distance=(float)sqrt( (double)(posModel.x-EposModel.x)*(double)(posModel.x-EposModel.x) + (double)(posModel.y-EposModel.y)*(double)(posModel.y-EposModel.y) + (double)(posModel.z-EposModel.z)*(double)(posModel.z-EposModel.z) );
 
