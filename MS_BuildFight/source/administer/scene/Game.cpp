@@ -45,18 +45,23 @@
 #include "../../module/etc/Ball.h"
 #include "../../module/etc/LocusEffect.h"
 
+#include "../../exten_common.h"
 
 #define PLAYER_MAX	(2)	//プレイヤー数
+#define SHOT_RIMIT	(0.001f)
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 //シーン
-CPlayerM *CGame::m_pPlayer = NULL;
+CPlayerM *CGame::m_pPlayer[2] = { NULL ,NULL};
 CEnemyM *CGame::m_pEnemy = NULL;
+CBall*	CGame::m_pBall[2];
 
 int CGame::m_nGameStartCount = 0;
 bool CGame::m_bReplayFlag =false;
 bool CGame::m_bVsSelectFlag = false;
+int	CGame::m_nPlayerNum;
+int	CGame::m_nSwitchCount;
 
 key2Con K2CList[8]={
 	{DIK_Z, COMMAND_SHOT},
@@ -133,30 +138,23 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	//インターフェース画面の作成
-	m_nIFtype=rand()%2;
-	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f));
-	//5番ゲージ
-	//スコアの作成
-	m_pScore=CScore::Create(pDevice,D3DXVECTOR3(430.0f,565.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),35,55);		//体力
-	m_pCountBullet=CCount::Create(pDevice,D3DXVECTOR3(1040.0f,265.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),10);	//弾
-	m_pCountOver=CCount::Create(pDevice,D3DXVECTOR3(1040.0f,383.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),750);	//スキル
-	m_pCountBoost=CCount::Create(pDevice,D3DXVECTOR3(835.0f,565.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),100);	//ブースト
-	//タイマー（時間）の作成
-	m_pTimer=CTimer::Create(pDevice,D3DXVECTOR3(1035.0f,35.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_nTimerCount=0;
+	InitUI(pDevice);
 
 	//キャラクターの作成
 	m_nPnum = CScene::GetFrame();
 	m_nEnum = CScene::GetEnemy();
 
-	//m_pPlayer = CPGunNight1::Create(pDevice, D3DXVECTOR3(0, 50, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), false);
+	m_pPlayer[0] = CPlayerM::Create(pDevice, 0,D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	//m_pPlayer->SetVsFlag(m_bVsSelectFlag);
+	m_pPlayer[0]->SetVsFlag(m_bVsSelectFlag);
 
+	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, -450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
 	//m_pEnemy = CEnemyM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 50, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f), !m_bVsSelectFlag);
 
 	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, 1, D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//エフェクトの作成
 
@@ -317,7 +315,7 @@ void CGame :: Update(void)
 		}
 		else if(m_bChangeFlag!=true)
 		{
-			if(pInputKeyboard->GetKeyTrigger(DIK_W)||pInputKeyboard->GetKeyTrigger(DIK_UP))
+			if(pInputKeyboard->GetKeyTrigger(DIK_W)||pInputKeyboard->GetKeyTrigger(DIK_Y))
 			{
 				m_pCharPicture[m_nCount]->SetDiffuse(1.0f,1.0f,1.0f,1.0f);
 				m_nCount--;
@@ -467,7 +465,8 @@ void CGame :: Draw(void)
 void CGame :: Restart(void)
 {
 	//キャラクターの作成
-	m_pPlayer->Restart(D3DXVECTOR3(0,30,200.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	m_pPlayer[0]->Restart(D3DXVECTOR3(0, 30, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[1]->Restart(D3DXVECTOR3(0, 30, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEnemy->Restart(D3DXVECTOR3(0,30,-200.0f),D3DXVECTOR3(0.0f,3.14f,0.0f));
 
 	//タイマー（時間）の作成
@@ -514,6 +513,7 @@ void CGame::TurnStart()
 		m_MovePow = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_pEffect[13]->SetViewFlag(true, 30);
 		CManager::SetgameEndFlag(false);
+		m_shotrot = D3DXVECTOR3(0, 0, 0);
 		m_nSwitchCount++;
 	}
 
@@ -554,6 +554,51 @@ void CGame::ShotStart()
 		m_MovePow.z -= 1.0f;
 	}
 
+	if (pInputKeyboard->GetKeyPress(DIK_RIGHT))
+	{
+		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
+		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
+		m_shotrot.y += D3DX_PI * 0.05f;
+		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
+		work.x = ball.x - sinf(m_shotrot.y)*750.0f;
+		work.z = ball.z - cosf(m_shotrot.y)*750.0f;
+		work.y = m_pPlayer[m_nPlayerNum]->GetPos().y;
+		m_pPlayer[m_nPlayerNum]->SetPos(work);
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_LEFT))
+	{
+		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
+		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
+		m_shotrot.y -= D3DX_PI * 0.05f;
+		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
+		work.x = ball.x - sinf(m_shotrot.y)*750.0f;
+		work.z = ball.z - cosf(m_shotrot.y)*750.0f;
+		work.y = m_pPlayer[m_nPlayerNum]->GetPos().y;
+		m_pPlayer[m_nPlayerNum]->SetPos(work);
+	}
+
+	if (pInputKeyboard->GetKeyPress(DIK_UP))
+	{
+		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
+		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
+		m_shotrot.x += D3DX_PI * 0.01f;
+		m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
+		work.x = work.x;
+		work.z = work.z;
+		work.y = ball.y - sinf(m_shotrot.x)*750.0f;
+		m_pPlayer[m_nPlayerNum]->SetPos(work);
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_DOWN))
+	{
+		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
+		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
+		m_shotrot.x -= D3DX_PI * 0.01f;
+		m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
+		work.x = work.x;
+		work.z = work.z;
+		work.y = ball.y - sinf(m_shotrot.x)*750.0f;
+		m_pPlayer[m_nPlayerNum]->SetPos(work);
+	}
 	//仮　スピード決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
@@ -572,7 +617,7 @@ void CGame::BallMove()
 
 	m_pBall[m_nPlayerNum]->SetPos(pos);
 
-	if (m_MovePow.x < 0.1f || m_MovePow.y < 0.1f || m_MovePow.z < 0.1f)
+	if (m_MovePow.x < SHOT_RIMIT && m_MovePow.y < SHOT_RIMIT && m_MovePow.z < SHOT_RIMIT)
 	{
 		m_pEffect[11]->SetViewFlag(true, 30);
 		m_nSwitchCount++;
@@ -632,5 +677,20 @@ void CGame::charachange()
 	m_pEffect[15]->SetViewFlag(true, 30);
 
 	m_nSwitchCount=0;
+}
+void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
+{
+
+	m_nIFtype = rand() % 2;
+	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f));
+	//5番ゲージ
+	//スコアの作成
+	m_pScore = CScore::Create(pDevice, D3DXVECTOR3(430.0f, 565.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 35, 55);		//体力
+	m_pCountBullet = CCount::Create(pDevice, D3DXVECTOR3(1040.0f, 265.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10);	//弾
+	m_pCountOver = CCount::Create(pDevice, D3DXVECTOR3(1040.0f, 383.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 750);	//スキル
+	m_pCountBoost = CCount::Create(pDevice, D3DXVECTOR3(835.0f, 565.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100);	//ブースト
+	//タイマー（時間）の作成
+	m_pTimer = CTimer::Create(pDevice, D3DXVECTOR3(1035.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_nTimerCount = 0;
 }
 /////////////EOF////////////

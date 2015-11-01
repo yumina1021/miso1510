@@ -571,7 +571,7 @@ void CMeshField::Draw(LPDIRECT3DTEXTURE9 pTexture)
 	D3DXVec3Normalize(&cameraVec, &cameraVec);
 	D3DXVec3Normalize(&lightVec, &lightVec);
 
-	D3DXVECTOR3 playerPos = CGame::GetPlayer()->GetPos();
+	D3DXVECTOR3 playerPos = CGame::GetPlayer(0)->GetPos();
 
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);

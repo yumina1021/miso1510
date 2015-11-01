@@ -41,18 +41,21 @@ class CGame  : public CScene
 		~CGame(void);			//デストラクタ
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice);	//初期化
+		void InitUI(LPDIRECT3DDEVICE9 pDevice);
 		static unsigned __stdcall InitSet( LPVOID Param );	//初期化
 		void Uninit(void);							//終了
 		void Update(void);							//更新
 		void Draw(void);							//描画
 		void Restart(void);							//再開
 
-		static CPlayerM *GetPlayer(void){ return m_pPlayer; };
+		static CPlayerM *GetPlayer(int id){ return m_pPlayer[id]; };
 		static CEnemyM *GetEnemy(int iD){ return m_pEnemy; };
 		static int GetStartCount(void){ return m_nGameStartCount; };
 		static void SetStartCount(int nchange){ m_nGameStartCount = nchange; };
 		static bool	GetReplay(void){ return m_bReplayFlag; };
 		static bool	GetVs(void){ return m_bReplayFlag; };
+		static CBall *GetBall(int i){ return m_pBall[i]; };
+		static int GetPlayerCount(void){ return m_nPlayerNum; };
 
 		CMeshField *GetMeshField(void){ return m_pMeshField; };
 		Cform3D *Getform3D(void){ return m_pform3D; };
@@ -67,7 +70,6 @@ class CGame  : public CScene
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
-		CBall *GetBall(int i){ return m_pBall[i]; };
 
 		void SetTimer(int time);
 
@@ -80,7 +82,7 @@ class CGame  : public CScene
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
-		static CPlayerM* m_pPlayer;			//プレイヤーのポインタ
+		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
 		static CEnemyM*	 m_pEnemy;			//エネミーのポインタ
 		CEffect*		m_pEffect[16];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
@@ -99,7 +101,7 @@ class CGame  : public CScene
 		CDome*			m_pDome;
 		CDomeU*			m_pDome2;
 		Cform2D*		m_pUI;
-		CBall*			m_pBall[2];
+		static CBall*	m_pBall[2];
 
 		int				m_nCount;
 		int				m_nClearType;
@@ -111,14 +113,15 @@ class CGame  : public CScene
 		static bool		m_bVsSelectFlag;
 		static bool		m_bReplayFlag;
 		int				m_nTimerPlus;
+		static int		m_nPlayerNum;
 		int				m_nIFtype;
 		int				m_nEnum;
 		int				m_nPnum;
 		bool			m_bJudge;
 		int				m_nTurnCount;
-		int				m_nSwitchCount;
-		int				m_nPlayerNum;
+		static int		m_nSwitchCount;
 		D3DXVECTOR3		m_MovePow;
+		D3DXVECTOR3		m_shotrot;
 };
 
 #endif

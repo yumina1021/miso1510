@@ -231,7 +231,7 @@ void CEnemyM :: Update(void)
 	pSound = CManager::GetSound();
 
 	CPlayerM *pPlayerM;
-	pPlayerM = CGame::GetPlayer();
+	pPlayerM = CGame::GetPlayer(0);
 
 	D3DXVECTOR3 playerPos = pPlayerM->GetPos();
 

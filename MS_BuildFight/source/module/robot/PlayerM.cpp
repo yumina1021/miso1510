@@ -140,9 +140,6 @@ HRESULT CPlayerM :: Init(LPDIRECT3DDEVICE9 pDevice,int nTypeModel,D3DXVECTOR3 po
 	// アニメーション設定
 	SetMotion(MOTIONTYPE_NEUTRAL);
 
-	HRESULT hr;
-	LPD3DXBUFFER err;
-	LPD3DXBUFFER code;
 
 	//ピクセルシェーダー用に変換1
 	Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc,m_pDevice);
@@ -244,12 +241,6 @@ void CPlayerM :: Update(void)
 	CInputKeyboard	*pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
-	CEnemyM *pEnemy;
-	pEnemy = CGame::GetEnemy(0);
-	D3DXVECTOR3 enemypos;
-	enemypos = pEnemy->GetPos();
-
-
 	//法線（まだ未使用）
 	D3DXVECTOR3 normal;
 
@@ -268,14 +259,14 @@ void CPlayerM :: Update(void)
 		m_Rot.y = Rotation_Normalizer(m_Rot.y);
 
 		// 重力をかける
-		m_Move.y -= GRAVITY * 0.05f;
+		//m_Move.y -= GRAVITY * 0.05f;
 
 		float Distance = 0.0f;
-		Distance = (float)sqrt((double)(m_Pos.x - enemypos.x)*(double)(m_Pos.x - enemypos.x) + (double)(m_Pos.y - enemypos.y)*(double)(m_Pos.y - enemypos.y) + (double)(m_Pos.z - enemypos.z)*(double)(m_Pos.z - enemypos.z));
+		//Distance = (float)sqrt((double)(m_Pos.x - enemypos.x)*(double)(m_Pos.x - enemypos.x) + (double)(m_Pos.y - enemypos.y)*(double)(m_Pos.y - enemypos.y) + (double)(m_Pos.z - enemypos.z)*(double)(m_Pos.z - enemypos.z));
 
 		// 位置移動
 		m_Pos.x += m_Move.x;
-		m_Pos.y += m_Move.y;
+		//m_Pos.y += m_Move.y;
 		m_Pos.z += m_Move.z;
 
 		m_Move.x += (0.0f - m_Move.x) * REGIST_MOVE;
@@ -284,22 +275,6 @@ void CPlayerM :: Update(void)
 		//フィールドとの当たり判定
 		m_fHeightField = 0.0f;
 
-		if(m_Pos.y <= m_fHeightField)
-		{
-			if(m_bJump == true)
-			{
-				m_Move.x *= 0.005f;
-				m_Move.z *= 0.005f;
-
-				// 着地モーション再生
-				SetMotion(MOTIONTYPE_LANDING);
-				//pSound->Play(SOUND_LABEL_SE_LANDING);
-			}
-
-			m_Pos.y = m_fHeightField;
-			m_Move.y = 0.0f;
-			m_bJump = false;
-		}
 
 		if(m_bJump == false)
 		{
@@ -315,7 +290,7 @@ void CPlayerM :: Update(void)
 				}
 
 				//向きの設定（常に自機の方に向くように）
-				m_rotDestModel.y = atan2f((m_Pos.x-enemypos.x),(m_Pos.z-enemypos.z));
+				//m_rotDestModel.y = atan2f((m_Pos.x-enemypos.x),(m_Pos.z-enemypos.z));
 			}
 			else
 			{
@@ -413,12 +388,14 @@ void CPlayerM::Draw(void)
 	// ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
+
+	CDebugProc::Print("%f,%f,%f\n", m_Pos.x, m_Pos.y, m_Pos.z);
 	// モデルパーツの描画
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		if (m_apModel[nCntModel])
 		{
-			m_apModel[nCntModel]->Draw(m_pD3DTex[m_nTextureNum], &shaderSet, pCamera);
+			//m_apModel[nCntModel]->Draw(m_pD3DTex[m_nTextureNum], &shaderSet, pCamera);
 		}
 	}
 }

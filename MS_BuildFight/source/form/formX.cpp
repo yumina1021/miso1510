@@ -121,10 +121,6 @@ HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)
 
 	m_bEnemyFlag=false;
 
-	HRESULT hr;
-	LPD3DXBUFFER err;
-	LPD3DXBUFFER code;
-
 	//ピクセルシェーダー用に変換1
 	Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &m_shader.ps, &m_shader.psc, m_pDevice);
 
@@ -171,7 +167,7 @@ void CformX :: Update(void)
 		if(m_bEnemyFlag==false)
 		{
 			CPlayerM *pPlayer;
-			pPlayer=CGame::GetPlayer();
+			pPlayer=CGame::GetPlayer(0);
 			pos=pPlayer->GetPos();
 		}else
 		{

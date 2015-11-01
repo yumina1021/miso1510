@@ -9,12 +9,14 @@
 // マクロ定義
 //*****************************************************************************
 #include "Ball.h"
+#include "../../exten_common.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
 const LPSTR CBall::m_ModelName[]=
 {
 	"data/MODEL/ball.x",
+	"data/MODEL/nisiko.x",
 };
 //=============================================================================
 // コンストラクタ
@@ -58,43 +60,11 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 
 	m_bGoal = false;
 
-	HRESULT hr;
-	LPD3DXBUFFER err;
-	LPD3DXBUFFER code;
-
-	//ピクセルシェーダー用に変換
-	hr = D3DXCompileShaderFromFile("source/shader/basicPS.hlsl", NULL, NULL, "PS_DIFFUSE", "ps_2_0", 0, &code, &err, &shaderSet.psc);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "D3DXCompileShaderFromFile", MB_OK);
-		err->Release();
-		return false;
-	}
-	//シェーダーの登録
-	hr = pDevice->CreatePixelShader((DWORD*)code->GetBufferPointer(), &shaderSet.ps);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "FAILED", "CreatePixelShader", MB_OK);
-		return false;
-	}
+	//ピクセルシェーダー用に変換1
+	Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc, m_pDevice);
 
 	//バーテックスシェーダー用に変換1
-	hr = D3DXCompileShaderFromFile("source/shader/basicVS.hlsl", NULL, NULL, "VS", "vs_2_0", 0, &code, &err, &shaderSet.vsc);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "D3DXCompileShaderFromFile", MB_OK);
-		err->Release();
-		return false;
-	}
-	//シェーダーの登録
-	hr = pDevice->CreateVertexShader((DWORD*)code->GetBufferPointer(), &shaderSet.vs);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "FAILED", "CreateVertexShader", MB_OK);
-		return false;
-	}
+	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet.vs, &shaderSet.vsc, m_pDevice);
 
 	CformX::SetShader(shaderSet);
 
