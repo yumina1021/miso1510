@@ -13,7 +13,6 @@
 #include "../Input.h"
 #include "../Maneger.h"
 #include "../Sound.h"
-#include "../netClient.h"
 
 #include "../../module/etc/Fade.h"
 #include "../../module/ui/BackGround.h"
@@ -30,8 +29,7 @@ CSelect :: CSelect(void)
 {
 	m_pBackGround = NULL;
 	m_pFade = NULL;
-	m_pCharPicture[5] = { };
-	m_pEffect[6] = {};
+	m_pCharPicture[CHARCTER_TYPE::TYPE_MAX] = {};
 }
 //=============================================================================
 // デストラクタ
@@ -48,35 +46,11 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//背景の作成
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_SELECT);
 
-	//キャラ画像配置
-	m_pEffect[0]=CEffect::Create(pDevice,Selecteffect001,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[1]=CEffect::Create(pDevice,Selecteffect002,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[2]=CEffect::Create(pDevice,Selecteffect003,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-
 	//文字の配置
-	m_pCharPicture[0]=CCharPicture::Create(pDevice,s_1,D3DXVECTOR3(200.0f,200.0f,0.0f),400,100);
-	m_pCharPicture[1]=CCharPicture::Create(pDevice,s_2,D3DXVECTOR3(200.0f,300.0f,0.0f),400,100);
-	m_pCharPicture[2]=CCharPicture::Create(pDevice,s_3,D3DXVECTOR3(200.0f,400.0f,0.0f),400,100);
-
-
-	//隠しキャラ
-	if(CManager::Getnight0PlayFlag()==true)
-	{
-		m_pCharPicture[3] = CCharPicture::Create(pDevice, s_0, D3DXVECTOR3(200.0f, 500.0f, 0.0f), 400, 100);
-		m_pEffect[3]=CEffect::Create(pDevice,Selecteffect000,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-		m_pCharPicture[4] = CCharPicture::Create(pDevice, n_b, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 400, 100);
-		m_pEffect[4] = CEffect::Create(pDevice, Selecteffect010, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	}
-	else
-	{
-		m_pCharPicture[3] = CCharPicture::Create(pDevice, s_99, D3DXVECTOR3(200.0f, 500.0f, 0.0f), 400, 100);
-		m_pEffect[3] = CEffect::Create(pDevice, Selecteffect999, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		m_pCharPicture[4] = CCharPicture::Create(pDevice, s_99, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 400, 100);
-		m_pEffect[4] = CEffect::Create(pDevice, Selecteffect1000, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	}
-
-	//マッチング待機
-	m_pEffect[5]=CEffect::Create(pDevice,SelecteffectMatching,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	m_pCharPicture[CHARCTER_TYPE::TYPE_1] = CCharPicture::Create(pDevice, s_0, D3DXVECTOR3(350.0f, 350.0f, 0.0f), 400, 100);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_2] = CCharPicture::Create(pDevice, s_1, D3DXVECTOR3(1000.0f, 350.0f, 0.0f), 400, 100);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_3] = CCharPicture::Create(pDevice, s_2, D3DXVECTOR3(350.0f, 600.0f, 0.0f), 400, 100);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_4] = CCharPicture::Create(pDevice, s_3, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 400, 100);
 
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);
@@ -124,122 +98,10 @@ void CSelect :: Update(void)
 {
 	//サウンド取得の作成
 	CSound *pSound;
-	pSound = CManager::GetSound();
+	pSound = CManager::GetSound();	
 
-	//キーボードインプットの受け取り
-	CInputKeyboard *pInputKeyboard;
-	pInputKeyboard = CManager::GetInputKeyboard();
-
-	//エスケープキーが押された場合
-	if(pInputKeyboard->GetKeyTrigger(DIK_ESCAPE))
-	{
-		// データ送信
-		DATA data;
-
-		data.Type = DATA_TYPE_EVENT;
-
-		data.Event.Type = DATA_EVENT_TYPE_NONE;
-		data.Event.Frame = 0;
-
-		CNetClient::SendData( data );
-
-		m_bTitleBackFlag=true;
-		//pSound->Play(SOUND_LABEL_SE_SELECT000);
-		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-	}
-
-	//隠しキャラが使えない状態で隠しキャラが選ばれた場合
-	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z)) && CManager::Getnight0PlayFlag() == false && (m_nCursor == 3 || m_nCursor == 4) && m_bChangeFlag == false)
-	{
-
-	}else
-	//エンターキーが押された場合
-	if((pInputKeyboard->GetKeyTrigger(DIK_RETURN)||pInputKeyboard->GetKeyTrigger(DIK_Z))&&m_bChangeFlag==false)
-	{
-		//カーソルが合っているコマンドを発動
-		switch(m_nCursor)
-		{
-			//1号機
-			case 0 :	m_bChangeFlag=true;
-						CScene::SetFrame(0);
-						//pSound->PlayVoice(0,VOICE_LABEL_SE_START);
-						break;
-			//２号機
-			case 1 :	m_bChangeFlag=true;
-						CScene::SetFrame(1);
-						//pSound->PlayVoice(1,VOICE_LABEL_SE_START);
-						break;
-			//３号機
-			case 2 :	m_bChangeFlag=true;
-						CScene::SetFrame(2);
-						//pSound->PlayVoice(2,VOICE_LABEL_SE_START);
-						break;
-			if(CManager::Getnight0PlayFlag()==true)
-			{
-				//０号機
-				case 3 :	m_bChangeFlag=true;
-							CScene::SetFrame(3);
-							//pSound->PlayVoice(3,VOICE_LABEL_SE_START);
-							break;
-				//０号機
-				case 4:		m_bChangeFlag = true;
-							CScene::SetFrame(4);
-							//pSound->PlayVoice(3, VOICE_LABEL_SE_START);
-							break;
-			}
-			default : break;
-		}
-
-		CScene::SetMap(0);
-
-		if(m_bVsSelectFlag==false)
-		{
-			CScene::SetEnemy(rand()%3);
-			if(m_pFade->GetPlayFade()==false)
-			{
-				//pSound->Play(SOUND_LABEL_SE_SELECT001);
-				m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-			}
-		}else
-		{
-			if(m_bSendData==false)
-			{
-				// データ送信
-				DATA data;
-				data.Type = DATA_TYPE_EVENT;
-				data.Event.Type = DATA_EVENT_TYPE_START;
-				data.Event.Frame = m_nCursor;
-				CNetClient::SendData( data );
-				m_bSendData=true;
-			}
-			m_pEffect[5]->SetViewFlag(true,90000);
-		}
-	}
-	else if(m_bChangeFlag!=true)
-	{
-		if(pInputKeyboard->GetKeyTrigger(DIK_W)||pInputKeyboard->GetKeyTrigger(DIK_UP))
-		{
-			m_pEffect[m_nCursor]->SetViewFlag(false,1);
-			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f,1.0f,1.0f,1.0f);
-			m_nCursor--;
-			//pSound->Play(SOUND_LABEL_SE_SELECT000);
-			if(m_nCursor<0)
-			{
-					m_nCursor=4;
-			}
-		}else if(pInputKeyboard->GetKeyTrigger(DIK_S)||pInputKeyboard->GetKeyTrigger(DIK_DOWN))
-		{
-			m_pEffect[m_nCursor]->SetViewFlag(false,1);
-			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f,1.0f,1.0f,1.0f);
-			m_nCursor++;
-			//pSound->Play(SOUND_LABEL_SE_SELECT000);
-			if(m_nCursor>4)
-			{
-			m_nCursor=0;
-			}
-
-		}
-	}
+	// ボタン選択
+	SelectByButton();
 
 	m_fDiffuse-=0.01f;
 
@@ -250,23 +112,45 @@ void CSelect :: Update(void)
 
 	m_pCharPicture[m_nCursor]->SetDiffuse(m_fDiffuse,m_fDiffuse,m_fDiffuse,1.0f);
 
-	m_pEffect[m_nCursor]->SetViewFlag(true,1);
+	UpdateFade();
 
-	if(CNetClient::GetStartFlag()==true&&m_bChangeFlag==true)
+}
+//=============================================================================
+// 描画
+//=============================================================================
+void CSelect :: Draw(void)
+{
+	m_pBackGround->Draw();
+
+	for (int i = 0; i < CHARCTER_TYPE::TYPE_MAX; i++)
+	{
+		m_pCharPicture[i]->Draw();
+	}
+
+	//フェードの作成
+	m_pFade->Draw();
+}
+//=============================================================================
+// フェードの更新
+//=============================================================================
+void CSelect::UpdateFade(void)
+{
+	if (m_bChangeFlag == true)
 	{
 		//pSound->Play(SOUND_LABEL_SE_SELECT002);
-		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-		m_bChangeFlag=false;
+		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		m_bChangeFlag = false;
 	}
 
 	//フェードインが終わったら
-	if(m_pFade->GetFade()==FADE_IN_END)
+	if (m_pFade->GetFade() == FADE_IN_END)
 	{
-		if(m_bTitleBackFlag==false)
+		if (m_bTitleBackFlag == false)
 		{
 			//次のフェーズを変える
 			CManager::SetAfterScene(PHASETYPE_GAME);
-		}else
+		}
+		else
 		{
 			//次のフェーズを変える
 			CManager::SetAfterScene(PHASETYPE_TITLE);
@@ -276,19 +160,116 @@ void CSelect :: Update(void)
 //=============================================================================
 // 描画
 //=============================================================================
-void CSelect :: Draw(void)
+void CSelect::SelectByButton(void)
 {
-	m_pBackGround->Draw();
 
-	for (int i = 0; i < 5; i++)
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	//エンターキーが押された場合
+	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z)) && m_bChangeFlag == false)
 	{
-		m_pEffect[i]->Draw();
-		m_pCharPicture[i]->Draw();
+
+		// 遷移処理
+		m_bChangeFlag = true;
+
+		// 選択したキャラを保存
+		CScene::SetFrame(m_nCursor);
+		//pSound->PlayVoice(m_nCursor,VOICE_LABEL_SE_START);
+
+		if (m_bVsSelectFlag == false)
+		{
+			CScene::SetEnemy(rand() % 3);
+			if (m_pFade->GetPlayFade() == false)
+			{
+				//pSound->Play(SOUND_LABEL_SE_SELECT001);
+				m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+			}
+		}
 	}
+	else if (m_bChangeFlag != true)
+	{
+		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pInputKeyboard->GetKeyTrigger(DIK_UP))
+		{
+			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+			//pSound->Play(SOUND_LABEL_SE_SELECT000);
 
-	m_pEffect[5]->Draw();
+			// 各配置によって移動する
+			if (m_nCursor == TYPE_1
+				|| m_nCursor == TYPE_2)
+			{
 
-	//フェードの作成
-	m_pFade->Draw();
+				m_nCursor += 2;
+
+			}
+			else
+			{
+				m_nCursor -= 2;
+
+			}
+
+		}
+		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pInputKeyboard->GetKeyTrigger(DIK_DOWN))
+		{
+			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+			//pSound->Play(SOUND_LABEL_SE_SELECT000);
+
+			// 各配置によって移動する
+			if (m_nCursor == TYPE_1
+				|| m_nCursor == TYPE_2){
+
+				m_nCursor += 2;
+
+			}
+			else
+			{
+
+				m_nCursor -= 2;
+
+			}
+
+		}
+		if (pInputKeyboard->GetKeyTrigger(DIK_A) || pInputKeyboard->GetKeyTrigger(DIK_LEFT))
+		{
+			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+			//pSound->Play(SOUND_LABEL_SE_SELECT000);
+
+			// 各配置によって移動する
+			if (m_nCursor == TYPE_1
+				|| m_nCursor == TYPE_3)
+			{
+
+				m_nCursor++;
+
+			}
+			else
+			{
+				m_nCursor--;
+
+			}
+
+		}
+		else if (pInputKeyboard->GetKeyTrigger(DIK_D) || pInputKeyboard->GetKeyTrigger(DIK_RIGHT))
+		{
+			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+			//pSound->Play(SOUND_LABEL_SE_SELECT000);
+
+			// 各配置によって移動する
+			if (m_nCursor == TYPE_1
+				|| m_nCursor == TYPE_3)
+			{
+
+				m_nCursor++;
+
+			}
+			else
+			{
+				m_nCursor--;
+
+			}
+
+		}
+	}
 }
 /////////////EOF////////////

@@ -11,6 +11,19 @@
 // インクルードファイル
 //*****************************************************************************
 #include "scene.h"
+
+//*****************************************************************************
+// 列挙体定義
+//*****************************************************************************
+enum CHARCTER_TYPE
+{
+	TYPE_1 = 0,
+	TYPE_2,
+	TYPE_3,
+	TYPE_4,
+	TYPE_MAX,
+
+};
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -29,11 +42,13 @@ class CSelect  : public CScene
 		void Uninit(void);						//終了
 		void Update(void);						//更新
 		void Draw(void);						//描画
+		void SelectByButton(void);				//描画
+		void SelectByCursor(void);				//描画
+		void UpdateFade(void);				//描画
 	private:
 		CBackGround*		m_pBackGround;		//背景
 		CFade*				m_pFade;			//フェード
-		CCharPicture*		m_pCharPicture[5];	//メニュー用
-		CEffect*			m_pEffect[6];		//キャラエフェクト
+		CCharPicture*		m_pCharPicture[CHARCTER_TYPE::TYPE_MAX];	//メニュー用
 
 		int					m_nCursor;			//カーソル
 		bool				m_bChangeFlag;		//切り換えフラグ
