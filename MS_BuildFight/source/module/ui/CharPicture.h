@@ -53,11 +53,14 @@ class CCharPicture  : public Cform2D
 		void Uninit(void);//終了
 		void Update(void);//更新
 		void Draw(void);//描画
+		D3DXVECTOR3 GetLen(void){ return m_Len; };
 
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		int					m_nCount;				//フェード時間
 		static const LPSTR	m_apTextureName[];		//テクスチャー
+		D3DXVECTOR3			m_Len;
+
 };
 
 #endif
