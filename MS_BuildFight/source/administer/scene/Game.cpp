@@ -600,6 +600,7 @@ void CGame::ShotStart()
 	//仮　スピード決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
+		
 		m_nSwitchCount++;
 	}
 }
@@ -691,4 +692,17 @@ void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 	m_pTimer = CTimer::Create(pDevice, D3DXVECTOR3(1035.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_nTimerCount = 0;
 }
+void CGame::CheckHitAngle(D3DXVECTOR3 ball, D3DXVECTOR3 player)
+{
+	//float X = atan2((double)ball.x, (double)player.x / 3.141592*180+360)%360;
+	//float Y = atan2((double)ball.y, (double)player.y / 3.141592*180+360)%360;
+	//float Z = atan2((double)ball.z, (double)player.z / 3.141592*180+360)%360;
+
+
+}
+
+
+
+
+
 /////////////EOF////////////

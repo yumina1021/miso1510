@@ -82,6 +82,7 @@ class CGame  : public CScene
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
 
 		void SetTimer(int time);
+		
 
 	private:
 		void TurnStart();	//ターン開始
@@ -89,6 +90,7 @@ class CGame  : public CScene
 		void BallMove();	//弾移動
 		void Judge();		//結果判定
 		void charachange();	//キャラ変更
+		void CheckHitAngle(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//角度算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
@@ -132,6 +134,7 @@ class CGame  : public CScene
 		static int		m_nSwitchCount;
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
+		D3DXVECTOR3		m_PowerShot;
 };
 
 #endif
