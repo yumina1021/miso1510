@@ -45,10 +45,12 @@
 #include "../../module/etc/Ball.h"
 #include "../../module/etc/LocusEffect.h"
 
+#include "../Debugproc.h"
 #include "../../exten_common.h"
 
 #define PLAYER_MAX	(2)	//プレイヤー数
 #define SHOT_RIMIT	(0.001f)
+#define PLAYER_DISTANCE	(100.0f)
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -153,8 +155,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
 	//m_pEnemy = CEnemyM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 50, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f), !m_bVsSelectFlag);
 
-	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//エフェクトの作成
 
@@ -251,15 +253,15 @@ void CGame :: Update(void)
 	{
 		switch (m_nSwitchCount)
 		{
-		case 0:		TurnStart();
+		case START_PHASE:	TurnStart();
 			break;
-		case 1:		ShotStart();
+		case SHOT_PHASE:	ShotStart();
 			break;
-		case 2:		BallMove();
+		case MOVE_PHASE:	BallMove();
 			break;
-		case 3:		Judge();
+		case JUDGE_PHASE:	Judge();
 			break;
-		case 4:		charachange();
+		case CHANGE_PHASE:	charachange();
 			break;
 		}
 	}
@@ -513,7 +515,7 @@ void CGame::TurnStart()
 		m_MovePow = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_pEffect[13]->SetViewFlag(true, 30);
 		CManager::SetgameEndFlag(false);
-		m_shotrot = D3DXVECTOR3(0, 0, 0);
+		m_shotrot = D3DXVECTOR3(-2.4f, 0, 0);
 		m_nSwitchCount++;
 	}
 
@@ -554,51 +556,47 @@ void CGame::ShotStart()
 		m_MovePow.z -= 1.0f;
 	}
 
+	D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
+	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
 	if (pInputKeyboard->GetKeyPress(DIK_RIGHT))
 	{
-		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
-		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
-		m_shotrot.y += D3DX_PI * 0.05f;
+		m_shotrot.y += D3DX_PI * 0.01f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
-		work.x = ball.x - sinf(m_shotrot.y)*750.0f;
-		work.z = ball.z - cosf(m_shotrot.y)*750.0f;
-		work.y = m_pPlayer[m_nPlayerNum]->GetPos().y;
-		m_pPlayer[m_nPlayerNum]->SetPos(work);
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_LEFT))
 	{
-		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
-		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
-		m_shotrot.y -= D3DX_PI * 0.05f;
+		m_shotrot.y -= D3DX_PI * 0.01f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
-		work.x = ball.x - sinf(m_shotrot.y)*750.0f;
-		work.z = ball.z - cosf(m_shotrot.y)*750.0f;
-		work.y = m_pPlayer[m_nPlayerNum]->GetPos().y;
-		m_pPlayer[m_nPlayerNum]->SetPos(work);
 	}
 
+	bool rotlimit_x_max = m_shotrot.x - D3DX_PI / 4.0f < 3.14f;
+	bool rotlimit_x_min = m_shotrot.x > 0.3f;
 	if (pInputKeyboard->GetKeyPress(DIK_UP))
 	{
-		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
-		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
-		m_shotrot.x += D3DX_PI * 0.01f;
-		m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
-		work.x = work.x;
-		work.z = work.z;
-		work.y = ball.y - sinf(m_shotrot.x)*750.0f;
-		m_pPlayer[m_nPlayerNum]->SetPos(work);
+		if (true)
+		{
+			m_shotrot.x -= D3DX_PI * 0.01f;
+			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
+		}
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_DOWN))
 	{
-		D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
-		D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
-		m_shotrot.x -= D3DX_PI * 0.01f;
-		m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
-		work.x = work.x;
-		work.z = work.z;
-		work.y = ball.y - sinf(m_shotrot.x)*750.0f;
-		m_pPlayer[m_nPlayerNum]->SetPos(work);
+		if (true)
+		{
+			m_shotrot.x += D3DX_PI * 0.01f;
+			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
+		}
 	}
+	CDebugProc::Print("shotrot::x%f y%f z%f", m_shotrot.x, m_shotrot.y, m_shotrot.z);
+	work.x = ball.x -((sinf(m_shotrot.y) + cosf(m_shotrot.y))
+					* (cosf(-m_shotrot.x) - sinf(-m_shotrot.x)))*PLAYER_DISTANCE;
+	
+	work.z = ball.z -((cosf(m_shotrot.y) - sinf(m_shotrot.y))
+					* (sinf(m_shotrot.x) + cosf(m_shotrot.x)))*PLAYER_DISTANCE;
+	
+	work.y = ball.y - ((cosf(m_shotrot.x) - sinf(m_shotrot.x))
+					)*PLAYER_DISTANCE;
+	m_pPlayer[m_nPlayerNum]->SetPos(work);
 	//仮　スピード決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
@@ -610,7 +608,7 @@ void CGame::BallMove()
 {
 	//スピードによって球が移動
 	D3DXVECTOR3 pos = m_pBall[m_nPlayerNum]->GetPos();
-
+	// hack プレイヤーと弾の角度から発射向きを算出
 	pos += m_MovePow;
 
 	m_MovePow *= 0.5;

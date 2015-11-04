@@ -123,7 +123,7 @@ void CDebugProc::Draw(void)
 	{
 		RECT rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
-		m_pD3DXFont->DrawText(NULL, m_aStr, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
+		m_pD3DXFont->DrawText(NULL, m_aStr, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0, 0, 0));
 
 		// バッファクリア
 		memset(m_aStr, 0, sizeof m_aStr);

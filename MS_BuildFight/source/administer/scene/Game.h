@@ -33,6 +33,15 @@ class CDome;
 class CDomeU;
 class CBall;
 
+enum GAME_PHASE
+{
+	START_PHASE = 0,
+	SHOT_PHASE,
+	MOVE_PHASE,
+	JUDGE_PHASE,
+	CHANGE_PHASE,
+	MAX_PHASE,
+};
 
 class CGame  : public CScene
 {
@@ -56,6 +65,7 @@ class CGame  : public CScene
 		static bool	GetVs(void){ return m_bReplayFlag; };
 		static CBall *GetBall(int i){ return m_pBall[i]; };
 		static int GetPlayerCount(void){ return m_nPlayerNum; };
+		static int GetPhase(void){ return m_nSwitchCount; };
 
 		CMeshField *GetMeshField(void){ return m_pMeshField; };
 		Cform3D *Getform3D(void){ return m_pform3D; };
