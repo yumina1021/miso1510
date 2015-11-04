@@ -113,14 +113,6 @@ void CSelect :: Update(void)
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
-<<<<<<< HEAD
-	//エスケープキーが押された場合
-	if(pInputKeyboard->GetKeyTrigger(DIK_BACKSPACE))
-	{
-		m_bTitleBackFlag=true;
-		//pSound->Play(SOUND_LABEL_SE_SELECT000);
-		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-=======
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_F1)
 		&& m_bChangeFlag == false)
@@ -137,10 +129,7 @@ void CSelect :: Update(void)
 	// ボタン選択
 	if (m_nType == SELECT_TYPE::TYPE_BUTTON)
 	{
-
 		SelectByButton();
-
->>>>>>> origin/sakai_work
 	}
 	// カーソル移動
 	else if (m_nType == SELECT_TYPE::TYPE_CURSOR)
@@ -268,9 +257,6 @@ void CSelect::SelectByButton(void)
 		}
 		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pInputKeyboard->GetKeyTrigger(DIK_DOWN))
 		{
-<<<<<<< HEAD
-			m_pEffect[5]->SetViewFlag(true,90000);
-=======
 			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
 
@@ -287,8 +273,6 @@ void CSelect::SelectByButton(void)
 				m_nCursor -= 2;
 
 			}
-
->>>>>>> origin/sakai_work
 		}
 		if (pInputKeyboard->GetKeyTrigger(DIK_A) || pInputKeyboard->GetKeyTrigger(DIK_LEFT))
 		{
@@ -374,12 +358,7 @@ void CSelect::SelectByCursor(void){
 
 
 		}
-
-<<<<<<< HEAD
-=======
 	}
->>>>>>> origin/sakai_work
-
 	// 左クリックしたら
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
@@ -431,14 +410,6 @@ void CSelect::SelectByCursor(void){
 
 		}
 	}
-<<<<<<< HEAD
-	if (m_bChangeFlag == true && m_pFade->GetFade() == FADE_NONE)
-	{
-		//pSound->Play(SOUND_LABEL_SE_SELECT002);
-		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
-	}
-}
-=======
 	// カーソルの座標の更新
 	m_pCursor->SetPos(tmpPos);
 
@@ -450,7 +421,6 @@ void CSelect::SelectByCursor(void){
 #endif
 
 }// SelectByCursor
->>>>>>> origin/sakai_work
 //=============================================================================
 // カール移動での選択
 //=============================================================================
