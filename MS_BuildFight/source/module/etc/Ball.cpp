@@ -16,6 +16,7 @@
 const LPSTR CBall::m_ModelName[]=
 {
 	"data/MODEL/ball.x",
+	"data/MODEL/nisiko.x",
 };
 //=============================================================================
 // コンストラクタ

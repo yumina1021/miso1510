@@ -154,7 +154,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	//m_pEnemy = CEnemyM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 50, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f), !m_bVsSelectFlag);
 
 	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, 1, D3DXVECTOR3(0.0f, 50.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//エフェクトの作成
 
