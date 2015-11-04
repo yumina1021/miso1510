@@ -32,11 +32,13 @@ const LPSTR CCharPicture::m_apTextureName[]=
 	"data/TEXTURE/p_continue.png",
 	"data/TEXTURE/p_retry.png",
 	"data/TEXTURE/p_quit.png"
+
 };
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CCharPicture :: CCharPicture():Cform2D(OBJTYPE_PAUSE,7)
+CCharPicture :: CCharPicture():Cform2D(OBJTYPE_PAUSE,7),
+m_Len(0.0f, 0.0f, 0.0f)
 {
 }
 //=============================================================================
@@ -65,6 +67,7 @@ HRESULT CCharPicture :: Init(LPDIRECT3DDEVICE9 pDevice,PictureNum nType,D3DXVECT
 	m_pDevice = pDevice;
 	//フィールドの初期化
 	Cform2D::Init(m_pDevice,m_apTextureName[(int)nType],pos,D3DXVECTOR3(0.0f,0.0f,0.0f),fwidth,fheight);
+	m_Len = D3DXVECTOR3(fwidth, fheight, 0.0f);
 	return S_OK;
 }
 //=============================================================================
