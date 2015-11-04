@@ -36,6 +36,13 @@ class CCamera
 		void Update(void);						//更新
 		void Set(LPDIRECT3DDEVICE9 pDevice);	//描画
 
+		void SceneGame(void);
+		void StartCamera(void);
+		void ShotCamera(void);
+		void MoveCamera(void);
+		void JudgeCamera(void);
+		void ChangeCamera(void);
+
 		D3DXVECTOR3 GetRotCamera(void){return m_rotCamera;};							//カメラの向き受け渡し
 		D3DXMATRIX GetMtxView (void){return m_mtxView;};		//ビューマトリクス受け渡し
 		D3DXVECTOR3 GetPointView(void){return m_posPointView;};	//注視点の受け渡し
