@@ -90,7 +90,7 @@ class CGame  : public CScene
 		void BallMove();	//弾移動
 		void Judge();		//結果判定
 		void charachange();	//キャラ変更
-		void CheckHitAngle(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//角度算出
+		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
