@@ -136,6 +136,21 @@
     <ClCompile Include="source\exten_common.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\ui\Character.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\font_texture.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Scenario.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\sprite.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\text_box.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -287,6 +302,21 @@
     </ClInclude>
     <ClInclude Include="source\exten_common.h">
       <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Character.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\font_texture.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Scenario.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\sprite.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\text_box.h">
+      <Filter>source\module\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

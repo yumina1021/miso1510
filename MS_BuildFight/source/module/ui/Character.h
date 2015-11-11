@@ -20,23 +20,22 @@
 //*****************************************************************************
 typedef enum
 {
-	normal = 0,
-	smile,
-	smile2,
-	smile3,
-	smile4,
-	smile5,
-	shy,
-	star,
-	heart,
-	hawawa,
-	suprise,
-	trouble,
-	angery,
-	seel,
-	sad,
-	ScenarioMax
-}CharacterType;
+	FACIAL_NORMAL = 0,
+	FACIAL_SMILE,
+	FACIAL_SMILE2,
+	FACIAL_SMILE3,
+	FACIAL_SMILE4,
+	FACIAL_SHY,
+	FACIAL_STAR,
+	FACIAL_HEART,
+	FACIAL_HAWAWA,
+	FACIAL_SURPRISE,
+	FACIAL_TROUBLE,
+	FACIAL_ANGERY,
+	FACIAL_SEEL,
+	FACIAL_SAD,
+	FACIAL_Max
+}FasialType;
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -53,16 +52,17 @@ class CCharacter  : public Cform2D
 		void Update(void);//更新
 		void Draw(void);//描画
 		void SetViewFlag(bool change,int time){m_ViewFlag=change;m_nCount=time;};
-		void SetCharaType(CharacterType type){ m_charaType = type; };
-		CharacterType GetCharaType(void){ return m_charaType; };
+
+		void SetFacialType(FasialType type){ m_facialType = type; };
+		FasialType GetFacialType(void){ return m_facialType; };
 
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		int					m_nCount;
 		static const LPSTR	m_apTextureName[];
 		bool				m_ViewFlag;
-		CharacterType		m_charaType;
-		CharacterType		m_charaTypeOld;
+		FasialType			m_facialType;
+		FasialType			m_facialTypeOld;
 };
 
 #endif

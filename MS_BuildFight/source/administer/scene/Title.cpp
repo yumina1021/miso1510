@@ -112,7 +112,7 @@ void CTitle :: Update(void)
 		}else if(m_nCursor==2)
 		{
 			//次のフェーズを変える
-			CManager::SetAfterScene(PHASETYPE_TUTRIAL);
+			CManager::SetAfterScene(PHASETYPE_RESULT);
 		}
 	}
 }

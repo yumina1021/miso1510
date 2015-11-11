@@ -19,6 +19,12 @@
 #include "../../module/etc/Fade.h"
 #include "../../module/ui/BackGround.h"
 #include "../../module/ui/ResultScore.h"
+
+#include "../../form/formX.h"
+
+#include "../../module/etc/Ball.h"
+
+#include "../../module/ui/Scenario.h"
 //*****************************************************************************
 // 定数
 //*****************************************************************************
@@ -33,6 +39,10 @@ CResult :: CResult(void)
 	m_pBackGround = NULL;
 	m_pFade = NULL;
 	m_pRescore[3] = { };
+
+	m_pBall = NULL;
+
+	m_pScenerio = NULL;
 }
 //=============================================================================
 // デストラクタ
@@ -46,8 +56,14 @@ CResult :: ~CResult(void)
 //=============================================================================
 HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
+
+	m_pBall = CBall::Create(pDevice, 0,D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 	//背景の作成
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_RESULT);
+
+	//シナリオ
+	m_pScenerio = CScenario::Create(pDevice,true);
 
 	//サウンド取得の作成
 	CSound *pSound;
@@ -139,6 +155,9 @@ void CResult :: Uninit(void)
 	CSound *pSound;
 	pSound = CManager::GetSound();
 
+	m_pScenerio->Uninit();
+	delete m_pScenerio;
+
 	//サウンド再生の作成
 	pSound->Stop();
 
@@ -153,6 +172,19 @@ void CResult :: Update(void)
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
+
+	m_pScenerio->Update(pInputKeyboard);
+
+	D3DXVECTOR3 pos = m_pBall->GetPos();
+	if (pInputKeyboard->GetKeyTrigger(DIK_A))
+	{
+		pos.x++;
+	}
+	if (pInputKeyboard->GetKeyTrigger(DIK_D))
+	{
+		pos.x--;
+	}
+	m_pBall->SetPos(pos);
 
 	//フェードの開始
 	if(pInputKeyboard->GetKeyTrigger(DIK_RETURN)||pInputKeyboard->GetKeyTrigger(DIK_Z))
@@ -175,14 +207,17 @@ void CResult :: Update(void)
 //=============================================================================
 void CResult :: Draw(void)
 {
+
+	m_pScenerio->Draw();
+
 	//背景
-	m_pBackGround->Draw();
+	//m_pBackGround->Draw();
 
 	//リザルト
-	m_pRescore[0]->Draw();
-	m_pRescore[1]->Draw();
-	m_pRescore[2]->Draw();
-	m_pRescore[3]->Draw();
+	//m_pRescore[0]->Draw();
+	//m_pRescore[1]->Draw();
+	//m_pRescore[2]->Draw();
+	//m_pRescore[3]->Draw();
 
 	//フェード
 	m_pFade->Draw();

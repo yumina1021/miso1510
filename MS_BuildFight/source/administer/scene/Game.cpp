@@ -681,7 +681,7 @@ void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 {
 
 	m_nIFtype = rand() % 2;
-	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f));
+	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f),1300,750);
 	//5番ゲージ
 	//スコアの作成
 	m_pScore = CScore::Create(pDevice, D3DXVECTOR3(430.0f, 565.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 35, 55);		//体力
