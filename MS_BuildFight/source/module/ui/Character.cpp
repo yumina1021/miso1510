@@ -84,12 +84,12 @@ void CCharacter :: Update(void)
 		Cform2D::Update();
 
 		//äGïœçX
-		if (m_charaType != m_charaTypeOld)
+		if (m_facialType != m_facialTypeOld)
 		{
-			Cform2D::SetTexture(m_apTextureName[(int)m_charaType]);
+			Cform2D::SetTexture(m_apTextureName[(int)m_facialType]);
 		}
 
-		m_charaTypeOld = m_charaType;
+		m_facialTypeOld = m_facialType;
 	}
 }
 //=============================================================================

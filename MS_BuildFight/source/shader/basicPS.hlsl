@@ -13,7 +13,7 @@ float gValue;
 /////////////////////////////////////////////////////////
 float4 PS(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
-	return tex2D(texSampler, uv);
+	return tex2D(texSampler, uv)*diffuse;
 }
 
 /////////////////////////////////////////////////////////

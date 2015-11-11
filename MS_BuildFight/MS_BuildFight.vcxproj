@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Desktop\MS_BuildFight_2\source\module\ui\Character.cpp" />
     <ClCompile Include="source\administer\Debugproc.cpp" />
     <ClCompile Include="source\administer\FrustumCulling.cpp" />
     <ClCompile Include="source\administer\Input.cpp" />
@@ -116,15 +117,20 @@
     <ClCompile Include="source\module\ui\CharPicture.cpp" />
     <ClCompile Include="source\module\ui\Count.cpp" />
     <ClCompile Include="source\module\ui\Effect.cpp" />
+    <ClCompile Include="source\module\ui\font_texture.cpp" />
     <ClCompile Include="source\module\ui\Gauge.cpp" />
     <ClCompile Include="source\module\ui\Icon.cpp" />
     <ClCompile Include="source\module\ui\Lock.cpp" />
     <ClCompile Include="source\module\ui\Number.cpp" />
     <ClCompile Include="source\module\ui\ResultScore.cpp" />
+    <ClCompile Include="source\module\ui\Scenario.cpp" />
     <ClCompile Include="source\module\ui\Score.cpp" />
+    <ClCompile Include="source\module\ui\sprite.cpp" />
+    <ClCompile Include="source\module\ui\text_box.cpp" />
     <ClCompile Include="source\module\ui\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Desktop\MS_BuildFight_2\source\module\ui\Character.h" />
     <ClInclude Include="source\administer\data.h" />
     <ClInclude Include="source\administer\Debugproc.h" />
     <ClInclude Include="source\administer\FrustumCulling.h" />
@@ -168,12 +174,16 @@
     <ClInclude Include="source\module\ui\CharPicture.h" />
     <ClInclude Include="source\module\ui\Count.h" />
     <ClInclude Include="source\module\ui\Effect.h" />
+    <ClInclude Include="source\module\ui\font_texture.h" />
     <ClInclude Include="source\module\ui\Gauge.h" />
     <ClInclude Include="source\module\ui\Icon.h" />
     <ClInclude Include="source\module\ui\Lock.h" />
     <ClInclude Include="source\module\ui\Number.h" />
     <ClInclude Include="source\module\ui\ResultScore.h" />
+    <ClInclude Include="source\module\ui\Scenario.h" />
     <ClInclude Include="source\module\ui\Score.h" />
+    <ClInclude Include="source\module\ui\sprite.h" />
+    <ClInclude Include="source\module\ui\text_box.h" />
     <ClInclude Include="source\module\ui\Timer.h" />
   </ItemGroup>
   <ItemGroup>

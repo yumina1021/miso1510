@@ -26,12 +26,12 @@ Cform2D :: ~Cform2D(void)
 //=============================================================================
 // Cform2D¶¬
 //=============================================================================
-Cform2D *Cform2D::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
+Cform2D *Cform2D::Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pFileName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height)
 {
 	Cform2D *pform2D;
 
 	pform2D = new Cform2D();
-	pform2D->Init(pDevice,pFileName,pos,rot,1300,750);
+	pform2D->Init(pDevice, pFileName, pos, rot, width, height);
 
 	return pform2D;
 }
@@ -211,5 +211,10 @@ void Cform2D :: SetDiffuse(float r,float g,float b,float a)
 
 	//ƒAƒ“ƒƒbƒN
 	m_pD3DVtxBuff->Unlock();
+}
+
+void Cform2D::SetTexture(LPSTR pFileName)
+{
+	D3DXCreateTextureFromFile(m_pDevice, pFileName, &m_pD3DTex);
 }
 /////////////EOF////////////

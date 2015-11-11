@@ -17,6 +17,8 @@
 class CBackGround;	//前方宣言
 class CFade;
 class CReScore;
+class CBall;
+class CScenario;
 
 class CResult  : public CScene
 {
@@ -32,6 +34,8 @@ class CResult  : public CScene
 		CBackGround* m_pBackGround;				//背景
 		CFade*		m_pFade;					//フェード
 		CReScore*	m_pRescore[4];				//スコア用
+		CBall*		m_pBall;					//フォーム
+		CScenario*	m_pScenerio;				//シナリオ
 };
 
 #endif
