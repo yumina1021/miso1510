@@ -599,8 +599,9 @@ void CGame::ShotStart()
 	m_pPlayer[m_nPlayerNum]->SetPos(work);
 	//仮　スピード決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
-	{
-		
+	{	
+		//ベクトルの関数呼ぶ場所
+		m_PowerShot = CheckVector(ball, work);
 		m_nSwitchCount++;
 	}
 }
@@ -610,7 +611,7 @@ void CGame::BallMove()
 	//スピードによって球が移動
 	D3DXVECTOR3 pos = m_pBall[m_nPlayerNum]->GetPos();
 	// hack プレイヤーと弾の角度から発射向きを算出
-	pos += m_MovePow;
+	pos += m_MovePow.x*m_PowerShot;
 
 	m_MovePow *= 0.5;
 
@@ -692,13 +693,14 @@ void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 	m_pTimer = CTimer::Create(pDevice, D3DXVECTOR3(1035.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_nTimerCount = 0;
 }
-void CGame::CheckHitAngle(D3DXVECTOR3 ball, D3DXVECTOR3 player)
+//プレイヤーとボールのベクトルを算出
+D3DXVECTOR3 CGame::CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player)
 {
-	//float X = atan2((double)ball.x, (double)player.x / 3.141592*180+360)%360;
-	//float Y = atan2((double)ball.y, (double)player.y / 3.141592*180+360)%360;
-	//float Z = atan2((double)ball.z, (double)player.z / 3.141592*180+360)%360;
+	D3DXVECTOR3 Vector;
+	Vector = ball - player;
+	D3DXVec3Normalize(&Vector,&Vector);
 
-
+	return Vector;
 }
 
 
