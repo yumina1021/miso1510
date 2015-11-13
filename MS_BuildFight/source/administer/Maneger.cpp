@@ -22,6 +22,7 @@
 #include "scene/Scene.h"
 #include "scene/Title.h"
 #include "scene/Select.h"
+#include "scene/StageSelect.h"
 #include "scene/Game.h"
 #include "scene/Result.h"
 #include "scene/Tutorial.h"
@@ -49,6 +50,8 @@ CLight *CManager::m_pLight = NULL;						// ライト
 
 PHASETYPE CManager::m_phaseType = PHASETYPE_TITLE;			//フェーズのタイプ
 PHASETYPE CManager::m_afterSceneType = PHASETYPE_TITLE;
+
+HWND CManager::m_hwnd = NULL;
 
 #ifdef _DEBUG
 CDebugProc *CManager::m_pDebugProc = NULL;				// デバッグ
@@ -122,6 +125,8 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 
 	m_nCountform = 0;
 	m_bWirerFlag = false;
+
+	m_hwnd = hWnd;
 
 	return S_OK;
 }
@@ -484,6 +489,18 @@ void CManager::ChangeScene(void)
 							delete m_pScene;
 							m_pScene=NULL;
 							m_pScene=new CSelect();
+							m_pScene->SetVSFlag(vs);
+							m_pScene->SetReplayFlag(replay);
+							m_pScene->Init(m_pD3DDevice);
+							break;
+							//次のフェーズがセレクト
+			case PHASETYPE_STAGE_SELECT:
+							replay = m_pScene->GetReplayFlag();
+							vs = m_pScene->GetVSFlag();
+							m_pScene->Uninit();
+							delete m_pScene;
+							m_pScene = NULL;
+							m_pScene = new CStageSelect();
 							m_pScene->SetVSFlag(vs);
 							m_pScene->SetReplayFlag(replay);
 							m_pScene->Init(m_pD3DDevice);
