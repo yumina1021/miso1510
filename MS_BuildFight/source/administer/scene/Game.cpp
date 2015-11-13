@@ -199,7 +199,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_bJudge = false;
 
-	m_nSwitchCount = 0;
+	m_nSwitchCount = START_PHASE;
 
 	m_nPlayerNum = 0;
 
@@ -255,11 +255,15 @@ void CGame :: Update(void)
 		{
 		case START_PHASE:	TurnStart();
 			break;
-		case SHOT_PHASE:	ShotStart();
+		case ANGLE_PHASE:	AngleDecision();
+			break;
+		case POWER_PHASE:	PowerDecision();
 			break;
 		case MOVE_PHASE:	BallMove();
 			break;
 		case JUDGE_PHASE:	Judge();
+			break;
+		case END_PHASE:		End();
 			break;
 		case CHANGE_PHASE:	charachange();
 			break;
@@ -516,45 +520,19 @@ void CGame::TurnStart()
 		m_pEffect[13]->SetViewFlag(true, 30);
 		CManager::SetgameEndFlag(false);
 		m_shotrot = D3DXVECTOR3(-2.4f, 0, 0);
-		m_nSwitchCount++;
+		m_nSwitchCount = ANGLE_PHASE;
 	}
 
 	m_nGameStartCount++;
 }
-//球打ち開始
-void CGame::ShotStart()
+//角度決定開始
+void CGame::AngleDecision()
 {
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	m_pEffect[10]->SetViewFlag(true, 1);
-
-	//弾のスピード調節
-	if (pInputKeyboard->GetKeyPress(DIK_Q))
-	{
-		m_MovePow.y+=1.0f;
-	}
-	else if (pInputKeyboard->GetKeyPress(DIK_A))
-	{
-		m_MovePow.y -= 1.0f;
-	}
-	if (pInputKeyboard->GetKeyPress(DIK_W))
-	{
-		m_MovePow.x += 1.0f;
-	}
-	else if (pInputKeyboard->GetKeyPress(DIK_S))
-	{
-		m_MovePow.x -= 1.0f;
-	}
-	if (pInputKeyboard->GetKeyPress(DIK_E))
-	{
-		m_MovePow.z += 1.0f;
-	}
-	else if (pInputKeyboard->GetKeyPress(DIK_D))
-	{
-		m_MovePow.z -= 1.0f;
-	}
 
 	D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
 	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
@@ -602,7 +580,46 @@ void CGame::ShotStart()
 	{
 		//ベクトルの関数呼ぶ場所
 		m_PowerShot = CheckVector(ball, work);
-		m_nSwitchCount++;
+		m_nSwitchCount = POWER_PHASE;
+	}
+
+}
+//打つ力の決定
+void CGame:: PowerDecision()
+{
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+	//弾のスピード調節
+	if (pInputKeyboard->GetKeyPress(DIK_Q))
+	{
+		m_MovePow.y += 1.0f;
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_A))
+	{
+		m_MovePow.y -= 1.0f;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_W))
+	{
+		m_MovePow.x += 1.0f;
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_S))
+	{
+		m_MovePow.x -= 1.0f;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_E))
+	{
+		m_MovePow.z += 1.0f;
+	}
+	else if (pInputKeyboard->GetKeyPress(DIK_D))
+	{
+		m_MovePow.z -= 1.0f;
+	}
+
+	//仮　打つ力を決めたから次
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	{
+		m_nSwitchCount=MOVE_PHASE;
 	}
 }
 //弾移動
@@ -620,7 +637,7 @@ void CGame::BallMove()
 	if (m_MovePow.x < SHOT_RIMIT && m_MovePow.y < SHOT_RIMIT && m_MovePow.z < SHOT_RIMIT)
 	{
 		m_pEffect[11]->SetViewFlag(true, 30);
-		m_nSwitchCount++;
+		m_nSwitchCount = JUDGE_PHASE;
 	}
 }
 //結果判定
@@ -659,8 +676,21 @@ void CGame::Judge()
 	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
-		m_nSwitchCount++;
+		m_nSwitchCount = END_PHASE;
 	}
+}
+void CGame::End()
+{
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	//仮　入らなかった交代
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	{
+		m_nSwitchCount = CHANGE_PHASE;
+	}
+
 }
 //キャラ変更
 void CGame::charachange()	
@@ -676,7 +706,7 @@ void CGame::charachange()
 
 	m_pEffect[15]->SetViewFlag(true, 30);
 
-	m_nSwitchCount=0;
+	m_nSwitchCount = START_PHASE;
 }
 void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 {

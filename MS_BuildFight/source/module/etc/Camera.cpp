@@ -338,9 +338,11 @@ void CCamera :: SceneGame(void)
 	switch (phase)
 	{
 	case START_PHASE:	StartCamera(); break;
-	case SHOT_PHASE:	ShotCamera(); break;
+	case ANGLE_PHASE:	ShotCamera(); break;
+	case POWER_PHASE:	ShotCamera(); break;
 	case MOVE_PHASE:	MoveCamera(); break;
 	case JUDGE_PHASE:	JudgeCamera(); break;
+	case END_PHASE:		JudgeCamera(); break;
 	case CHANGE_PHASE:	ChangeCamera(); break;
 	}
 }
