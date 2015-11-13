@@ -48,7 +48,7 @@ HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 	int nNumBlockZ=1;
 
 	//テクスチャの設定
-	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/lock.png",&m_pD3DTex);
+	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/toumei2.png",&m_pD3DTex);
 
 	//フィールドの初期化
 	m_Pos = D3DXVECTOR3(0.0f,0.0f,0.0f);
