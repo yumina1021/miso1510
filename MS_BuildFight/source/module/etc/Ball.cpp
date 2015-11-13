@@ -9,6 +9,7 @@
 // マクロ定義
 //*****************************************************************************
 #include "Ball.h"
+#include "LocusEffect.h"
 #include "../../exten_common.h"
 //*****************************************************************************
 // 静的変数
@@ -59,6 +60,10 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 
 	m_bGoal = false;
 
+	//エフェクト追加
+	m_pLocusEffect = CLocusEffect::Create(pDevice, NULL, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pLocusEffect->SetFlag(true);
+
 	//ピクセルシェーダー用に変換1
 	Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc, m_pDevice);
 
@@ -84,6 +89,10 @@ void CBall :: Uninit(void)
 //=============================================================================
 void CBall :: Update(void)
 {
+	//エフェクトに座標設定
+	m_pLocusEffect->SetPosBuffer(CformX::GetPos());
+	m_pLocusEffect->SetPos(CformX::GetPos());
+
 	//更新呼び出し
 	CformX::Update();
 }
@@ -94,6 +103,7 @@ void CBall :: Draw(void)
 {
 	if (m_bViewFlag)
 	{
+		m_pLocusEffect->Draw();
 		CformX::Draw();
 	}
 }

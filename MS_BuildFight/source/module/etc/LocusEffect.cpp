@@ -9,6 +9,9 @@
 // マクロ定義
 //*****************************************************************************
 #include "LocusEffect.h"
+#include "Camera.h"
+#include "../../exten_common.h"
+#include "../../administer/Maneger.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -90,6 +93,12 @@ HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 
 	m_bFlag = false;
 
+	//ピクセルシェーダー用に変換1
+	Create_PS("source/shader/basicPS.hlsl", "PS_EFFECT", &shaderSet.ps, &shaderSet.psc, m_pDevice);
+
+	//バーテックスシェーダー用に変換1
+	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet.vs, &shaderSet.vsc, m_pDevice);
+
 	return S_OK;
 }
 //=============================================================================
@@ -148,8 +157,17 @@ void CLocusEffect :: Draw(void)
 {
 	if (m_bFlag)
 	{
-		//m_pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);	// 結果 = 転送先(DEST) - 転送元(SRC)
-		//m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		CCamera* pCamera = CManager::GetCamera();
+
+		D3DXMATRIX view, proj;
+		//ビュー行列
+		D3DXVECTOR3 eye(0.0f, 50.0f, -100.0f);
+		D3DXVECTOR3 at(0.0f, 20.0f, 0.0f);
+		D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+
+		eye = pCamera->GetPosP();
+		at = pCamera->GetPosR();
+		up = pCamera->GetVecUp();
 
 		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		// SRC(これから描画する側) + DEST(既に描画されてる側)
@@ -167,13 +185,28 @@ void CLocusEffect :: Draw(void)
 		D3DXMatrixIdentity(&mtxWorld);
 		D3DXMatrixScaling(&mtxScl, m_Scl.x, m_Scl.y, m_Scl.z);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);
+
 		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Rot.y, m_Rot.x, m_Rot.z);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
-		//D3DXMatrixTranslation(&mtxTranslate,m_Pos.x,m_Pos.y,m_Pos.z);
-		D3DXMatrixTranslation(&mtxTranslate, 0.0f, 0.0f, 0.0f);
 
+		D3DXMatrixTranslation(&mtxTranslate, 0.0f, 0.0f, 0.0f);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTranslate);
+
 		m_pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+
+		D3DXMatrixLookAtLH(&view, &eye, &at, &up);
+
+		D3DXMatrixPerspectiveFovLH(&proj, D3DXToRadian(45), 960.0f / 540.0f, 10.0f, 100000.0f);
+
+		D3DXMATRIX wvp = mtxWorld*view*proj;
+
+		shaderSet.vsc->SetMatrix(m_pDevice, "world", &mtxWorld);
+		shaderSet.vsc->SetMatrix(m_pDevice, "gWvp", &wvp);
+
+		shaderSet.vsc->SetVector(m_pDevice, "MatDiffuse", &D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+
+		m_pDevice->SetVertexShader(shaderSet.vs);
+		m_pDevice->SetPixelShader(shaderSet.ps);
 
 		//頂点バッファをデータストリームにバインド
 		m_pDevice->SetStreamSource(0, m_pD3DVtxBuff, 0, sizeof(VERTEX_3D));
@@ -182,9 +215,10 @@ void CLocusEffect :: Draw(void)
 		m_pDevice->SetFVF(FVF_VERTEX_3D);
 
 		//テクスチャの設定
-		//m_pDevice->SetTexture(0,m_pD3DTex);
 		m_pDevice->SetTexture(0, NULL);
 
+		//unsigned int s0 = shaderSet.psc->GetSamplerIndex("texSampler");
+		//m_pDevice->SetTexture(s0, m_pD3DTex);
 
 		//ポリゴンの描画
 		m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 120);
@@ -192,7 +226,9 @@ void CLocusEffect :: Draw(void)
 		m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 		m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
-		////m_pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);			// 結果 = 転送元(SRC) + 転送先(DEST)
+
+		m_pDevice->SetVertexShader(NULL);
+		m_pDevice->SetPixelShader(NULL);
 	}
 }
 
@@ -232,8 +268,8 @@ void CLocusEffect :: SetPosBuffer(D3DXVECTOR3 pos)
 		ColorBuff[i*2]=ColorBuff[(i-1)*2];
 	}
 
-	PosBuff[0]=D3DXVECTOR3(posA.x,posA.y,posA.z);
-	PosBuff[1]=D3DXVECTOR3(posA.x,posA.y+3.0f,posA.z);
+	PosBuff[0]=D3DXVECTOR3(posA.x,posA.y+3.0f,posA.z);
+	PosBuff[1]=D3DXVECTOR3(posA.x,posA.y+18.0f,posA.z);
 
 	ColorBuff[0]=D3DXCOLOR(1.0f,0.0f,0.0f,0.2f);
 	ColorBuff[1]=D3DXCOLOR(0.0f,0.0f,1.0f,0.8f);

@@ -80,6 +80,8 @@ class CLocusEffect  : public Cform
 		D3DXVECTOR3 PosBuff[BUFFER_MAX];
 		D3DXCOLOR ColorBuff[BUFFER_MAX];
 		bool		m_bFlag;
+		SHADER_SET	shaderSet;				//シェーダー情報
+
 
 };
 
