@@ -644,7 +644,7 @@ void CGame::Judge()
 	}
 
 	//終了判定  ターン数：時間経過：ゴール入った
-	if ((m_nTurnCount>5) || (m_pTimer->GetTimer() <= 0) || (m_bJudge) && !(m_bChangeFlag))
+	if ((m_pTimer->GetTimer() <= 0) || (m_bJudge) && !(m_bChangeFlag))
 	{
 		CManager::SetgameEndFlag(true);
 
@@ -680,6 +680,7 @@ void CGame::End()
 	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
+		
 		m_nSwitchCount = CHANGE_PHASE;
 	}
 
@@ -689,11 +690,15 @@ void CGame::charachange()
 {
 	//プレイヤー切り換え
 	m_nPlayerNum++;
-
 	//プレイヤーが全部回った
 	if (m_nPlayerNum >= PLAYER_MAX)
 	{
 		m_nPlayerNum = 0;
+	}
+	if (m_pBall[m_nPlayerNum]->GetGoalFlag())m_nPlayerNum--;
+	if (m_nPlayerNum < 0)
+	{
+		m_nPlayerNum = 1;
 	}
 
 	m_pEffect[15]->SetViewFlag(true, 30);
