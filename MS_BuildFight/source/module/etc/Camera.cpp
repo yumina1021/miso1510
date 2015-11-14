@@ -338,9 +338,11 @@ void CCamera :: SceneGame(void)
 	switch (phase)
 	{
 	case START_PHASE:	StartCamera(); break;
-	case SHOT_PHASE:	ShotCamera(); break;
+	case ANGLE_PHASE:	ShotCamera(); break;
+	case POWER_PHASE:	PowerCamera(); break;
 	case MOVE_PHASE:	MoveCamera(); break;
 	case JUDGE_PHASE:	JudgeCamera(); break;
+	case END_PHASE:		JudgeCamera(); break;
 	case CHANGE_PHASE:	ChangeCamera(); break;
 	}
 }
@@ -362,7 +364,7 @@ void CCamera :: Set(LPDIRECT3DDEVICE9 pDevice)
 	pDevice->SetTransform(D3DTS_PROJECTION,&m_mtxProjection);
 }
 //=============================================================================
-// ゲーム
+// キャラクター開始処理
 //=============================================================================
 void CCamera::StartCamera(void)
 {
@@ -393,7 +395,7 @@ void CCamera::StartCamera(void)
 	m_posCameraR = posModel;
 }
 //=============================================================================
-// ゲーム
+// 射出角度設定フェイズ
 //=============================================================================
 void CCamera :: ShotCamera(void)
 {
@@ -418,13 +420,13 @@ void CCamera :: ShotCamera(void)
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
-	m_posPointView = pBall->GetPos();
+	//m_posPointView = pBall->GetPos();
 	m_posCameraP = posModel;
 	m_posCameraR = pBall->GetPos();
 	//m_posCameraP = posModel;
 }
 //=============================================================================
-// ゲーム
+// ボール動いてるなう
 //=============================================================================
 void CCamera::MoveCamera(void)
 {
@@ -451,12 +453,12 @@ void CCamera::MoveCamera(void)
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
-	m_posCameraP = EposModel + D3DXVECTOR3(50.0f,50.0f,50.0f);
+	m_posCameraP = posModel;
 	m_posCameraR = EposModel;
 	//m_posPointView = pBall->GetPos();
 }
 //=============================================================================
-// ゲーム
+// 止まった時のジャッジ
 //=============================================================================
 void CCamera::JudgeCamera(void)
 {
@@ -483,7 +485,38 @@ void CCamera::JudgeCamera(void)
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
-	m_posCameraP = EposModel + D3DXVECTOR3(50.0f, 50.0f, 50.0f);
+	m_posCameraP = posModel;
+	m_posCameraR = EposModel;
+}
+//=============================================================================
+// 力決めだんべ
+//=============================================================================
+void CCamera::PowerCamera(void)
+{
+	//プレイヤーの受け取り
+	CPlayerM *pPlayerM;
+	pPlayerM = CGame::GetPlayer(CGame::GetPlayerCount());
+
+	//プレイヤーの位置＆向き取得
+	D3DXVECTOR3 posModel = pPlayerM->GetPos();
+	D3DXVECTOR3 rotModel = D3DXVECTOR3(0, 0, 0);
+	D3DXVECTOR3 moveModel = D3DXVECTOR3(0, 0, 0);
+
+	//ボールの受け取り
+	CBall *pBall;
+	pBall = CGame::GetBall(CGame::GetPlayerCount());
+
+	m_posCameraP = posModel;
+	m_posCameraR = pBall->GetPos();
+
+	//ボールの位置＆向き取得
+	D3DXVECTOR3 EposModel = pBall->GetPos();
+	D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
+
+	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
+
+	//注視点座標設定
+	m_posCameraP = posModel;
 	m_posCameraR = EposModel;
 }
 //=============================================================================

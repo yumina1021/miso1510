@@ -39,6 +39,7 @@ class CCamera
 		void SceneGame(void);
 		void StartCamera(void);
 		void ShotCamera(void);
+		void PowerCamera(void);
 		void MoveCamera(void);
 		void JudgeCamera(void);
 		void ChangeCamera(void);

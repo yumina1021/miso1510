@@ -151,6 +151,9 @@
     <ClCompile Include="source\module\ui\text_box.cpp">
       <Filter>source\module\ui</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\etc\Goal.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -317,6 +320,9 @@
     </ClInclude>
     <ClInclude Include="source\module\ui\text_box.h">
       <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\Goal.h">
+      <Filter>source\module\etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

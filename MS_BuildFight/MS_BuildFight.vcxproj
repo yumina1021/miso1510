@@ -101,6 +101,7 @@
     <ClCompile Include="source\module\etc\Ball.cpp" />
     <ClCompile Include="source\module\etc\Camera.cpp" />
     <ClCompile Include="source\module\etc\Fade.cpp" />
+    <ClCompile Include="source\module\etc\Goal.cpp" />
     <ClCompile Include="source\module\etc\Light.cpp" />
     <ClCompile Include="source\module\etc\LocusEffect.cpp" />
     <ClCompile Include="source\module\field\Dome.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="source\module\etc\Ball.h" />
     <ClInclude Include="source\module\etc\Camera.h" />
     <ClInclude Include="source\module\etc\Fade.h" />
+    <ClInclude Include="source\module\etc\Goal.h" />
     <ClInclude Include="source\module\etc\Light.h" />
     <ClInclude Include="source\module\etc\LocusEffect.h" />
     <ClInclude Include="source\module\field\Dome.h" />

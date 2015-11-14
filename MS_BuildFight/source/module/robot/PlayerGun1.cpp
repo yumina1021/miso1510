@@ -88,10 +88,7 @@ void CPGunNight1 :: Update(void)
 	CSound	*pSound;
 	pSound = CManager::GetSound();
 
-	CEnemyM *pEnemyM;
-	pEnemyM = CGame::GetEnemy(0);
-
-	D3DXVECTOR3 enemyPos = pEnemyM->GetPos();
+	D3DXVECTOR3 enemyPos = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
 	// ‘O‰ñ‚ÌˆÊ’u‚ð•Û‘¶
 	m_PosOld = m_Pos;

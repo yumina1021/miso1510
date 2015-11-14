@@ -171,9 +171,6 @@ void CformX :: Update(void)
 			pos=pPlayer->GetPos();
 		}else
 		{
-			CEnemyM *pEnemy;
-			pEnemy=CGame::GetEnemy(0);
-			pos=pEnemy->GetPos();
 		}
 		m_Pos.x=pos.x;
 		m_Pos.y=pos.y+100;
