@@ -94,7 +94,7 @@ HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 	m_bFlag = false;
 
 	//ピクセルシェーダー用に変換1
-	Create_PS("source/shader/basicPS.hlsl", "PS_EFFECT", &shaderSet.ps, &shaderSet.psc, m_pDevice);
+	Create_PS("source/shader/basicPS.hlsl", "PS", &shaderSet.ps, &shaderSet.psc, m_pDevice);
 
 	//バーテックスシェーダー用に変換1
 	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet.vs, &shaderSet.vsc, m_pDevice);

@@ -78,6 +78,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\administer\scene\StageSelect.cpp" />
+    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Button.cpp" />
+    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Cursor.cpp" />
     <ClCompile Include="source\administer\Debugproc.cpp" />
     <ClCompile Include="source\administer\FrustumCulling.cpp" />
     <ClCompile Include="source\administer\Input.cpp" />
@@ -131,6 +134,9 @@
     <ClCompile Include="source\module\ui\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\administer\scene\StageSelect.h" />
+    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Button.h" />
+    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Cursor.h" />
     <ClInclude Include="source\administer\data.h" />
     <ClInclude Include="source\administer\Debugproc.h" />
     <ClInclude Include="source\administer\FrustumCulling.h" />

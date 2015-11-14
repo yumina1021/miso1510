@@ -90,11 +90,8 @@ class CGame  : public CScene
 				(b.x - a.x) * (b.x - a.x) +
 				(b.x - a.x) * (b.x - a.x) <= (al + bl) * (al + bl);}
 	private:
-<<<<<<< HEAD
-=======
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
->>>>>>> ohashi_work
 		void TurnStart();		//ターン開始
 		void AngleDecision();	//角度決定開始
 		void PowerDecision();	//打つ力の決定
@@ -102,10 +99,7 @@ class CGame  : public CScene
 		void Judge();			//結果判定
 		void End();				//終了
 		void charachange();		//キャラ変更
-<<<<<<< HEAD
-=======
 		void ObjHitCheck();
->>>>>>> ohashi_work
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ

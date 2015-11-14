@@ -154,6 +154,15 @@
     <ClCompile Include="source\module\etc\Goal.cpp">
       <Filter>source\module\etc</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Button.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Cursor.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\administer\scene\StageSelect.cpp">
+      <Filter>source\administer\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -323,6 +332,15 @@
     </ClInclude>
     <ClInclude Include="source\module\etc\Goal.h">
       <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Button.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Cursor.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\administer\scene\StageSelect.h">
+      <Filter>source\administer\scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

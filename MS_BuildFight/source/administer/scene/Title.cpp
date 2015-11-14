@@ -105,27 +105,6 @@ void CTitle :: Uninit(void)
 //=============================================================================
 void CTitle :: Update(void)
 {
-<<<<<<< HEAD
-	KeyCommand();
-
-	m_pCharPicture[m_nCursor]->SetDiffuse(m_fDiffuse,m_fDiffuse,m_fDiffuse,1.0f);
-
-	//フェードインが終わったら
-	if(m_pFade->GetFade()==FADE_IN_END)
-	{
-		if(m_nCursor==0||m_nCursor==1)
-		{
-			//次のフェーズを変える
-			CScene::SetReplayFlag(false);
-			CManager::SetAfterScene(PHASETYPE_SELECT);
-		}else if(m_nCursor==2)
-		{
-			//次のフェーズを変える
-			CManager::SetAfterScene(PHASETYPE_RESULT);
-		}
-	}
-=======
-
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
@@ -175,8 +154,6 @@ void CTitle :: Update(void)
 	CDebugProc::Print("モード選択:%d\n ※0:ボタン 1:カーソル", m_nType);
 
 #endif
-
->>>>>>> origin/sakai_work
 }
 //=============================================================================
 // 描画
@@ -184,14 +161,6 @@ void CTitle :: Update(void)
 void CTitle :: Draw(void)
 {
 	m_pBackGround->Draw();
-<<<<<<< HEAD
-
-	//文字
-	m_pCharPicture[0]->Draw();
-	m_pCharPicture[1]->Draw();
-	m_pCharPicture[2]->Draw();
-	m_pCharPicture[3]->Draw();
-=======
 	m_pCursor->Draw();
 	//文字
 	for (int i = 0; i < MAX; i++)
@@ -200,7 +169,6 @@ void CTitle :: Draw(void)
 		m_pCharPicture[i]->Draw();
 
 	}
->>>>>>> origin/sakai_work
 
 	//フェード
 	m_pFade->Draw();
@@ -221,90 +189,6 @@ void CTitle::KeyCommand(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//エンターキーが押された場合
-<<<<<<< HEAD
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z))
-	{
-		//カーソルが合っているコマンドを発動
-		switch (m_nCursor)
-		{
-			//スタート
-		case 0:	m_bChangeFlag = true;
-			//pSound->Play(SOUND_LABEL_SE_SELECT001);
-			if (m_pFade->GetPlayFade() == false)
-			{
-				m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-				CScene::SetVSFlag(false);
-			}
-			break;
-			//VS
-		case 1:	m_bChangeFlag = true;
-			//pSound->Play(SOUND_LABEL_SE_SELECT001);
-			if (m_pFade->GetPlayFade() == false)
-			{
-				m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-				CScene::SetVSFlag(true);
-			}
-			break;
-			//コンフィグ
-		case 2:	m_bChangeFlag = true;
-			//pSound->Play(SOUND_LABEL_SE_SELECT001);
-			if (m_pFade->GetPlayFade() == false)
-			{
-				m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-			}
-			break;
-			//エンド
-		case 3:	m_bChangeFlag = false;
-			//pSound->Play(SOUND_LABEL_SE_SELECT001);
-			GameEnd();
-			break;
-
-		default: break;
-		}
-	}
-	else if (m_bChangeFlag != true)
-	{
-		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pInputKeyboard->GetKeyTrigger(DIK_UP))
-		{
-			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-			m_nCursor--;
-			//pSound->Play(SOUND_LABEL_SE_SELECT000);
-			if (m_nCursor<0)
-			{
-				m_nCursor = 3;
-			}
-		}
-		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pInputKeyboard->GetKeyTrigger(DIK_DOWN))
-		{
-			m_pCharPicture[m_nCursor]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-			m_nCursor++;
-			//pSound->Play(SOUND_LABEL_SE_SELECT000);
-			if (m_nCursor>3)
-			{
-				m_nCursor = 0;
-			}
-		}
-	}
-	if (pInputKeyboard->GetKeyTrigger(DIK_F5))
-	{
-		if (CManager::Getnight0PlayFlag() == true)
-		{
-			CManager::Setnight0PlayFlag(false);
-		}
-		else
-		{
-			CManager::Setnight0PlayFlag(true);
-		}
-	}
-
-	m_fDiffuse -= 0.01f;
-
-	if (m_fDiffuse<0.5f)
-	{
-		m_fDiffuse = 1.0f;
-	}
-}
-=======
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
 
@@ -468,5 +352,4 @@ void CTitle::UpdateFade(void)
 		}
 	}
 }
->>>>>>> origin/sakai_work
 /////////////EOF////////////

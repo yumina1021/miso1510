@@ -82,21 +82,6 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//サウンド再生の作成
 	//pSound->Play(SOUND_LABEL_BGM004);
 
-<<<<<<< HEAD
-	m_bChangeFlag=false;
-	m_nCursor=0;
-
-	m_fDiffuse=1.0f;
-
-	m_bVsSelectFlag = CScene::GetVSFlag();
-
-	m_bTitleBackFlag=false;
-
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
-	m_bSendData=false;
-	m_bChangeFlag = false;
-=======
->>>>>>> origin/sakai_work
 	return S_OK;
 }
 //=============================================================================
@@ -148,11 +133,7 @@ void CSelect :: Update(void)
 	if (m_nType == SELECT_TYPE::TYPE_BUTTON)
 	{
 		SelectByButton();
-<<<<<<< HEAD
-=======
 		m_pCursor->SyncCharPos(m_pCharPicture[m_nCursor]->GetPos());
-
->>>>>>> origin/sakai_work
 	}
 	// カーソル移動
 	else if (m_nType == SELECT_TYPE::TYPE_CURSOR)
@@ -380,13 +361,8 @@ void CSelect::SelectByCursor(void){
 
 		}
 	}
-<<<<<<< HEAD
-	// 左クリックしたら
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
-=======
 	// 決定ボタンを押したら
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
->>>>>>> origin/sakai_work
 	{
 
 		// どれかのキャラボタンに乗っかっていたら

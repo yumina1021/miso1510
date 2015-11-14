@@ -54,12 +54,9 @@ class CTitle  : public CScene
 		void Draw(void);					//•`‰æ
 	private:
 		void KeyCommand(void);				//“ü—ÍŒn
-<<<<<<< HEAD
-=======
 		void SelectByCursor(void);
 		void ChangeState(void);
 		void UpdateFade();
->>>>>>> origin/sakai_work
 
 		CBackGround*	m_pBackGround;		//”wŒi
 		CFade*			m_pFade;			//ƒtƒF[ƒh
