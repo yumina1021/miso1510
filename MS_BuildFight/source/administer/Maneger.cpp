@@ -412,6 +412,22 @@ void CManager :: Update(void)
 		pSurface->Release();
 		filename = NULL;
 	}
+	if (m_pKeyboard->GetKeyTrigger(DIK_F5))
+	{
+		SetAfterScene(PHASETYPE_TITLE);
+	}
+	if (m_pKeyboard->GetKeyTrigger(DIK_F6))
+	{
+		SetAfterScene(PHASETYPE_SELECT);
+	}
+	if (m_pKeyboard->GetKeyTrigger(DIK_F7))
+	{
+		SetAfterScene(PHASETYPE_STAGE_SELECT);
+	}
+	if (m_pKeyboard->GetKeyTrigger(DIK_F8))
+	{
+		SetAfterScene(PHASETYPE_RESULT);
+	}
 }
 //=============================================================================
 // •`‰æ
