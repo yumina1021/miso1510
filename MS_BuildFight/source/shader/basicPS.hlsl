@@ -88,3 +88,10 @@ float4 PS_SHADOW(float4 diffuse : COLOR0, float2 uv : TEXCOORD0, float4 uvx : TE
 {
 	return tex2D(shadowSampler, uv);
 }
+/////////////////////////////////////////////////////////
+// エフェクト用
+/////////////////////////////////////////////////////////
+float4 PS_EFFECT(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
+{
+	return diffuse;
+}

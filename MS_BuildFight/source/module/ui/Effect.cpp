@@ -14,7 +14,7 @@
 //*****************************************************************************
 const LPSTR CEffect::m_apTextureName[]=
 {
-	"data/TEXTURE/effect001.png",
+	"data/TEXTURE/circuit.png",
 	"data/TEXTURE/effect002.png",
 	"data/TEXTURE/effect003.png",
 	"data/TEXTURE/effect000.png",

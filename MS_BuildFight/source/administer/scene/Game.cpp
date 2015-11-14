@@ -150,6 +150,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pEffect[m_nPnum] = CEffect::Create(pDevice, (EffectNum)m_nPnum, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[(m_nEnum + 5)] = CEffect::Create(pDevice, (EffectNum)(m_nEnum + 5), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+	m_pEffect[0] = CEffect::Create(pDevice, effect001, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 	m_pEffect[10] = CEffect::Create(pDevice, effect000, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[11] = CEffect::Create(pDevice, effect002, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[12]=CEffect::Create(pDevice,Gtimeout,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
@@ -256,6 +258,8 @@ void CGame :: Update(void)
 			break;
 		}
 	}
+
+	m_pEffect[0]->SetViewFlag(true, 1);
 
 	CDebugProc::Print(" X = %f\n Y = %f\n Z = %f\n", m_MovePow.x, m_MovePow.y, m_MovePow.z);
 
@@ -440,6 +444,7 @@ void CGame :: Draw(void)
 		m_pCountBoost->Draw();
 		m_pTimer->Draw();
 
+		m_pEffect[0]->Draw();
 		m_pEffect[m_nPnum]->Draw();
 		m_pEffect[(m_nEnum + 5)]->Draw();
 

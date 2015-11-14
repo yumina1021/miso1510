@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -78,9 +78,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\administer\scene\StageSelect.cpp" />
-    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Button.cpp" />
-    <ClCompile Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Cursor.cpp" />
+    <ClCompile Include="source\administer\scene\StageSelect.cpp" />
+    <ClCompile Include="source\module\ui\Button.cpp" />
+    <ClCompile Include="source\module\ui\Cursor.cpp" />
     <ClCompile Include="source\administer\Debugproc.cpp" />
     <ClCompile Include="source\administer\FrustumCulling.cpp" />
     <ClCompile Include="source\administer\Input.cpp" />
@@ -134,9 +134,9 @@
     <ClCompile Include="source\module\ui\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\administer\scene\StageSelect.h" />
-    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Button.h" />
-    <ClInclude Include="C:\Users\ha-tomoki\Documents\miso1510\MS_BuildFight\source\module\ui\Cursor.h" />
+    <ClInclude Include="source\administer\scene\StageSelect.h" />
+    <ClInclude Include="source\module\ui\Button.h" />
+    <ClInclude Include="source\module\ui\Cursor.h" />
     <ClInclude Include="source\administer\data.h" />
     <ClInclude Include="source\administer\Debugproc.h" />
     <ClInclude Include="source\administer\FrustumCulling.h" />
