@@ -22,6 +22,7 @@ typedef enum			//フェーズの種類
 	PHASETYPE_TITLE =0,
 	PHASETYPE_TUTRIAL,
 	PHASETYPE_SELECT,
+	PHASETYPE_STAGE_SELECT,
 	PHASETYPE_LOAD,
 	PHASETYPE_GAME,
 	PHASETYPE_RESULT,
@@ -93,6 +94,9 @@ class CManager
 		static void Setnight0PlayFlag(bool pause){m_night0PlayFlag =pause;};
 		static bool Getnight0PlayFlag(void){return m_night0PlayFlag;};
 
+		static void SetSetWndHandle(HWND paramWnd){ m_hwnd = paramWnd; };
+		static HWND GetSetWndHandle(void){ return m_hwnd; };
+
 		int SetRenderTargets(float width, float height);
 		void RemoveRenderTargets(int i);
 		RenderTagets* GetRenderTargets(int i){ return m_renderTargets[i]; };
@@ -123,6 +127,7 @@ class CManager
 
 		static PHASETYPE		m_phaseType;		//現在のフェーズタイプ
 		static PHASETYPE		m_afterSceneType;	//次のフェーズタイプ
+		static HWND				m_hwnd;
 
 #ifdef _DEBUG
 		static  CDebugProc *m_pDebugProc;			//デバッグ処理へのポインタ
