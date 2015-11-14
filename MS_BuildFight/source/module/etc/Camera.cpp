@@ -339,11 +339,7 @@ void CCamera :: SceneGame(void)
 	{
 	case START_PHASE:	StartCamera(); break;
 	case ANGLE_PHASE:	ShotCamera(); break;
-<<<<<<< HEAD
-	case POWER_PHASE:	ShotCamera(); break;
-=======
 	case POWER_PHASE:	PowerCamera(); break;
->>>>>>> ohashi_work
 	case MOVE_PHASE:	MoveCamera(); break;
 	case JUDGE_PHASE:	JudgeCamera(); break;
 	case END_PHASE:		JudgeCamera(); break;
