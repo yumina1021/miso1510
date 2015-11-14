@@ -32,6 +32,7 @@ class CIcon;
 class CDome;
 class CDomeU;
 class CBall;
+class CGoal;
 
 enum GAME_PHASE
 {
@@ -60,7 +61,6 @@ class CGame  : public CScene
 		void Restart(void);							//再開
 
 		static CPlayerM *GetPlayer(int id){ return m_pPlayer[id]; };
-		static CEnemyM *GetEnemy(int iD){ return m_pEnemy; };
 		static int GetStartCount(void){ return m_nGameStartCount; };
 		static void SetStartCount(int nchange){ m_nGameStartCount = nchange; };
 		static bool	GetReplay(void){ return m_bReplayFlag; };
@@ -84,9 +84,17 @@ class CGame  : public CScene
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
 
 		void SetTimer(int time);
-		
 
+		static bool SphireHit(D3DXVECTOR3 a, float al, D3DXVECTOR3 b, float bl){
+			return (b.x - a.x) * (b.x - a.x) +
+				(b.x - a.x) * (b.x - a.x) +
+				(b.x - a.x) * (b.x - a.x) <= (al + bl) * (al + bl);}
 	private:
+<<<<<<< HEAD
+=======
+		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
+		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
+>>>>>>> ohashi_work
 		void TurnStart();		//ターン開始
 		void AngleDecision();	//角度決定開始
 		void PowerDecision();	//打つ力の決定
@@ -94,12 +102,15 @@ class CGame  : public CScene
 		void Judge();			//結果判定
 		void End();				//終了
 		void charachange();		//キャラ変更
+<<<<<<< HEAD
+=======
+		void ObjHitCheck();
+>>>>>>> ohashi_work
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
 		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
-		static CEnemyM*	 m_pEnemy;			//エネミーのポインタ
 		CEffect*		m_pEffect[16];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
 		CCount*			m_pCountBoost;		//カウントのポインター
@@ -118,6 +129,7 @@ class CGame  : public CScene
 		CDomeU*			m_pDome2;
 		Cform2D*		m_pUI;
 		static CBall*	m_pBall[2];
+		CGoal*			m_pGoal;
 
 		int				m_nCount;
 		int				m_nClearType;

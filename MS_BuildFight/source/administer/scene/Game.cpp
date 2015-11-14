@@ -43,6 +43,7 @@
 
 #include "../../module/etc/Fade.h"
 #include "../../module/etc/Ball.h"
+#include "../../module/etc/Goal.h"
 #include "../../module/etc/LocusEffect.h"
 
 #include "../Debugproc.h"
@@ -56,7 +57,6 @@
 //*****************************************************************************
 //シーン
 CPlayerM *CGame::m_pPlayer[2] = { NULL ,NULL};
-CEnemyM *CGame::m_pEnemy = NULL;
 CBall*	CGame::m_pBall[2];
 
 int CGame::m_nGameStartCount = 0;
@@ -143,20 +143,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	InitUI(pDevice);
 
 	//キャラクターの作成
-	m_nPnum = CScene::GetFrame();
-	m_nEnum = CScene::GetEnemy();
-
-	m_pPlayer[0] = CPlayerM::Create(pDevice, 0,D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	m_pPlayer[0]->SetVsFlag(m_bVsSelectFlag);
-
-	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, -450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
-	//m_pEnemy = CEnemyM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 50, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f), !m_bVsSelectFlag);
-
-	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	ModelInit(pDevice);
 
 	//エフェクトの作成
 
@@ -445,6 +432,7 @@ void CGame :: Draw(void)
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
 
+		m_pGoal->Draw();
 		m_pUI->Draw();
 		m_pScore->Draw();
 		m_pCountBullet->Draw();
@@ -473,7 +461,6 @@ void CGame :: Restart(void)
 	//キャラクターの作成
 	m_pPlayer[0]->Restart(D3DXVECTOR3(0, 30, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pPlayer[1]->Restart(D3DXVECTOR3(0, 30, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEnemy->Restart(D3DXVECTOR3(0,30,-200.0f),D3DXVECTOR3(0.0f,3.14f,0.0f));
 
 	//タイマー（時間）の作成
 	m_nTimerCount=0;
@@ -630,10 +617,10 @@ void CGame::BallMove()
 	// hack プレイヤーと弾の角度から発射向きを算出
 	pos += m_MovePow.x*m_PowerShot;
 
-	m_MovePow *= 0.5;
+	m_MovePow *= 0.8;
 
 	m_pBall[m_nPlayerNum]->SetPos(pos);
-
+	ObjHitCheck();
 	if (m_MovePow.x < SHOT_RIMIT && m_MovePow.y < SHOT_RIMIT && m_MovePow.z < SHOT_RIMIT)
 	{
 		m_pEffect[11]->SetViewFlag(true, 30);
@@ -644,9 +631,9 @@ void CGame::BallMove()
 void CGame::Judge()
 {
 	m_pEffect[12]->SetViewFlag(true, 1);
-
+	ObjHitCheck();
 	//もしゴールしたら終了
-	if ((m_pBall[0]->GetGoalFlag() || m_pBall[1]->GetGoalFlag()) && !m_bJudge)
+	if ((m_pBall[0]->GetGoalFlag() && m_pBall[1]->GetGoalFlag()) && !m_bJudge)
 	{
 		m_bJudge = true;
 	}
@@ -731,6 +718,46 @@ D3DXVECTOR3 CGame::CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player)
 	D3DXVec3Normalize(&Vector, &Vector);
 
 	return Vector;
+}
+//
+void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
+{
+	m_nPnum = CScene::GetFrame();
+	m_nEnum = CScene::GetEnemy();
+
+	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pPlayer[0]->SetVsFlag(m_bVsSelectFlag);
+
+	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, -450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
+
+	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	ObjectInit(pDevice);
+}
+//
+void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
+{
+	// ファイル読みこみに後に変更
+	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 500.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+}
+// 当たり判定
+void CGame::ObjHitCheck()
+{
+	// とりあえずゴールとの当たり判定のみ
+	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
+	D3DXVECTOR3 obj = m_pGoal->GetPos();
+	if (SphireHit(ball, 10.0f, obj, 10.0f))
+	{
+		if (m_nSwitchCount == JUDGE_PHASE)
+		{
+			m_pBall[m_nPlayerNum]->SetGoalFlag(true);
+			CDebugProc::Print("カップインだお\n");
+		}
+	}
 }
 
 
