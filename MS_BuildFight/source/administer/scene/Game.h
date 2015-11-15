@@ -45,7 +45,11 @@ enum GAME_PHASE
 	CHANGE_PHASE,
 	MAX_PHASE,
 };
-
+typedef struct STAGE_STATE
+{
+	D3DXVECTOR3 position;
+	float length;
+};
 class CGame  : public CScene
 {
 	public:
@@ -100,6 +104,7 @@ class CGame  : public CScene
 		void End();				//終了
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
+		void ShotCountAdd(int);
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
@@ -145,6 +150,7 @@ class CGame  : public CScene
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
 		D3DXVECTOR3		m_PowerShot;
+		STAGE_STATE**	m_stagestate;
 };
 
 #endif

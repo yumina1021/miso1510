@@ -206,6 +206,31 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	return S_OK;
 }
+//
+void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
+{
+	m_nPnum = CScene::GetFrame();
+	m_nEnum = CScene::GetEnemy();
+
+	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pPlayer[0]->SetVsFlag(m_bVsSelectFlag);
+
+	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, -450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
+
+	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, 1, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	ObjectInit(pDevice);
+}
+//
+void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
+{
+	// ファイル読みこみに変更予定
+	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 500.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+}
 //=============================================================================
 // 初期化スレッド
 //=============================================================================
@@ -680,7 +705,6 @@ void CGame::End()
 	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
-		
 		m_nSwitchCount = CHANGE_PHASE;
 	}
 
@@ -729,31 +753,6 @@ D3DXVECTOR3 CGame::CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player)
 
 	return Vector;
 }
-//
-void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
-{
-	m_nPnum = CScene::GetFrame();
-	m_nEnum = CScene::GetEnemy();
-
-	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	m_pPlayer[0]->SetVsFlag(m_bVsSelectFlag);
-
-	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, -450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
-
-	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	ObjectInit(pDevice);
-}
-//
-void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
-{
-	// ファイル読みこみに後に変更
-	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 500.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-}
 // 当たり判定
 void CGame::ObjHitCheck()
 {
@@ -765,11 +764,17 @@ void CGame::ObjHitCheck()
 		if (m_nSwitchCount == JUDGE_PHASE)
 		{
 			m_pBall[m_nPlayerNum]->SetGoalFlag(true);
-			CDebugProc::Print("カップインだお\n");
+			CDebugProc::Print("カップイン！！\n");
 		}
 	}
 }
-
+//
+void CGame::ShotCountAdd(int num)
+{
+	int work = m_pBall[m_nPlayerNum]->GetShotNum();
+	work += num;
+	m_pBall[m_nPlayerNum]->SetShotNum(work);
+}
 
 
 

@@ -17,6 +17,10 @@
 const LPSTR CBall::m_ModelName[]=
 {
 	"data/MODEL/ball.x",
+	"data/MODEL/ball.x",
+	"data/MODEL/ball.x",
+	"data/MODEL/ball.x",
+	"data/MODEL/ball.x",
 };
 //=============================================================================
 // コンストラクタ
@@ -65,12 +69,21 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 	m_pLocusEffect->SetFlag(true);
 
 	//ピクセルシェーダー用に変換1
-	Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc, m_pDevice);
+	switch (nType)
+	{
+	case 0:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_ROSA", &shaderSet.ps, &shaderSet.psc, m_pDevice);break;
+	case 1:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_LIRA", &shaderSet.ps, &shaderSet.psc, m_pDevice);break;
+	case 2:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_THEME", &shaderSet.ps, &shaderSet.psc, m_pDevice);break;
+	case 3:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_HAGE", &shaderSet.ps, &shaderSet.psc, m_pDevice); break;
+	default:Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc, m_pDevice); break;
+	}
 
 	//バーテックスシェーダー用に変換1
 	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet.vs, &shaderSet.vsc, m_pDevice);
 
 	CformX::SetShader(shaderSet);
+
+	shot_num = 0;
 
 	return S_OK;
 }

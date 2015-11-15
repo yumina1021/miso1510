@@ -95,3 +95,35 @@ float4 PS_EFFECT(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	return diffuse;
 }
+/////////////////////////////////////////////////////////
+// ローザボールカラー
+/////////////////////////////////////////////////////////
+float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
+{
+	float4 color = float4(1.0f,0.0f,1.0f,1.0f);
+	return color;
+}
+/////////////////////////////////////////////////////////
+// リーラボールカラー
+/////////////////////////////////////////////////////////
+float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
+{
+	float4 color = float4(0.2f, 0.6f, 1.0f, 1.0f);
+	return color;
+}
+/////////////////////////////////////////////////////////
+// テーメボールカラー
+/////////////////////////////////////////////////////////
+float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
+{
+	float4 color = float4(1.0f, 1.0f, 0.0f, 1.0f);
+	return color;
+}
+/////////////////////////////////////////////////////////
+// 禿爺ボールカラー
+/////////////////////////////////////////////////////////
+float4 PS_BALL_HAGE(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
+{
+	float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	return color;
+}

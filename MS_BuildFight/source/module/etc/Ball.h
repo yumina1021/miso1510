@@ -39,6 +39,9 @@ class CBall  : public CformX
 		void SetGoalFlag(bool change){ m_bGoal = change; };
 		bool GetGoalFlag(void){ return m_bGoal; };
 
+		void SetShotNum(int num){ shot_num = num; };
+		int GetShotNum(void){ return shot_num; };
+
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		static const LPSTR	m_ModelName[];			//Modelの名前配列
@@ -46,6 +49,7 @@ class CBall  : public CformX
 		SHADER_SET			shaderSet;				//シェーダー情報
 		bool				m_bGoal;				//ゴールした判定
 		CLocusEffect*		m_pLocusEffect;
+		int					shot_num;
 };
 
 #endif
