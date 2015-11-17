@@ -65,11 +65,14 @@ HRESULT Cform2D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,D3DXVECTOR3 po
 	m_Pos=pos;
 	m_Rot=rot;
 
+	m_fWidth = width;
+	m_fHeight = height;
+
 	//ƒ|ƒŠƒSƒ“‘ÎŠpü‚Ì’·‚³‰Šú‰»
-	m_fLength = sqrtf(((width/2)*(width/2))+((height/2)*(height/2)));
+	m_fLength = sqrtf(((m_fWidth / 2)*(m_fWidth / 2)) + ((m_fHeight / 2)*(m_fHeight / 2)));
 
 	//ƒ|ƒŠƒSƒ“‘ÎŠpü‚ÌŠp“x‰Šú‰»
-	m_fAngle = atan2f((width/2),(height/2));
+	m_fAngle = atan2f((m_fWidth / 2), (m_fHeight / 2));
 
 	D3DXVECTOR3 Setpos[POINT_MAX];					//ƒ|ƒŠƒSƒ“‚ÌˆÊ’u
 	
@@ -216,5 +219,19 @@ void Cform2D :: SetDiffuse(float r,float g,float b,float a)
 void Cform2D::SetTexture(LPSTR pFileName)
 {
 	D3DXCreateTextureFromFile(m_pDevice, pFileName, &m_pD3DTex);
+}
+
+//‘å‚«‚³İ’è
+void Cform2D::SetLength(float width, float height)
+{
+	m_fWidth = width;
+
+	m_fHeight = height;
+
+	//ƒ|ƒŠƒSƒ“‘ÎŠpü‚Ì’·‚³‰Šú‰»
+	m_fLength = sqrtf(((m_fWidth / 2)*(m_fWidth / 2)) + ((m_fHeight / 2)*(m_fHeight / 2)));
+
+	//ƒ|ƒŠƒSƒ“‘ÎŠpü‚ÌŠp“x‰Šú‰»
+	m_fAngle = atan2f((m_fWidth / 2), (m_fHeight / 2));
 }
 /////////////EOF////////////

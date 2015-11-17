@@ -45,11 +45,7 @@ enum GAME_PHASE
 	CHANGE_PHASE,
 	MAX_PHASE,
 };
-typedef struct STAGE_STATE
-{
-	D3DXVECTOR3 position;
-	float length;
-};
+
 class CGame  : public CScene
 {
 	public:
@@ -91,8 +87,8 @@ class CGame  : public CScene
 
 		static bool SphireHit(D3DXVECTOR3 a, float al, D3DXVECTOR3 b, float bl){
 			return (b.x - a.x) * (b.x - a.x) +
-				   (b.y - a.y) * (b.y - a.y) +
-				   (b.z - a.z) * (b.z - a.z) <= (al + bl) * (al + bl);}
+				(b.x - a.x) * (b.x - a.x) +
+				(b.x - a.x) * (b.x - a.x) <= (al + bl) * (al + bl);}
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -104,13 +100,12 @@ class CGame  : public CScene
 		void End();				//終了
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
-		void ShotCountAdd(int);
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
 		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
-		CEffect*		m_pEffect[16];		//エフェクトのポインター
+		CEffect*		m_pEffect[8];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
 		CCount*			m_pCountBoost;		//カウントのポインター
 		CTimer*			m_pTimer;			//タイマーのポインター
@@ -150,7 +145,6 @@ class CGame  : public CScene
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
 		D3DXVECTOR3		m_PowerShot;
-		STAGE_STATE**	m_stagestate;
 };
 
 #endif

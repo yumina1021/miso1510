@@ -47,8 +47,11 @@ HRESULT CGameClear :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_GAMECLEAR);
 
 	//文字の配置
-	m_pEffect[0]=CEffect::Create(pDevice,GameCleareffect001,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[1]=CEffect::Create(pDevice,GameCleareffect002,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	m_pEffect[0] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[1] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pEffect[0]->SetView(true);
+	m_pEffect[1]->SetView(true);
 
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);
@@ -97,10 +100,7 @@ void CGameClear :: Update(void)
 	//エンターキーが押された場合
 	if(pInputKeyboard->GetKeyTrigger(DIK_RETURN)||pInputKeyboard->GetKeyTrigger(DIK_Z))
 	{
-		m_pEffect[m_nCount-1]->SetViewFlag(false,1);
-
-		m_pEffect[m_nCount]->SetViewFlag(true,1000);
-
+		m_pEffect[0]->SetView(false);
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
 
 		if(m_nCount>=1)

@@ -19,7 +19,7 @@
 // マクロ定義
 //*****************************************************************************
 #define POINT_MAX			(4)
-#define POLYGON_WIDTH		(300)
+#define POLYGON_WIDTH		(400)
 #define POLYGON_HEIGHT		(400)
 #define POLYGON_FIRST_X		(0)
 #define POLYGON_FIRST_Y		(0)
@@ -49,6 +49,9 @@ class Cform2D  : public Cform
 		void SetRot(float fx,float fy,float fz){m_Rot.x=fx;m_Rot.y=fy;m_Rot.z=fz;};
 		D3DXVECTOR3 GetRot(void){return m_Rot;};
 
+		void SetLength(float width, float height);
+		D3DXVECTOR2 GetLength(void){return D3DXVECTOR2(m_fWidth, m_fHeight);};
+
 	private:
 		LPDIRECT3DTEXTURE9  	m_pD3DTex;		//テクスチャ表示用
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;	//頂点情報格納ワーク(動的)
@@ -59,6 +62,9 @@ class Cform2D  : public Cform
 
 		float					m_fLength;		//ポリゴン対角線の長さ
 		float					m_fAngle;		//ポリゴン対角線の角度
+		float					m_fWidth;
+		float					m_fHeight;
+
 };
 
 #endif

@@ -47,14 +47,14 @@ HRESULT CTutorial :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TUTORIAL);
 
 	//文字の配置
-	m_pEffect[0]=CEffect::Create(pDevice,Tutorialeffect001,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[1]=CEffect::Create(pDevice,Tutorialeffect002,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[2]=CEffect::Create(pDevice,Tutorialeffect003,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[3]=CEffect::Create(pDevice,Tutorialeffect004,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[4]=CEffect::Create(pDevice,Tutorialeffect005,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[5]=CEffect::Create(pDevice,Tutorialeffect006,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[6]=CEffect::Create(pDevice,Tutorialeffect007,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
-	m_pEffect[7]=CEffect::Create(pDevice,Tutorialeffect008,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	m_pEffect[0] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[1] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[2] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[3] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[4] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[5] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[6] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[7] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);
@@ -103,7 +103,7 @@ void CTutorial :: Update(void)
 	//エンターキーが押された場合
 	if(pInputKeyboard->GetKeyTrigger(DIK_RETURN)||pInputKeyboard->GetKeyTrigger(DIK_Z))
 	{
-		m_pEffect[m_nCount-1]->SetViewFlag(false,1);
+		m_pEffect[m_nCount-1]->SetView(false);
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
 		if(m_nCount>=7)
 		{
@@ -120,7 +120,7 @@ void CTutorial :: Update(void)
 		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
 	}
 
-	m_pEffect[m_nCount]->SetViewFlag(true,1);
+	m_pEffect[m_nCount]->SetView(true);
 
 	//フェードインが終わったら
 	if(m_pFade->GetFade()==FADE_IN_END)

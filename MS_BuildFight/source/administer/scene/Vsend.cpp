@@ -59,11 +59,13 @@ HRESULT CVsend :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	if(vs==true)
 	{
-		m_pEffect=CEffect::Create(pDevice,Glose,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+		m_pEffect = CEffect::Create(pDevice, action, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}else
 	{
-		m_pEffect=CEffect::Create(pDevice,Gwin,D3DXVECTOR3(650.0f,375.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+		m_pEffect = CEffect::Create(pDevice, action, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
+
+	m_pEffect->SetView(true);
 
 	//CReScore::Create(pDevice,score,D3DXVECTOR3(SCREEN_WIDTH/2,450.0f,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
 
@@ -97,8 +99,6 @@ void CVsend :: Update(void)
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
-
-	m_pEffect->SetViewFlag(true,1);
 
 	//フェードの開始
 	if(pInputKeyboard->GetKeyTrigger(DIK_RETURN)||pInputKeyboard->GetKeyTrigger(DIK_Z))
