@@ -206,7 +206,7 @@ void CEffect::FadeIn(int time, EFFECT_FADE type)
 {
 	m_effectPhase = FADE_IN;
 	m_FadeType = type;
-	D3DXVECTOR2 start = Cform2D::GetLength()*0.5f;
+	D3DXVECTOR2 start = Cform2D::GetLengthWH()*0.5f;
 	D3DXVECTOR3 pos = m_firstPos;
 
 	switch (m_FadeType)
@@ -234,7 +234,7 @@ void CEffect::FadeOut(int time, EFFECT_FADE type)
 {
 	m_effectPhase = FADE_OUT;
 	m_FadeType = type;
-	D3DXVECTOR2 start = Cform2D::GetLength()*0.5f;
+	D3DXVECTOR2 start = Cform2D::GetLengthWH()*0.5f;
 	D3DXVECTOR3 pos = m_firstPos;
 
 	m_startPos = D3DXVECTOR2(pos.x, pos.y);

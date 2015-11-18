@@ -50,7 +50,9 @@ class Cform2D  : public Cform
 		D3DXVECTOR3 GetRot(void){return m_Rot;};
 
 		void SetLength(float width, float height);
-		D3DXVECTOR2 GetLength(void){return D3DXVECTOR2(m_fWidth, m_fHeight);};
+		D3DXVECTOR2 GetLengthWH(void){ return D3DXVECTOR2(m_fWidth, m_fHeight); };
+		void SetLength(float length){ m_fLength = length; };
+		float GetLength(void){ return m_fLength; };
 
 	private:
 		LPDIRECT3DTEXTURE9  	m_pD3DTex;		//テクスチャ表示用

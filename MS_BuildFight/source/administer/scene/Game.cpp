@@ -540,7 +540,7 @@ void CGame::AngleDecision()
 
 	m_pEffect[1]->SetRot(0.0f, 0.0f, z);
 
-	D3DXVECTOR2 len = m_pEffect[1]->GetLength();
+	D3DXVECTOR2 len = m_pEffect[1]->GetLengthWH();
 
 	len.x += 2.0f;
 	len.y += 2.0f;
