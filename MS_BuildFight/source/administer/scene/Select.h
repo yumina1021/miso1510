@@ -12,6 +12,8 @@
 //*****************************************************************************
 #include "scene.h"
 
+const int MAX_CURSOR(2);
+
 //*****************************************************************************
 // 列挙体定義
 //*****************************************************************************
@@ -44,6 +46,12 @@ class CSelect  : public CScene
 
 	};
 
+	struct SELECT_CURSOR
+	{
+		int			nSelect;	//カーソル
+		CCursor*	pCursor;	//メニュー用
+		bool		bDecisionFlg;
+	};
 	public:
 		CSelect(void);			//コンストラクタ
 		~CSelect(void);			//デストラクタ
@@ -53,24 +61,26 @@ class CSelect  : public CScene
 		void Update(void);						//更新
 		void Draw(void);						//描画
 
-		void SelectByButton(void);		//キーボードでの選択
-		void SelectByCursor(void);		//カール移動での選択
-		void UpdateFade(void);			//フェードの更新
-		void ChangeButton(void);		// ボタンの遷移
+		void SelectByKeyboardPlayer1(void);		//キーボードでの選択
+		void SelectByKeyboardPlayer2(void);		//キーボードでの選択
+		void SelectByCursor(void);				//カール移動での選択
+		void UpdateFade(void);					//フェードの更新
+		void ChangeButton(void);				// ボタンの遷移
+		void CheckSelectAllCorsor(int nParamDecisionCursor);// 全カーソルが選択したかどうかの検査
+		void CheckSelectOverlapCorsor(int nParamDecisionCursor);// 重複したカーソルがあるかどうかの検査
 
 	private:
 		CBackGround*	m_pBackGround;								//背景
 		CFade*			m_pFade;									//フェード
 		CButton*		m_pCharPicture[CHARCTER_TYPE::TYPE_MAX];	//メニュー用
-		CCursor*		m_pCursor;									//メニュー用
 
-		int			m_nCursor;			//カーソル
-		bool		m_bChangeFlag;		//切り換えフラグ
-		float		m_fDiffuse;			//アニメーション用
-		bool		m_bVsSelectFlag;	//VSモード用
-		bool		m_bTitleBackFlag;	//タイトルに行きました
-		bool		m_bSendData;		//相手データが送られた
-		SELECT_TYPE	m_nType;
+		bool			m_bChangeFlag;		//切り換えフラグ
+		float			m_fDiffuse;			//アニメーション用
+		bool			m_bVsSelectFlag;	//VSモード用
+		bool			m_bTitleBackFlag;	//タイトルに行きました
+		bool			m_bSendData;		//相手データが送られた
+		SELECT_TYPE		m_nType;
+		SELECT_CURSOR	m_Select[2];
 };
 
 #endif

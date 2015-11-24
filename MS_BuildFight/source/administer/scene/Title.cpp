@@ -27,7 +27,7 @@
 #define MENU_X	(SCREEN_WIDTH/2)	//メニューのX位置
 #define MENU_Y	(450.0f)			//メニューのY位置
 
-#define MENU_WIDTH	(600)			//メニューの横サイズ
+#define MENU_WIDTH	(400)			//メニューの横サイズ
 #define MENU_HEIGHT	(100)			//メニューの縦サイズ
 
 //=============================================================================
@@ -42,9 +42,9 @@ m_nType(SELECT_TYPE::TYPE_BUTTON)
 	m_pBackGround = NULL;
 	m_pFade = NULL;
 	m_pCharPicture[0] = { };
-	//m_pCharPicture[1] = { };
-	//m_pCharPicture[2] = { };
-	//m_pCharPicture[3] = { };
+	m_pCharPicture[1] = { };
+	m_pCharPicture[2] = { };
+	m_pCharPicture[3] = { };
 }
 //=============================================================================
 // デストラクタ
@@ -62,8 +62,12 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
 	//文字の配置
-	m_pCharPicture[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X, 630.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 32, 32);
+	m_pCharPicture[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X, 450.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pCharPicture[VS_MODE] = CButton::Create(pDevice, t_vs, D3DXVECTOR3(MENU_X, MENU_Y + 75.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pCharPicture[TUTORIAL] = CButton::Create(pDevice, t_tutorial, D3DXVECTOR3(MENU_X, MENU_Y + (75.0f * 2), 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pCharPicture[GAME_END] = CButton::Create(pDevice, t_end, D3DXVECTOR3(MENU_X, MENU_Y + (75.0f * 3), 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pCursor[0] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 64, 64);
+	m_pCursor[1] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 64, 64);
 
 	// 選択状態にしておく
 	m_pCharPicture[m_nCursor]->SetButtonState(BUTTON_STATE::SELECTED);
@@ -121,7 +125,7 @@ void CTitle :: Update(void)
 	else if (pInputKeyboard->GetKeyTrigger(DIK_2)
 		&& m_bChangeFlag == false)
 	{
-		m_pCursor->SetTime(0.0f);
+		m_pCursor[0]->SetTime(0.0f);
 		m_nType = SELECT_TYPE::TYPE_CURSOR;
 
 	}
@@ -129,7 +133,7 @@ void CTitle :: Update(void)
 	if (m_nType == SELECT_TYPE::TYPE_BUTTON)
 	{
 		KeyCommand();
-		m_pCursor->SyncCharPos(m_pCharPicture[m_nCursor]->GetPos());
+		m_pCursor[0]->SyncCharPos(m_pCharPicture[m_nCursor]->GetPos());
 
 	}
 	// カーソル移動
@@ -158,7 +162,14 @@ void CTitle :: Update(void)
 void CTitle :: Draw(void)
 {
 	m_pBackGround->Draw();
-	m_pCursor->Draw();
+
+	//文字
+	for (int i = 0; i < 2; i++)
+	{
+
+		m_pCursor[i]->Draw();
+
+	}
 	//文字
 	for (int i = 0; i < MAX; i++)
 	{
@@ -194,8 +205,8 @@ void CTitle::KeyCommand(void)
 	}
 	else if (m_bChangeFlag != true)
 	{
-		/*
-		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pInputKeyboard->GetKeyTrigger(DIK_UP))
+
+		if (pInputKeyboard->GetKeyTrigger(DIK_W))
 		{
 			m_nCursor--;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -205,7 +216,7 @@ void CTitle::KeyCommand(void)
 			}
 
 		}
-		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pInputKeyboard->GetKeyTrigger(DIK_DOWN))
+		else if (pInputKeyboard->GetKeyTrigger(DIK_S))
 		{
 			m_nCursor++;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -215,7 +226,6 @@ void CTitle::KeyCommand(void)
 				m_nCursor = GAME_START;
 			}
 		}
-		*/
 	}
 
 }
@@ -225,7 +235,7 @@ void CTitle::KeyCommand(void)
 void CTitle::SelectByCursor(void){
 
 	// 変数定義
-	D3DXVECTOR3 tmpCurPos = m_pCursor->GetPos();
+	D3DXVECTOR3 tmpCurPos = m_pCursor[0]->GetPos();
 	D3DXVECTOR3 tmpCharPos(0.0f, 0.0f, 0.0f);
 	bool tmpOnFlg(false);
 	D3DXVECTOR3 tmpCursorLen(0.0f, 0.0f, 0.0f);
@@ -242,7 +252,7 @@ void CTitle::SelectByCursor(void){
 		tmpCharPos = m_pCharPicture[i]->GetPos();
 
 		// 矩形でのあたり判定
-		if (CCursor::HitChkRect(tmpCurPos, tmpCharPos, m_pCursor->GetLen(), m_pCharPicture[i]->GetLen()))
+		if (CCursor::HitChkRect(tmpCurPos, tmpCharPos, m_pCursor[0]->GetLen(), m_pCharPicture[i]->GetLen()))
 		{
 
 			// 当たっていることを記録
@@ -273,7 +283,7 @@ void CTitle::SelectByCursor(void){
 	}// if
 	else if (m_bChangeFlag != true)
 	{
-		m_pCursor->MoveByKeybord();
+		m_pCursor[0]->MoveByKeybord();
 	}
 
 
