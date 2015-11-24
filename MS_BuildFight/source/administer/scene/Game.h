@@ -48,6 +48,22 @@ enum GAME_PHASE
 	MAX_PHASE,
 };
 
+class OBB
+{
+protected:
+	D3DXVECTOR3 m_Pos;				// 位置
+	D3DXVECTOR3 m_NormaDirect[3];	// 方向ベクトル
+	FLOAT m_fLength[3];				// 各軸方向の長さ
+
+public:
+	D3DXVECTOR3 GetDirect(int elem){ return m_NormaDirect[elem]; };	// 指定軸番号の方向ベクトルを取得
+	FLOAT GetLen_W(int elem){ return m_fLength[elem]; };			// 指定軸方向の長さを取得
+	D3DXVECTOR3 GetPos_W(){ return m_Pos; };				// 位置を取得
+	void SetDirect(int elem, D3DXVECTOR3 normal){ m_NormaDirect[elem] = normal; };	// 指定軸番号の方向ベクトルを取得
+	void SetLen_W(int elem, float length){ m_fLength[elem] = length; };			// 指定軸方向の長さを取得
+	void SetPos_W(D3DXVECTOR3 pos){ m_Pos = pos; };				// 位置を取得
+};
+
 class CGame  : public CScene
 {
 	public:
@@ -87,6 +103,7 @@ class CGame  : public CScene
 			return (b.x - a.x) * (b.x - a.x) +
 				(b.y - a.y) * (b.y - a.y) +
 				(b.z - a.z) * (b.z - a.z) <= (al + bl) * (al + bl);}
+		static bool ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length);
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -99,6 +116,7 @@ class CGame  : public CScene
 		void End();				//終了
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
+
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ

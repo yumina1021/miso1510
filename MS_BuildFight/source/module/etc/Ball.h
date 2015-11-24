@@ -42,6 +42,11 @@ class CBall  : public CformX
 		void SetShotNum(int num){ shot_num = num; };
 		int GetShotNum(void){ return shot_num; };
 
+		void AddForce(D3DXVECTOR3 Force, D3DXVECTOR3 Position);
+		void AddForce(D3DXVECTOR3 Force);
+
+		D3DXVECTOR3 GetVelocity(void){ return m_MovVelocity; }
+		void SetVelocity(D3DXVECTOR3 vel){ m_MovVelocity = vel; }
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		static const LPSTR	m_ModelName[];			//Modelの名前配列
@@ -50,6 +55,13 @@ class CBall  : public CformX
 		bool				m_bGoal;				//ゴールした判定
 		CLocusEffect*		m_pLocusEffect;
 		int					shot_num;
+
+		float m_Mass;
+		float m_MOI;
+		float m_MovResist;
+		float m_RotResist;
+		D3DXVECTOR3 m_MovVelocity;
+		D3DXVECTOR3 m_RotVelocity;
 };
 
 #endif

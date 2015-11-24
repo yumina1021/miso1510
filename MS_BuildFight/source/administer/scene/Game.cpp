@@ -50,7 +50,7 @@
 #include "../../exten_common.h"
 
 #define PLAYER_MAX	(2)	//プレイヤー数
-#define SHOT_RIMIT	(0.001f)
+#define SHOT_RIMIT	(0.05f)
 #define PLAYER_DISTANCE	(100.0f)
 //*****************************************************************************
 // グローバル変数
@@ -710,23 +710,18 @@ void CGame:: PowerDecision()
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
 		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
-		m_nSwitchCount=MOVE_PHASE;
+		m_nSwitchCount = MOVE_PHASE;
+		m_pBall[m_nPlayerNum]->AddForce(m_MovePow.x*m_PowerShot);
 	}
 }
 //弾移動
 void CGame::BallMove()
 {
-	//スピードによって球が移動
-	D3DXVECTOR3 pos = m_pBall[m_nPlayerNum]->GetPos();
-	// hack プレイヤーと弾の角度から発射向きを算出
-	pos += m_MovePow.x*m_PowerShot;
-
-	m_MovePow *= 0.8;
-
-	m_pBall[m_nPlayerNum]->SetPos(pos);
+	D3DXVECTOR3 velocity = m_pBall[m_nPlayerNum]->GetVelocity();
 	ObjHitCheck();
-	if (m_MovePow.x < SHOT_RIMIT && m_MovePow.y < SHOT_RIMIT && m_MovePow.z < SHOT_RIMIT)
+	if (velocity.x < SHOT_RIMIT && velocity.y < SHOT_RIMIT && velocity.z < SHOT_RIMIT)
 	{
+		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
 	}
 }
@@ -856,6 +851,43 @@ void CGame::ObjHitCheck()
 			CDebugProc::Print("カップインだお\n");
 		}
 	}
+}
+//
+// OBB vs 球
+//
+bool CGame::ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length)
+{
+
+	OBB obb;
+	D3DXMATRIX matRot;
+	D3DXMatrixRotationYawPitchRoll(&matRot, objrot.y, objrot.x, objrot.z);
+	obb.SetDirect(0, D3DXVECTOR3(matRot._11, matRot._12, matRot._13));
+	obb.SetDirect(1, D3DXVECTOR3(matRot._21, matRot._22, matRot._23));
+	obb.SetDirect(2, D3DXVECTOR3(matRot._31, matRot._32, matRot._33));
+	//obb1.SetPos_W(m_pos + m_speed);
+	obb.SetPos_W(objpos);
+
+	obb.SetLen_W(0, objsize.x);
+	obb.SetLen_W(1, objsize.y);
+	obb.SetLen_W(2, objsize.z);
+
+	D3DXVECTOR3 Vec(0, 0, 0);   // 最終的に長さを求めるベクトル
+	float length;
+	// 各軸についてはみ出た部分のベクトルを算出
+	for (int i = 0; i<3; i++)
+	{
+		FLOAT L = obb.GetLen_W(i);
+		if (L <= 0) continue;  // L=0は計算できない
+		FLOAT s = D3DXVec3Dot(&(sphire_pos - obb.GetPos_W()), &obb.GetDirect(i)) / L;
+
+		// sの値から、はみ出した部分があればそのベクトルを加算
+		s = fabs(s);
+		if (s > 1)	Vec += (1 - s)*L*obb.GetDirect(i);   // はみ出した部分のベクトル算出
+	}
+
+	length = D3DXVec3Length(&Vec);   // 長さを出力
+
+	return length < sphire_length;
 }
 
 

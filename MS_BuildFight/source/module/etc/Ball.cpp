@@ -85,6 +85,13 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 
 	shot_num = 0;
 
+	m_MovVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_RotVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Mass = 1.0f;
+	m_MOI = 100.0f;
+	m_MovResist = 0.02f;
+	m_RotResist = 0.02f;
+
 	CformX::SetTexture("data/TEXTURE/tama.jpg", 0);
 
 	return S_OK;
@@ -104,6 +111,12 @@ void CBall :: Uninit(void)
 //=============================================================================
 void CBall :: Update(void)
 {
+	m_MovVelocity -= m_MovVelocity * m_MovResist;
+	m_RotVelocity -= m_RotVelocity * m_RotResist;
+
+	D3DXVECTOR3 pos = CformX::GetPos();
+	pos += m_MovVelocity;
+	CformX::SetPos(pos);
 	//エフェクトに座標設定
 	m_pLocusEffect->SetPosBuffer(CformX::GetPos());
 	m_pLocusEffect->SetPos(CformX::GetPos());
@@ -121,5 +134,25 @@ void CBall :: Draw(void)
 		m_pLocusEffect->Draw();
 		CformX::Draw();
 	}
+}
+//=============================================================================
+// 物理演算
+//=============================================================================
+void CBall::AddForce(D3DXVECTOR3 Force, D3DXVECTOR3 Position)
+{
+	m_MovVelocity += Force / m_Mass;
+	D3DXVECTOR3 vec, torq;
+	vec = Position - CformX::GetPos();
+	D3DXVec3Cross(&torq, &vec, &Force);
+	m_RotVelocity += torq / m_MOI;
+}
+//=============================================================================
+// 物理演算
+//=============================================================================
+void CBall::AddForce(D3DXVECTOR3 force)
+{
+	D3DXVECTOR3 acc;
+	acc = force / m_Mass;
+	m_MovVelocity += acc;
 }
 /////////////EOF////////////
