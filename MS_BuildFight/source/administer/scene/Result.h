@@ -22,7 +22,8 @@ class CScenario;
 class Cform2D;
 class CManager;
 
-#define BLIZZARD_MAX (500)		//紙吹雪の枚数
+#define BLIZZARD_MAX (20)		//紙吹雪の枚数
+
 
 enum RESULT_TYPE
 {
@@ -48,6 +49,10 @@ class CResult  : public CScene
 		void TieGame();		//引き分け
 		void PaperBlizzard(float min,float max);	//紙吹雪
 	private:
+		void _UpdateBlizzard(void);
+		void _UpdateFade(void);
+
+
 		CBackGround* m_pBackGround;				//背景
 		CFade*		m_pFade;					//フェード
 		CReScore*	m_pRescore[4];				//スコア用
@@ -60,7 +65,10 @@ class CResult  : public CScene
 		D3DXVECTOR2 m_Vector[BLIZZARD_MAX];		//紙吹雪の向き
 		RESULT_TYPE m_ResultType;				//勝敗
 		static const LPSTR	m_apTextureName[];	//紙吹雪のテクスチャ
-
+		float m_a;
+		int m_cnt;
+		float m_MaxSpeed;
+		bool m_BlizzardFlag;		//紙吹雪開始フラグ
 };
 
 #endif
