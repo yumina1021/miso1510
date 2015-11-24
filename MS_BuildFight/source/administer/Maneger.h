@@ -94,8 +94,14 @@ class CManager
 		static void Setnight0PlayFlag(bool pause){m_night0PlayFlag =pause;};
 		static bool Getnight0PlayFlag(void){return m_night0PlayFlag;};
 
-		static void SetSetWndHandle(HWND paramWnd){ m_hwnd = paramWnd; };
-		static HWND GetSetWndHandle(void){ return m_hwnd; };
+		static void SetWndHandle(HWND paramWnd){ m_hwnd = paramWnd; };
+		static HWND GetWndHandle(void){ return m_hwnd; };
+
+		static void SetSelectMap(int paramMap){ m_nSelectMap = paramMap; };
+		static int GetSelectMap(void){ return m_nSelectMap; };
+
+		static void SetSelectChar(int paramSetPlayer, int paramMap){ m_nSelectChar[paramSetPlayer] = paramMap; };
+		static int  GetSelectChar(int paramSetPlayer){ return m_nSelectChar[paramSetPlayer]; };
 
 		int SetRenderTargets(float width, float height);
 		void RemoveRenderTargets(int i);
@@ -147,6 +153,8 @@ class CManager
 		LPDIRECT3DPIXELSHADER9 _ps[3];			//ピクセルシェーダー
 		LPD3DXCONSTANTTABLE    _psc[3];		//ピクセルシェーダー用コンスタントテーブル
 
+		static int				m_nSelectMap;		//選んだマップ
+		static int				m_nSelectChar[2];	//選んだキャラ
 };
 
 #endif

@@ -66,7 +66,7 @@ class CTitle  : public CScene
 		bool			m_bChangeFlag;		//シーン切替フラグ
 		float			m_fDiffuse;			//メニューアニメーション用
 		SELECT_TYPE		m_nType;
-		CCursor*		m_pCursor;			//メニュー用
+		CCursor*		m_pCursor[2];			//メニュー用
 
 };
 
