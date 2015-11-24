@@ -50,9 +50,7 @@ class CCursor : public CCharPicture
 		void SetTime(float paramTime){ m_Time = paramTime; };	// ƒLƒƒƒ‰‚ÌÀ•W‚Æ“¯Šú‚³‚¹‚é
 
 		static void RadianRot(float& paramRot);
-		static D3DXVECTOR3 EsasingNone(D3DXVECTOR3 paramMinPos,
-										D3DXVECTOR3 paramMaxPos,
-										float paramTime);
+		static float EsasingNone(float paramMin, float paramMax, float paramTime);
 		
 		static bool HitChkRect(const D3DXVECTOR3& paramPos1,
 			const D3DXVECTOR3& paramPos2,

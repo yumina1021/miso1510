@@ -111,7 +111,7 @@ void CCursor::MoveByKeybord(void){
 	POINT tmpPointPos;
 	D3DXVECTOR3 tmpPos(GetPos());
 
-	HWND tmpWnd = CManager::GetSetWndHandle();
+	HWND tmpWnd = CManager::GetWndHandle();
 
 	GetCursorPos(&tmpPointPos);
 	ScreenToClient(tmpWnd, &tmpPointPos);
@@ -146,7 +146,11 @@ void CCursor::SyncCharPos(D3DXVECTOR3 paramSyncPos){
 
 	D3DXVECTOR3 tmpPos(GetPos());
 
-	SetPos(EsasingNone(tmpPos, paramSyncPos, m_Time));
+	tmpPos.x = EsasingNone(tmpPos.x, paramSyncPos.x, m_Time);
+	tmpPos.y = EsasingNone(tmpPos.y, paramSyncPos.y, m_Time);
+	tmpPos.z = EsasingNone(tmpPos.z, paramSyncPos.z, m_Time);
+
+	SetPos(tmpPos);
 
 	if (m_Time >= 1.0f)
 	{
@@ -175,7 +179,7 @@ void CCursor::RadianRot(float& paramRot)
 //=============================================================================
 // Easingèàóù
 //=============================================================================
-D3DXVECTOR3 CCursor::EsasingNone(D3DXVECTOR3 paramMinPos, D3DXVECTOR3 paramMaxPos, float paramTime){
+float CCursor::EsasingNone(float paramMin, float paramMax, float paramTime){
 
 	// ê¸å`
 	//return (paramMaxPos - paramMinPos)* paramTime + paramMinPos;
@@ -195,7 +199,7 @@ D3DXVECTOR3 CCursor::EsasingNone(D3DXVECTOR3 paramMinPos, D3DXVECTOR3 paramMaxPo
 
 	}
 
-	return (paramMaxPos - paramMinPos) * tmpRet + paramMinPos;
+	return (paramMax - paramMin) * tmpRet + paramMin;
 	
 }
 /////////////EOF////////////
