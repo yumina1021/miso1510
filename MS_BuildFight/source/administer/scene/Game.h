@@ -33,10 +33,12 @@ class CDome;
 class CDomeU;
 class CBall;
 class CGoal;
+class CScenario;
 
 enum GAME_PHASE
 {
 	START_PHASE = 0,
+	SCENARIO_PHASE,
 	ANGLE_PHASE,
 	POWER_PHASE,
 	MOVE_PHASE,
@@ -73,12 +75,8 @@ class CGame  : public CScene
 		Cform3D *Getform3D(void){ return m_pform3D; };
 		CEffect *GetEffect(int id){ return m_pEffect[id]; };
 		CScore *GetScore(void){ return m_pScore; };
-		CTimer *GetTimer(void){ return m_pTimer; };
-		CCount *GetCountBullet(void){ return m_pCountBullet; };
-		CCount *GetCountBoost(void){ return m_pCountBoost; };
-		CCount *GetCountOver(void){ return m_pCountOver; };
-		CGauge *GetGauge(void){ return m_pGauge; };
-		CGauge *GetGaugeEnemy(void){ return m_pGaugeEnemy; };
+		CCount *GetCountPar(void){ return m_pCountPar; };
+		CCount *GetCountShot(void){ return m_pCountShot; };
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
@@ -93,6 +91,7 @@ class CGame  : public CScene
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
 		void TurnStart();		//ターン開始
+		void GameScenario();	//茶番
 		void AngleDecision();	//角度決定開始
 		void PowerDecision();	//打つ力の決定
 		void BallMove();		//弾移動
@@ -105,14 +104,12 @@ class CGame  : public CScene
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
 		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
-		CEffect*		m_pEffect[8];		//エフェクトのポインター
+		CEffect*		m_pEffect[9];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
-		CCount*			m_pCountBoost;		//カウントのポインター
-		CTimer*			m_pTimer;			//タイマーのポインター
-		CCount*			m_pCountBullet;		//カウントのポインター
-		CCount*			m_pCountOver;		//カウントのポインター
-		CGauge*			m_pGauge;			//ゲージのポインター
-		CGauge*			m_pGaugeEnemy;		//ゲージのポインター
+
+		CCount*			m_pCountPar;		//パーポインター
+		CCount*			m_pCountShot;		//打数ポインター
+
 		CBackGround*	m_pBackGround;
 		CFade*			m_pFade;
 		CCharPicture*	m_pCharPicture[3];
@@ -124,6 +121,8 @@ class CGame  : public CScene
 		Cform2D*		m_pUI;
 		static CBall*	m_pBall[2];
 		CGoal*			m_pGoal;
+		CGauge*			m_pGauge;
+		CScenario*		m_pScenario;
 
 		int				m_nCount;
 		int				m_nClearType;

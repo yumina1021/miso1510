@@ -29,6 +29,7 @@ typedef enum
 	Tutoriale,
 	ready1,
 	ready2,
+	gage,
 	/*
 	Eeffect002,
 	Eeffect003,

@@ -23,6 +23,8 @@ const LPSTR CEffect::m_apTextureName[]=
 	"data/TEXTURE/tutrial.jpg",
 	"data/TEXTURE/ready1.png",
 	"data/TEXTURE/ready2.png",
+	"data/TEXTURE/gage5.png",
+
 	/*
 	"data/TEXTURE/Enemyeffect001.png",
 	"data/TEXTURE/Enemyeffect002.png",

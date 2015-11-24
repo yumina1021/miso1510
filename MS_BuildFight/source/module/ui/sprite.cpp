@@ -136,8 +136,6 @@ void Sprite::Draw(const D3DXMATRIX& matrix,SHADER_SET shader_)
 
 	D3DXMATRIX wvp = world_matrix*view_matrix*proj_matrix;
 
-	device_->SetTransform(D3DTS_WORLD, &world_matrix);
-
 	shader_.vsc->SetMatrix(device_, "gWvp", &wvp);
 	shader_.vsc->SetVector(device_, "MatDiffuse", (D3DXVECTOR4*)&color_);
 

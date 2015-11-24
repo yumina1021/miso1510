@@ -43,7 +43,7 @@ HRESULT CNumber :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXCOLOR colo
 	m_pDevice=pDevice;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/number000.png",&m_pD3DTex);
+	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/number001.png",&m_pD3DTex);
 
 	//頂点バッファの生成(メモリの確認)
 	if(FAILED(m_pDevice->CreateVertexBuffer(sizeof(VERTEX_2D)*POINT_MAX,

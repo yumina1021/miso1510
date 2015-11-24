@@ -224,6 +224,7 @@ void CSelect::SelectByButton(void)
 
 		// 選択したキャラを保存
 		CScene::SetFrame(m_nCursor);
+		CScene::SetEnemy(rand() % 3);
 		//pSound->PlayVoice(m_nCursor,VOICE_LABEL_SE_START);
 
 		if (m_bVsSelectFlag == false)
@@ -373,6 +374,7 @@ void CSelect::SelectByCursor(void){
 
 			// 選択したキャラを保存
 			CScene::SetFrame(m_nCursor);
+			CScene::SetEnemy(rand() % 3);
 			//pSound->PlayVoice(m_nCursor,VOICE_LABEL_SE_START);
 
 			if (m_bVsSelectFlag == false)

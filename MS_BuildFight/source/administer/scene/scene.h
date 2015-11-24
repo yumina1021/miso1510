@@ -46,8 +46,8 @@ class CScene
 	protected:
 
 	private:
-		int		m_nSelectFrame;
-		int		m_nSelectEnemy;
+		int		m_nSelectFrame=0;
+		int		m_nSelectEnemy=0;
 		int		m_nSelectMap;
 		int		m_nGameTime;
 		int		m_nGameScore;

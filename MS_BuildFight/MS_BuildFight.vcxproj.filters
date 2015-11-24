@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -342,6 +342,9 @@
     <ClInclude Include="source\administer\scene\StageSelect.h">
       <Filter>source\administer\scene</Filter>
     </ClInclude>
+    <ClInclude Include="source\module\ui\Scenario\GameScenario.h">
+      <Filter>source\module\ui\Scenario</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -376,6 +379,9 @@
     </Filter>
     <Filter Include="source\module\etc">
       <UniqueIdentifier>{e6135403-b361-449f-90f0-af9bc863cfb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\ui\Scenario">
+      <UniqueIdentifier>{e8d154f0-8743-4a02-846a-5e41f6e7f4ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

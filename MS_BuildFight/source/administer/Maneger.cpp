@@ -126,6 +126,9 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	m_nCountform = 0;
 	m_bWirerFlag = false;
 
+	m_nFrameNum = 0;
+	m_nEnemyNum = 0;
+
 	m_hwnd = hWnd;
 
 	return S_OK;
@@ -511,6 +514,8 @@ void CManager::ChangeScene(void)
 							break;
 							//次のフェーズがセレクト
 			case PHASETYPE_STAGE_SELECT:
+							m_nFrameNum = m_pScene->GetFrame();
+							m_nEnemyNum = m_pScene->GetEnemy();
 							replay = m_pScene->GetReplayFlag();
 							vs = m_pScene->GetVSFlag();
 							m_pScene->Uninit();
@@ -526,8 +531,6 @@ void CManager::ChangeScene(void)
 							break;
 			//次のフェーズがゲーム
 			case PHASETYPE_GAME:
-							frame=m_pScene->GetFrame();
-							enemy=m_pScene->GetEnemy();
 							map=m_pScene->GetMap();
 							time=m_pScene->GetTime();
 							score=m_pScene->GetScore();
@@ -539,8 +542,8 @@ void CManager::ChangeScene(void)
 							m_pScene=NULL;
 							m_pScene = new CGame();
 
-							m_pScene->SetFrame(frame);
-							m_pScene->SetEnemy(enemy);
+							m_pScene->SetFrame(m_nFrameNum);
+							m_pScene->SetEnemy(m_nEnemyNum);
 							m_pScene->SetMap(map);
 							m_pScene->SetTime(time);
 							m_pScene->SetScore(score);

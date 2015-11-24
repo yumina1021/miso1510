@@ -2,11 +2,17 @@
 sampler texSampler;
 sampler texSampler2;
 sampler shadowSampler;
+sampler texSamplerCube;
 
+float3 LightDir;
+float4 MatDiffuse;
+float3 CameraVec;
 float2 ScreenResolution;
 
 float4 gColor;
 float gValue;
+
+float4 cubeMap(sampler cubemap, float3 toEye, float3 normalW);
 
 /////////////////////////////////////////////////////////
 // 通常（テクスチャー）
@@ -101,7 +107,7 @@ float4 PS_EFFECT(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(1.0f,0.0f,1.0f,1.0f);
-	return color;
+	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
 // リーラボールカラー
@@ -109,7 +115,7 @@ float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(0.2f, 0.6f, 1.0f, 1.0f);
-	return color;
+	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
 // テーメボールカラー
@@ -117,7 +123,7 @@ float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(1.0f, 1.0f, 0.0f, 1.0f);
-	return color;
+	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
 // 禿爺ボールカラー
@@ -125,5 +131,41 @@ float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_HAGE(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	return color;
+	return tex2D(texSampler, uv)*color;
+}
+/////////////////////////////////////////////////////////
+// ゴールリング用
+/////////////////////////////////////////////////////////
+float4 PS_GOAL(float4 diffuse : COLOR0) : COLOR0
+{
+	return float4(diffuse.rgb, 0.5f);
+}
+/////////////////////////////////////////////////////////
+// ゴールリング用
+/////////////////////////////////////////////////////////
+float4 PS_GOAL_LING(float4 diffuse : COLOR0, float3 normal : TEXCOORD1, float3 worldPos : TEXCOORD2) : COLOR0
+{
+
+	float3 toEye;
+
+	normal = normalize(normal);
+
+	toEye = normalize(CameraVec - worldPos);
+
+	float4 cubeColor = cubeMap(texSamplerCube, toEye, normal);
+
+	float4 color = cubeColor*0.4 + MatDiffuse*0.6;
+
+	return float4(color.xyz, 1.0f);
+
+}
+
+//キューブマップ
+float4 cubeMap(sampler cubemap, float3 toEye, float3 normalW)
+{
+	float3 envVec = reflect(-toEye, normalW);
+
+	float4 envColor = texCUBE(cubemap, envVec);
+
+	return envColor;
 }

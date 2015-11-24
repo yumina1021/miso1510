@@ -14,6 +14,9 @@
 #include "../../form/form2D.h"
 
 #include "../../administer/Input.h"
+
+#include "Scenario\GameScenario.h"
+
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -38,23 +41,27 @@ CScenario :: ~CScenario(void)
 //=============================================================================
 // 生成
 //=============================================================================
-CScenario *CScenario::Create(LPDIRECT3DDEVICE9 pDevice,bool viewflag)
+CScenario *CScenario::Create(LPDIRECT3DDEVICE9 pDevice, Character chara,bool viewflag)
 {
 	CScenario *pScenario;
 
 	pScenario = new CScenario();
-	pScenario->Init(pDevice, viewflag);
+	pScenario->Init(pDevice,chara, viewflag);
 
 	return pScenario;
 }
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CScenario::Init(LPDIRECT3DDEVICE9 pDevice, bool viewflag)
+HRESULT CScenario::Init(LPDIRECT3DDEVICE9 pDevice, Character chara, bool viewflag)
 {
 	m_pDevice = pDevice;
 
 	m_ViewFlag = viewflag;
+
+	m_charaType = CHARA_LILA;
+
+	m_bScenarioEndFlag = false;
 
 	//フィールドの初期化
 	m_CCharacter = CCharacter::Create(m_pDevice, 0, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -64,12 +71,6 @@ HRESULT CScenario::Init(LPDIRECT3DDEVICE9 pDevice, bool viewflag)
 	//文字表示
 	m_textbox = new TextBox(m_pDevice, FontTexture::TYPE_MEIRYO, 60);
 	m_textbox->Initialize();
-
-	m_CCharacter->SetFacialType(FACIAL_HAWAWA);
-
-	m_textbox->__position(D3DXVECTOR2(210, 590));
-	m_textbox->__show_speed(10);
-	m_textbox->Print("わわわっ！\nわわわわわっ！");
 
 	return S_OK;
 }
@@ -88,44 +89,6 @@ void CScenario :: Uninit(void)
 //=============================================================================
 void CScenario::Update(CInputKeyboard* input)
 {
-	//キーボードインプットの受け取り
-	if (input->GetKeyTrigger(DIK_1))
-	{
-		m_CCharacter->SetFacialType(FACIAL_SMILE);
-
-		m_textbox->Clear();
-		m_textbox->__position(D3DXVECTOR2(210, 590));
-		m_textbox->__show_speed(10);
-		m_textbox->Print("えへへ");
-	}
-	if (input->GetKeyTrigger(DIK_2))
-	{
-		m_CCharacter->SetFacialType(FACIAL_SMILE2);
-
-		m_textbox->Clear();
-		m_textbox->__position(D3DXVECTOR2(210, 590));
-		m_textbox->__show_speed(10);
-		m_textbox->Print("わははははは");
-	}
-	if (input->GetKeyTrigger(DIK_3))
-	{
-		m_CCharacter->SetFacialType(FACIAL_STAR);
-
-		m_textbox->Clear();
-		m_textbox->__position(D3DXVECTOR2(210, 590));
-		m_textbox->__show_speed(10);
-		m_textbox->Print("なのです!", D3DXCOLOR(1.0f, 0.8f, 0.0f, 1.0f));
-	}
-	if (input->GetKeyTrigger(DIK_4))
-	{
-		m_CCharacter->SetFacialType(FACIAL_ANGERY);
-
-		m_textbox->Clear();
-		m_textbox->__position(D3DXVECTOR2(210, 590));
-		m_textbox->__show_speed(10);
-		m_textbox->Print("あ？", D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	}
-
 	m_CCharacter->Update();
 }
 //=============================================================================
@@ -140,6 +103,71 @@ void CScenario :: Draw(void)
 
 		m_textbox->Draw();
 
+	}
+}
+//=============================================================================
+// ゲーム内でのシナリオ
+//=============================================================================
+void CScenario::GameScenario(int count, GameAffair affair)
+{
+	if (m_nCount <= count)
+	{
+		GameScenarioData data;
+
+		m_nCount = count;
+
+		switch (affair)
+		{
+			case AFFAIR_START :
+				switch (m_charaType)
+				{
+				case 0:data = scenario_rosa_start[m_nCount]; break;
+				case 1:data = scenario_lila_start[m_nCount]; break;
+				case 2:data = scenario_ojyo_start[m_nCount]; break;
+				case 3:data = scenario_tutorial_start[m_nCount]; break;
+				}
+			break;
+			case AFFAIR_WIN:
+				switch (m_charaType)
+				{
+				case 0:data = scenario_rosa_win[m_nCount]; break;
+				case 1:data = scenario_lila_win[m_nCount]; break;
+				case 2:data = scenario_ojyo_win[m_nCount]; break;
+				case 3:data = scenario_tutorial_win[m_nCount]; break;
+				}
+			break;
+			case AFFAIR_LOSE:
+				switch (m_charaType)
+				{
+				case 0:data = scenario_rosa_lose[m_nCount]; break;
+				case 1:data = scenario_lila_lose[m_nCount]; break;
+				case 2:data = scenario_ojyo_lose[m_nCount]; break;
+				case 3:data = scenario_tutorial_lose[m_nCount]; break;
+				}
+			break;
+			case AFFAIR_HALF:
+				switch (m_charaType)
+				{
+				case 0:data = scenario_rosa_harf[m_nCount]; break;
+				case 1:data = scenario_lila_harf[m_nCount]; break;
+				case 2:data = scenario_ojyo_harf[m_nCount]; break;
+				case 3:data = scenario_tutorial_harf[m_nCount]; break;
+				}
+			break;
+		}
+
+		if (data.lastflag == true)
+		{
+			m_bScenarioEndFlag = true;
+		}
+
+		//キーボードインプットの受け取り
+		m_CCharacter->SetFacialType(data.type);
+
+		m_textbox->Clear();
+		m_textbox->__position(D3DXVECTOR2(data.x, data.y));
+		m_textbox->__show_speed(data.speed);
+		m_textbox->Print(data.font);
 	}
 }
 /////////////EOF////////////

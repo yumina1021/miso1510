@@ -37,9 +37,9 @@ class CTitle  : public CScene
 	enum BUTTON_TYPE : int
 	{
 		GAME_START = 0,
-		VS_MODE,
-		TUTORIAL,
-		GAME_END,
+		//VS_MODE,
+		//TUTORIAL,
+		//GAME_END,
 		MAX,
 
 	};

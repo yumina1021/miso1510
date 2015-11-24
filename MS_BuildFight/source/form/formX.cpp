@@ -15,6 +15,7 @@
 #include "../module/etc/Camera.h"
 #include "../administer/Maneger.h"
 #include "../exten_common.h"
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -119,6 +120,11 @@ HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)
 		m_pD3DTex[0]=NULL;
 	}
 
+	// キューブテクスチャの読み込み
+	D3DXCreateCubeTextureFromFile(pDevice,					// デバイスへのポインタ
+		"data/TEXTURE/sky.dds",		// ファイルの名前
+		&m_pD3DTextureCube);		// 読み込むメモリー
+
 	m_bEnemyFlag=false;
 
 	//ピクセルシェーダー用に変換1
@@ -142,6 +148,13 @@ void CformX :: Uninit(void)
 			m_pD3DTex[i]=NULL;
 		}
 	}
+
+	if (m_pD3DTextureCube != NULL)
+	{// マテリアルの開放
+		m_pD3DTextureCube->Release();
+		m_pD3DTextureCube = NULL;
+	}
+
 	if(m_pD3DXMeshModel!=NULL)
 	{
 		m_pD3DXMeshModel->Release();
@@ -160,55 +173,39 @@ void CformX :: Uninit(void)
 //=============================================================================
 void CformX :: Update(void)
 {
-	if(m_bDeathFlag)
-	{
-		D3DXVECTOR3 pos;
 
-		if(m_bEnemyFlag==false)
-		{
-			CPlayerM *pPlayer;
-			pPlayer=CGame::GetPlayer(0);
-			pos=pPlayer->GetPos();
-		}else
-		{
-		}
-		m_Pos.x=pos.x;
-		m_Pos.y=pos.y+100;
-		m_Pos.z=pos.z;
-
-		if(m_nDeathCount>1240)
-		{
-			m_nDeathCount=0;
-			this->Uninit();
-		}else
-		{
-			m_nDeathCount++;
-		}
-	}
 	//正規化
-	m_rotDestModel.y=Rotation_Normalizer(m_rotDestModel.y);
+	m_rotDestModel.x = Rotation_Normalizer(m_rotDestModel.x);
+	m_rotDestModel.y = Rotation_Normalizer(m_rotDestModel.y);
+	m_rotDestModel.z = Rotation_Normalizer(m_rotDestModel.z);
 
-	float fDiffRotY;
+	D3DXVECTOR3 fDiffRot;
 
 	//目的の向きへの差
-	fDiffRotY = m_rotDestModel.y - m_Rot.y;
+	fDiffRot = m_rotDestModel - m_Rot;
 
 	//謎の回転回避用
-	if((fDiffRotY<-(D3DX_PI))||(fDiffRotY>(D3DX_PI)))
+	if ((fDiffRot.x<-(D3DX_PI)) || (fDiffRot.x>(D3DX_PI)))
 	{
-		fDiffRotY *= -1;
+		fDiffRot.x *= -1;
+	}
+	if ((fDiffRot.y<-(D3DX_PI)) || (fDiffRot.y>(D3DX_PI)))
+	{
+		fDiffRot.y *= -1;
+	}
+	if ((fDiffRot.z<-(D3DX_PI)) || (fDiffRot.z>(D3DX_PI)))
+	{
+		fDiffRot.z *= -1;
 	}
 
 	//変更値代入
-	m_Rot.y += fDiffRotY*0.15f;
-	//正規化
-	m_Rot.y = Rotation_Normalizer(m_Rot.y);
+	m_Rot += fDiffRot*0.015f;
 
-	//高さ
-	if(m_Pos.y<0)
-	{
-		m_Pos.y=0.00001f;
-	}
+	//正規化
+	m_Rot.x = Rotation_Normalizer(m_Rot.x);
+	m_Rot.y = Rotation_Normalizer(m_Rot.y);
+	m_Rot.z = Rotation_Normalizer(m_Rot.z);
+
 }
 //=============================================================================
 // 描画
@@ -220,14 +217,14 @@ void CformX::Draw(void)
 	D3DXMATERIAL *pD3DXMat;
 	D3DMATERIAL9 matDef;
 	D3DXMATRIX world, view, proj, rot, pos;
-	D3DXMATRIX invWorld;
+	D3DXMATRIX invWorld, invTransWorld;
 
 	//ビュー行列
 	D3DXVECTOR3 eye(0.0f, 50.0f, -100.0f);
 	D3DXVECTOR3 at(0.0f, 20.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 
-	D3DXVECTOR3 lightVec(0.20f, 0.0f, 0.80f);
+	D3DXVECTOR3 lightVec(m_Pos.x - 0.20f, m_Pos.y - 0.0f, m_Pos.z- 0.80f);
 	D3DXCOLOR   lightDiffuse(0.8f, 0.8f, 0.8f, 1.0f);
 	D3DXCOLOR   lightDiffuse2(0.8f, 0.4f, 0.4f, 1.0f);
 	D3DXCOLOR   lightAmbient(0.5f, 0.5f, 0.5f, 1.0f);
@@ -248,6 +245,9 @@ void CformX::Draw(void)
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &pos);
 
 	D3DXMatrixInverse(&invWorld, NULL, &m_mtxWorld);
+	D3DXMatrixInverse(&invTransWorld, NULL, &m_mtxWorld);
+	D3DXMatrixTranspose(&invTransWorld, &invTransWorld);
+
 	D3DXVec3TransformCoord(&lightVec, &lightVec, &invWorld);
 
 	D3DXMatrixLookAtLH(&view, &eye, &at, &up);
@@ -261,7 +261,7 @@ void CformX::Draw(void)
 	D3DXVec3Normalize(&lightVec, &lightVec);
 
 	// ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	//m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	//デフォルトのマテリアル情報取得
 	m_pDevice->GetMaterial(&matDef);
@@ -269,12 +269,14 @@ void CformX::Draw(void)
 
 	m_shader.vsc->SetMatrix(m_pDevice, "world", &m_mtxWorld);
 	m_shader.vsc->SetMatrix(m_pDevice, "gWvp", &wvp);
+	m_shader.vsc->SetMatrix(m_pDevice, "worldInvTranspose", &invTransWorld);
 
-	m_shader.vsc->SetFloatArray(m_pDevice, "LightDir", (float*)&lightVec, 3);
+	m_shader.psc->SetFloatArray(m_pDevice, "CameraVec", (float*)&cameraVec, 3);
+	m_shader.psc->SetFloatArray(m_pDevice, "LightDir", (float*)&lightVec, 3);
+
 	m_shader.vsc->SetVector(m_pDevice, "LightDiffuse", (D3DXVECTOR4*)&lightDiffuse);
 	m_shader.vsc->SetVector(m_pDevice, "LightDiffuse2", (D3DXVECTOR4*)&lightDiffuse2);
 	m_shader.vsc->SetVector(m_pDevice, "LightAmbient", (D3DXVECTOR4*)&lightAmbient);
-	m_shader.vsc->SetFloatArray(m_pDevice, "CameraVec", (float*)&cameraVec, 3);
 	m_shader.vsc->SetFloatArray(m_pDevice, "Pos", (float*)&eye, 3);
 
 	if (m_pD3DTex[0] != NULL)
@@ -287,10 +289,15 @@ void CformX::Draw(void)
 		m_pDevice->SetTexture(0, NULL);		//テクスチャは使わない
 	}
 
+	unsigned int s0;
+	s0 = m_shader.psc->GetSamplerIndex("texSamplerCube");
+	m_pDevice->SetTexture(s0, m_pD3DTextureCube);
+
 	//マテリアルの個数分ループ
 	for (int nCntMat = 0; nCntMat<(int)m_nNumMatModel; nCntMat++)
 	{
 		m_shader.vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
+		m_shader.psc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
 		m_shader.vsc->SetVector(m_pDevice, "MatAmbient", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Ambient);
 		m_pDevice->SetVertexShader(m_shader.vs);
 		m_pDevice->SetPixelShader(m_shader.ps);
@@ -300,6 +307,8 @@ void CformX::Draw(void)
 
 	//マテリアルをもとに戻す！
 	m_pDevice->SetMaterial(&matDef);
+
+	m_pDevice->SetVertexShader(NULL);
 	m_pDevice->SetPixelShader(NULL);
 
 }

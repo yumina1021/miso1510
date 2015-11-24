@@ -60,6 +60,8 @@ class CformX  : public Cform
 	private:
 
 		LPDIRECT3DTEXTURE9	m_pD3DTex[TEXTURE_MAX];	//テクスチャ表示用
+		LPDIRECT3DCUBETEXTURE9 m_pD3DTextureCube;	// テクスチャ読み込み場所
+
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)	
 
 		D3DXMATRIX			m_MtxView;				//ビューマトリクス

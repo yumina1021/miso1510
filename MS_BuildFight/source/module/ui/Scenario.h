@@ -28,16 +28,37 @@ class CInputKeyboard;
 class CScenario
 {
 	public:
+		enum Character
+		{
+			CHARA_ROSA = 0,
+			CHARA_LILA,
+			CHARA_OJYOU,
+			CHARA_TUTORIAL,
+			CHARA_ALL
+		};
+		enum GameAffair
+		{
+			AFFAIR_START = 0,
+			AFFAIR_WIN,
+			AFFAIR_LOSE,
+			AFFAIR_HALF,
+			AFFAIR_ALL
+		};
+
 		CScenario();//コンストラクタ
 		~CScenario(void);//デストラクタ
 
-		static CScenario *Create(LPDIRECT3DDEVICE9 pDevice, bool viewflag);
+		static CScenario *Create(LPDIRECT3DDEVICE9 pDevice, Character chara, bool viewflag);
 
-		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, bool viewflag);//初期化
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, Character chara, bool viewflag);//初期化
 		void Uninit(void);//終了
 		void Update(CInputKeyboard* input);//更新
 		void Draw(void);//描画
-		void SetViewFlag(bool change,int time){m_ViewFlag=change;m_nCount=time;};
+
+		void SetViewFlag(bool change, int start){ m_ViewFlag = change; m_nCount = start; };
+		void SetScenarioEndFlag(bool change){ m_bScenarioEndFlag = change; };
+		bool GetScenarioEndFlag(void){ return m_bScenarioEndFlag; };
+		void GameScenario(int count, GameAffair affair);
 
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
@@ -46,6 +67,9 @@ class CScenario
 		CCharacter*			m_CCharacter;
 		Cform2D*			m_window;
 		TextBox*			m_textbox;
+		Character			m_charaType;
+		GameAffair			m_affair;
+		bool				m_bScenarioEndFlag;
 };
 
 #endif

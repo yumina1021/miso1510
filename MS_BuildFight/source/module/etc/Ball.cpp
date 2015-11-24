@@ -85,6 +85,8 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 
 	shot_num = 0;
 
+	CformX::SetTexture("data/TEXTURE/tama.jpg", 0);
+
 	return S_OK;
 }
 //=============================================================================

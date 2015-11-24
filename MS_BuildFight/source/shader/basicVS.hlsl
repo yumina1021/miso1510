@@ -2,6 +2,7 @@
 float4x4 gWvp;
 float4x4 oldWvp;
 float4x4 world;
+float4x4 worldInvTranspose;
 
 float3 LightDir;
 float4 LightDiffuse;
@@ -27,9 +28,7 @@ void VS(in float3 inPos : POSITION0,
 	float4 PosH = mul(float4(inPos, 1.0f), gWvp);
 	outPos = PosH;
 
-	float light = dot(inNormal, -LightDir)*0.5f + 0.5;
 	outColor = MatDiffuse;
-	outColor.a = 1.0f;
 	outUV = inUV;
 
 	float d = distance(Pos, inPos);	//カメラから
@@ -144,5 +143,37 @@ void VS_SHADOW(in float3 inPos : POSITION0,
 
 	outUV.x = (PlayerPos.x - inPos.x)*0.02f + 0.25f;
 	outUV.y = (PlayerPos.z - inPos.z)*0.02f + 0.5f;
+}
+////////////////////////////////////////
+//シャドウバッファ
+////////////////////////////////////////
+void VS_GOAL(in float3 inPos : POSITION0,
+			out float4 outPos : POSITION,
+			out float4 outColor : COLOR0)
+{
+	float4 PosH = mul(float4(inPos, 1.0f), gWvp);
+	outPos = PosH;
 
+	outColor = MatDiffuse;
+	outColor.a = 0.5f;
+}
+////////////////////////////////////////
+//シャドウバッファ
+////////////////////////////////////////
+void VS_GOAL_LING(in float3 inPos : POSITION0,
+	in float3 inNormal : NORMAL0,
+	out float4 outPos : POSITION,
+	out float4 outColor : COLOR0,
+	out float3 outNormal : TEXCOORD1,
+	out float3 outWorldPos : TEXCOORD2)
+{
+	float4 PosH = mul(float4(inPos, 1.0f), gWvp);
+
+	outPos = PosH;
+
+	outWorldPos = mul(float4(inPos, 1.0f), world);
+
+	outNormal = mul(inNormal, (float3x3)worldInvTranspose);
+
+	outColor = MatDiffuse;
 }

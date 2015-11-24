@@ -22,6 +22,16 @@ typedef enum
 {
 	FACIAL_NORMAL = 0,
 	FACIAL_SMILE,
+	FACIAL_ANGERY,
+	FACIAL_SAD,
+	FACIAL_NONE,
+	FACIAL_Max
+}FasialType;
+/*
+typedef enum
+{
+	FACIAL_NORMAL = 0,
+	FACIAL_SMILE,
 	FACIAL_SMILE2,
 	FACIAL_SMILE3,
 	FACIAL_SMILE4,
@@ -36,6 +46,7 @@ typedef enum
 	FACIAL_SAD,
 	FACIAL_Max
 }FasialType;
+*/
 //*****************************************************************************
 // ƒNƒ‰ƒX’è‹`
 //*****************************************************************************
@@ -63,6 +74,7 @@ class CCharacter  : public Cform2D
 		bool				m_ViewFlag;
 		FasialType			m_facialType;
 		FasialType			m_facialTypeOld;
+		char*				m_nCharaPas;
 };
 
 #endif

@@ -49,7 +49,7 @@ HRESULT CScore :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot
 	m_Pos=pos;
 	m_Rot=rot;
 
-	m_nScore=900;
+	m_nScore=0;
 
 	for(int i=0;i<FIGURE_MAX;i++)
 	{

@@ -27,7 +27,7 @@
 #define MENU_X	(SCREEN_WIDTH/2)	//メニューのX位置
 #define MENU_Y	(450.0f)			//メニューのY位置
 
-#define MENU_WIDTH	(400)			//メニューの横サイズ
+#define MENU_WIDTH	(600)			//メニューの横サイズ
 #define MENU_HEIGHT	(100)			//メニューの縦サイズ
 
 //=============================================================================
@@ -42,9 +42,9 @@ m_nType(SELECT_TYPE::TYPE_BUTTON)
 	m_pBackGround = NULL;
 	m_pFade = NULL;
 	m_pCharPicture[0] = { };
-	m_pCharPicture[1] = { };
-	m_pCharPicture[2] = { };
-	m_pCharPicture[3] = { };
+	//m_pCharPicture[1] = { };
+	//m_pCharPicture[2] = { };
+	//m_pCharPicture[3] = { };
 }
 //=============================================================================
 // デストラクタ
@@ -62,10 +62,7 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
 	//文字の配置
-	m_pCharPicture[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X, 450.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCharPicture[VS_MODE] = CButton::Create(pDevice, t_vs, D3DXVECTOR3(MENU_X, MENU_Y + 75.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCharPicture[TUTORIAL] = CButton::Create(pDevice, t_tutorial, D3DXVECTOR3(MENU_X, MENU_Y + (75.0f * 2), 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCharPicture[GAME_END] = CButton::Create(pDevice, t_end, D3DXVECTOR3(MENU_X, MENU_Y + (75.0f * 3), 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pCharPicture[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X, 630.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
 	m_pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 32, 32);
 
 	// 選択状態にしておく
@@ -197,7 +194,7 @@ void CTitle::KeyCommand(void)
 	}
 	else if (m_bChangeFlag != true)
 	{
-
+		/*
 		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pInputKeyboard->GetKeyTrigger(DIK_UP))
 		{
 			m_nCursor--;
@@ -218,6 +215,7 @@ void CTitle::KeyCommand(void)
 				m_nCursor = GAME_START;
 			}
 		}
+		*/
 	}
 
 }

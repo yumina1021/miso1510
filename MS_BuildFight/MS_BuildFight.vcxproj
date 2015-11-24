@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -189,6 +189,7 @@
     <ClInclude Include="source\module\ui\Number.h" />
     <ClInclude Include="source\module\ui\ResultScore.h" />
     <ClInclude Include="source\module\ui\Scenario.h" />
+    <ClInclude Include="source\module\ui\Scenario\GameScenario.h" />
     <ClInclude Include="source\module\ui\Score.h" />
     <ClInclude Include="source\module\ui\sprite.h" />
     <ClInclude Include="source\module\ui\text_box.h" />

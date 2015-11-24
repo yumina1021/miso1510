@@ -51,6 +51,7 @@ class CCamera;
 class CGame;
 class Cform;
 class CLight;
+class CEffect;
 
 #ifdef _DEBUG
 class CDebugProc;
@@ -136,6 +137,9 @@ class CManager
 		static bool				m_pauseFlag;		//ポーズをしているかのフラグ
 		static bool				m_gameEndFlag;		//ゲーム終了中かのフラグ
 		static bool				m_night0PlayFlag;	//ナイト０と戦ったかどうか？
+
+		int						m_nFrameNum;
+		int						m_nEnemyNum;
 
 		RenderTagets*			m_renderTargets[5];
 

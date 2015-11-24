@@ -35,6 +35,7 @@
 #include "../../module/ui/Gauge.h"
 #include "../../module/ui/BackGround.h"
 #include "../../module/ui/CharPicture.h"
+#include "../../module/ui/Scenario.h"
 
 #include "../../module/robot/PlayerM.h"
 #include "../../module/robot/EnemyM.h"
@@ -82,24 +83,21 @@ CGame :: CGame(void)
 	m_pMeshField = NULL;
 	m_pform3D = NULL;
 	m_pScore = NULL;
-	m_pCountBoost = NULL;
 
-	m_pTimer = NULL;
-	m_pCountBullet = NULL;
-	m_pCountOver = NULL;
-
-	m_pGauge = NULL;
-	m_pGaugeEnemy = NULL;
+	m_pCountPar = NULL;
+	m_pCountShot = NULL;
 
 	m_pBackGround = NULL;
 	m_pFade = NULL;
 	m_pCharPicture[2] = {};
 
-	m_pEffect[7] = {};
+	m_pEffect[8] = {};
 	m_pLocusEffect[19] = {};
 
 	m_pIcon = NULL;
 	m_pIconEnemy = NULL;
+
+	m_pScenario = NULL;
 
 	m_pBall[1] = {};
 }
@@ -126,12 +124,6 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	//空の作成
 	m_pDome2 = CDomeU::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	//ゲージの作成
-	m_pGauge = CGauge::Create(pDevice, D3DXVECTOR3(143.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), false);
-
-	//敵ゲージの作成
-	m_pGaugeEnemy = CGauge::Create(pDevice, D3DXVECTOR3(171.0f, 121.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), true);
-
 	//剣のエフェクト表示
 	for (int i = 0; i < 20; i++)
 	{
@@ -147,12 +139,16 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	//エフェクトの作成
 	m_pEffect[0] = CEffect::Create(pDevice, circuit_wall, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[1] = CEffect::Create(pDevice, circuit_circle, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 300, 300);
-	m_pEffect[2] = CEffect::Create(pDevice, action, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[3] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[4] = CEffect::Create(pDevice, ready2, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[5] = CEffect::Create(pDevice, please_shot, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[6] = CEffect::Create(pDevice, shot_ball, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[7] = CEffect::Create(pDevice, judge_timeout, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[2] = CEffect::Create(pDevice, gage, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[3] = CEffect::Create(pDevice, action, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[4] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[5] = CEffect::Create(pDevice, ready2, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[6] = CEffect::Create(pDevice, please_shot, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[7] = CEffect::Create(pDevice, shot_ball, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[8] = CEffect::Create(pDevice, judge_timeout, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	//シナリオ
+	m_pScenario = CScenario::Create(pDevice, (CScenario::Character)m_nPnum, false);
 
 	//Pause
 	//背景の作成
@@ -194,6 +190,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_nGameStartCount=0;
 
+	m_pEffect[2]->SetView(true);
+
 	// 受信スレッド開始
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
 
@@ -218,6 +216,14 @@ void CGame :: Uninit(void)
 	//サウンド再生の作成
 	pSound->Stop();
 
+	m_pScenario->Uninit();
+	delete m_pScenario;
+	m_pScenario = NULL;
+
+	m_pGoal->Uninit();
+	delete m_pGoal;
+	m_pGoal = NULL;
+
 	//シーンを全て終了
 	Cform::ReleaseAll();
 }
@@ -230,12 +236,16 @@ void CGame :: Update(void)
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
+	m_pGoal->Update();
+
 	//更新本体
 	if (!m_bChangeFlag)
 	{
 		switch (m_nSwitchCount)
 		{
 		case START_PHASE:	TurnStart();
+			break;
+		case SCENARIO_PHASE: GameScenario();
 			break;
 		case ANGLE_PHASE:	AngleDecision();
 			break;
@@ -341,7 +351,6 @@ void CGame :: Update(void)
 		//タイマーに設定
 		if(m_nTimerCount>60)
 		{
-			m_pTimer->AddTimer(-1);
 			m_nTimerCount=0;
 		}
 	}
@@ -361,7 +370,7 @@ void CGame :: Update(void)
 			//カーソルが合っているコマンドを発動
 			switch(m_nCount)
 			{
-				case 0 :	CScene::SetTime(m_pTimer->GetTimer()*100);
+				case 0 :	CScene::SetTime(0);
 							CScene::SetScore(m_nClearType*20000);
 							CManager::SetgameEndFlag(false);
 							CManager::Setnight0PlayFlag(true);
@@ -387,7 +396,7 @@ void CGame :: Update(void)
 			}
 	}else
 		{
-			CScene::SetTime(m_pTimer->GetTimer()*100);
+			CScene::SetTime(0);
 			CScene::SetScore(m_nClearType*20000);
 			CManager::SetgameEndFlag(false);
 			CManager::Setnight0PlayFlag(true);
@@ -425,13 +434,14 @@ void CGame :: Draw(void)
 		m_pBall[1]->Draw();
 
 		m_pGoal->Draw();
-		//m_pUI->Draw();
-		m_pTimer->Draw();
 
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 9; i++)
 		{
 			m_pEffect[i]->Draw();
 		}
+		m_pCountPar->Draw();
+		m_pScore->Draw();
+		m_pScenario->Draw();
 	}
 
 	//フェードの作成
@@ -449,11 +459,6 @@ void CGame :: Restart(void)
 
 	//タイマー（時間）の作成
 	m_nTimerCount=0;
-	m_pTimer->ResetTimer(TIMER_MAX);
-
-	//ゲージの作成
-	m_pGauge->ResetGauge(SCORE_G_MAX);
-	m_pGaugeEnemy->ResetGauge(SCORE_G_MAX);
 
 	//サウンド取得の作成
 	CSound *pSound;
@@ -473,7 +478,6 @@ void CGame :: Restart(void)
 void CGame::SetTimer(int time)
 {
 	//時間の変更
-	m_pTimer->ResetTimer(time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -490,14 +494,15 @@ void CGame::TurnStart()
 	{
 		if (m_nPlayerNum == 0)
 		{
+			m_pScore->AddScore(1);
 			m_nTurnCount++;
 		}
 
 		switch (m_nPlayerNum)
 		{
-		case 0:	m_pEffect[3]->FadeIn(60, CEffect::RIGHT);
+		case 0:	m_pEffect[4]->FadeIn(60, CEffect::RIGHT);
 			break;
-		case 1:	m_pEffect[4]->FadeIn(60, CEffect::RIGHT);
+		case 1:	m_pEffect[5]->FadeIn(60, CEffect::RIGHT);
 			break;
 		}
 		CManager::SetgameEndFlag(false);
@@ -512,15 +517,81 @@ void CGame::TurnStart()
 	{
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 		{
+			m_nGameStartCount = 0;
 			switch (m_nPlayerNum)
 			{
-			case 0:	m_pEffect[3]->FadeOut(60, CEffect::LEFT);
+			case 0:	m_pEffect[4]->FadeOut(60, CEffect::LEFT);
+				m_pEffect[2]->SetView(false);
+				m_nSwitchCount = SCENARIO_PHASE;
 				break;
-			case 1:	m_pEffect[4]->FadeOut(60, CEffect::LEFT);
+			case 1:	m_pEffect[5]->FadeOut(60, CEffect::LEFT);
+				m_nSwitchCount = ANGLE_PHASE;
 				break;
 			}
+		}
+	}
+}
+//少しシナリオ
+void CGame::GameScenario()
+{
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	static CScenario::GameAffair affair;
+
+	//プレイヤースタート表示
+	if (m_nGameStartCount == 0)
+	{
+		if (m_nTurnCount != 1)
+		{
+
+			D3DXVECTOR3 posBall, goal;
+
+			goal = m_pGoal->GetPos();
+
+			posBall = m_pBall[0]->GetPos();
+			float Distance1 = (float)sqrt((double)(posBall.x - goal.x)*(double)(posBall.x - goal.x) + (double)(posBall.y - goal.y)*(double)(posBall.y - goal.y) + (double)(posBall.z - goal.z)*(double)(posBall.z - goal.z));
+			posBall = m_pBall[1]->GetPos();
+			float Distance2 = (float)sqrt((double)(posBall.x - goal.x)*(double)(posBall.x - goal.x) + (double)(posBall.y - goal.y)*(double)(posBall.y - goal.y) + (double)(posBall.z - goal.z)*(double)(posBall.z - goal.z));
+
+			if (Distance1 > Distance2){ affair = CScenario::AFFAIR_WIN; }
+			else if (Distance1 < Distance2){ affair = CScenario::AFFAIR_LOSE; }
+			if (Distance1 + 50 > Distance2&&Distance1 - 50 < Distance2){ affair = CScenario::AFFAIR_HALF; }
+		}
+		else
+		{
+			affair = CScenario::AFFAIR_START;
+		}
+
+		m_pScenario->SetScenarioEndFlag(false);
+		m_pScenario->SetViewFlag(true,0);
+		m_pScenario->GameScenario(m_nGameStartCount, affair);
+
+		m_nGameStartCount++;
+		m_MovePow = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_shotrot = D3DXVECTOR3(-2.4f, 0, 0);
+	}
+
+	//シナリオが終了したら
+	if (m_pScenario->GetScenarioEndFlag())
+	{
+		//エンター押して終了
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+		{
 			m_nGameStartCount = 0;
+			m_pScenario->SetViewFlag(false, 0);
+			m_pEffect[2]->SetView(true);
 			m_nSwitchCount = ANGLE_PHASE;
+		}
+	}
+	else
+	{
+		//エンター押して次のシナリオ
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+		{
+			m_pScenario->GameScenario(m_nGameStartCount, affair);
+			m_nGameStartCount++;
 		}
 	}
 }
@@ -598,7 +669,7 @@ void CGame::AngleDecision()
 		m_PowerShot = CheckVector(ball, work);
 		m_pEffect[0]->SetView(false);
 		m_pEffect[1]->SetView(false);
-		m_pEffect[5]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		m_pEffect[6]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		m_nSwitchCount = POWER_PHASE;
 	}
 
@@ -638,7 +709,7 @@ void CGame:: PowerDecision()
 	//仮　打つ力を決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
-		m_pEffect[6]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		m_nSwitchCount=MOVE_PHASE;
 	}
 }
@@ -670,9 +741,9 @@ void CGame::Judge()
 	}
 
 	//終了判定  ターン数：時間経過：ゴール入った
-	if ((m_nTurnCount>5) || (m_pTimer->GetTimer() <= 0) || (m_bJudge) && !(m_bChangeFlag))
+	if ((m_nTurnCount>5) || (m_bJudge) && !(m_bChangeFlag))
 	{
-		m_pEffect[7]->SetView(true);
+		m_pEffect[8]->SetView(true);
 		CManager::SetgameEndFlag(true);
 
 		m_nClearType = 2;
@@ -727,17 +798,14 @@ void CGame::charachange()
 }
 void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 {
-
 	m_nIFtype = rand() % 2;
 	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f),1300,750);
 	//5番ゲージ
 	//スコアの作成
-	m_pScore = CScore::Create(pDevice, D3DXVECTOR3(430.0f, 565.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 60, 110);		//体力
-	m_pCountBullet = CCount::Create(pDevice, D3DXVECTOR3(1040.0f, 265.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10);	//弾
-	m_pCountOver = CCount::Create(pDevice, D3DXVECTOR3(1040.0f, 383.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 750);	//スキル
-	m_pCountBoost = CCount::Create(pDevice, D3DXVECTOR3(835.0f, 565.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100);	//ブースト
-	//タイマー（時間）の作成
-	m_pTimer = CTimer::Create(pDevice, D3DXVECTOR3(1035.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pCountPar = CCount::Create(pDevice, D3DXVECTOR3(240.0f, 45.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 3);	//弾
+	m_pCountShot = CCount::Create(pDevice, D3DXVECTOR3(50.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);	//スキル
+	m_pScore = CScore::Create(pDevice, D3DXVECTOR3(60.0f, 70.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 60, 110);		//体力
+	//m_pGauge = CGauge::Create(pDevice, D3DXVECTOR3(680.0f, 700.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),true);
 	m_nTimerCount = 0;
 }
 //プレイヤーとボールのベクトルを算出
@@ -763,8 +831,8 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 
 	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
 
-	m_pBall[0] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	ObjectInit(pDevice);
 }
