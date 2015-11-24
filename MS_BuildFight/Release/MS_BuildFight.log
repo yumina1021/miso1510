@@ -1,0 +1,71 @@
+﻿2015/11/21 16:57:47 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "D:\miso\MS_BuildFight_14_wiicon\MS_BuildFight.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USING_V110_SDK71_ /D _MBCS /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt source\administer\scene\Game.cpp
+         Game.cpp
+         C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\miso\MS_BuildFight_14_wiicon\Release\MS_BuildFight.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\miso\MS_BuildFight_14_wiicon\Release\MS_BuildFight.pdb" /SUBSYSTEM:WINDOWS,"5.01" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\miso\MS_BuildFight_14_wiicon\Release\MS_BuildFight.lib" /MACHINE:X86 /SAFESEH Release\StageSelect.obj
+         Release\wiimote.obj
+         Release\WiiRemote.obj
+         Release\Button.obj
+         Release\Cursor.obj
+         Release\Debugproc.obj
+         Release\FrustumCulling.obj
+         Release\Input.obj
+         Release\Maneger.obj
+         Release\netClient.obj
+         Release\Game.obj
+         Release\GameClear.obj
+         Release\Result.obj
+         Release\Select.obj
+         Release\Title.obj
+         Release\Tutorial.obj
+         Release\Vsend.obj
+         Release\Sound.obj
+         Release\exten_common.obj
+         Release\form.obj
+         Release\form2D.obj
+         Release\form3D.obj
+         Release\formBillBoard.obj
+         Release\formX.obj
+         Release\main.obj
+         Release\Ball.obj
+         Release\Camera.obj
+         Release\Fade.obj
+         Release\Goal.obj
+         Release\Light.obj
+         Release\LocusEffect.obj
+         Release\Dome.obj
+         Release\Domeunder.obj
+         Release\Field.obj
+         Release\EnemyM.obj
+         Release\Model.obj
+         Release\PlayerBace.obj
+         Release\PlayerGun1.obj
+         Release\PlayerM.obj
+         Release\BackGround.obj
+         Release\Bar.obj
+         Release\Character.obj
+         Release\CharPicture.obj
+         Release\Count.obj
+         Release\Effect.obj
+         Release\font_texture.obj
+         Release\Gauge.obj
+         Release\Icon.obj
+         Release\Lock.obj
+         Release\Number.obj
+         Release\ResultScore.obj
+         Release\Scenario.obj
+         Release\Score.obj
+         Release\sprite.obj
+         Release\text_box.obj
+         Release\Timer.obj
+         コード生成しています。
+         コード生成が終了しました。
+         MS_BuildFight.vcxproj -> D:\miso\MS_BuildFight_14_wiicon\Release\MS_BuildFight.exe
+     1>プロジェクト "D:\miso\MS_BuildFight_14_wiicon\MS_BuildFight.vcxproj" (Build ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:00:03.57

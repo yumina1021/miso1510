@@ -163,6 +163,12 @@
     <ClCompile Include="source\administer\scene\StageSelect.cpp">
       <Filter>source\administer\scene</Filter>
     </ClCompile>
+    <ClCompile Include="source\administer\wiicon\WiiRemote.cpp">
+      <Filter>source\administer\wiicontrol</Filter>
+    </ClCompile>
+    <ClCompile Include="source\administer\wiicon\wiimote.cpp">
+      <Filter>source\administer\wiicontrol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -342,8 +348,17 @@
     <ClInclude Include="source\administer\scene\StageSelect.h">
       <Filter>source\administer\scene</Filter>
     </ClInclude>
-    <ClInclude Include="source\module\ui\Scenario\GameScenario.h">
-      <Filter>source\module\ui\Scenario</Filter>
+    <ClInclude Include="source\administer\wiicon\wiimote_common.h">
+      <Filter>source\administer\wiicontrol</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\wiicon\wiimote_state.h">
+      <Filter>source\administer\wiicontrol</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\wiicon\WiiRemote.h">
+      <Filter>source\administer\wiicontrol</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\wiicon\wiimote.h">
+      <Filter>source\administer\wiicontrol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -380,8 +395,8 @@
     <Filter Include="source\module\etc">
       <UniqueIdentifier>{e6135403-b361-449f-90f0-af9bc863cfb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\module\ui\Scenario">
-      <UniqueIdentifier>{e8d154f0-8743-4a02-846a-5e41f6e7f4ee}</UniqueIdentifier>
+    <Filter Include="source\administer\wiicontrol">
+      <UniqueIdentifier>{6d321061-756c-4326-8a73-650139e20240}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

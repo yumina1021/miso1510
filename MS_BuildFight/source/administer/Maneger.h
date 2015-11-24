@@ -12,6 +12,7 @@
 //*****************************************************************************
 #include <windows.h>
 #include "../common.h"
+#include "wiicon/WiiRemote.h"
 
 
 #define SCENE_MAX	(10)
@@ -108,6 +109,7 @@ class CManager
 		void RemoveRenderTargets(int i);
 		RenderTagets* GetRenderTargets(int i){ return m_renderTargets[i]; };
 
+		static WiiRemote* GetWii(int id){ return wiimote[id]; }
 	private:
 		void RenderTargetDraw(void);
 		HRESULT RenderInit(HWND hWnd, BOOL bWindow);
@@ -135,6 +137,7 @@ class CManager
 		static PHASETYPE		m_phaseType;		//現在のフェーズタイプ
 		static PHASETYPE		m_afterSceneType;	//次のフェーズタイプ
 		static HWND				m_hwnd;
+		static WiiRemote* wiimote[2];
 
 #ifdef _DEBUG
 		static  CDebugProc *m_pDebugProc;			//デバッグ処理へのポインタ

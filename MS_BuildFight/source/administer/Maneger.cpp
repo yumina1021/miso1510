@@ -39,7 +39,8 @@
 LPDIRECT3DDEVICE9 CManager::m_pD3DDevice = NULL;		// デバイスのポインタ
 CInputKeyboard* CManager::m_pKeyboard = NULL;			//インプット
 CInputMouse * CManager ::m_pMouse = NULL;
-CInputJoypad * CManager ::m_pJoypad = NULL;
+CInputJoypad * CManager::m_pJoypad = NULL;
+WiiRemote* CManager::wiimote[2] = { NULL ,NULL};
 
 CSound *CManager::m_pSound = NULL;						//サウンド
 
@@ -101,6 +102,16 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	//ジョイパッドの初期化
 	//m_pJoypad = new CInputJoypad();
 	//m_pJoypad->Init(hInstance,hWnd);
+
+	for (int i = 0; i < 2; i++)
+	{
+		wiimote[i] = new WiiRemote;
+		if (!wiimote[i]->Init(0x1))
+		{
+			MessageBox(hWnd, "wiicon not connet", "Error", MB_OK);
+			wiimote[i] = NULL;
+		}
+	}
 
 	// ライト処理初期化
 	m_pLight = new CLight;
@@ -327,6 +338,15 @@ void CManager :: Uninit(void)
 		m_pSound = NULL;
 	}
 
+
+	for (int i = 0; i < 2; i++)
+	{
+		if (wiimote[i] != NULL)
+		{
+			wiimote[i]->Uninit();
+			delete wiimote[i];
+		}
+	}
 	//m_pJoypad->Uninit();		//ジョイパッド
 
 	//if(m_pJoypad!=NULL)
@@ -357,6 +377,13 @@ void CManager :: Update(void)
 	m_pMouse->Update();
 	//m_pJoypad->Update();
 	m_pScene->Update();
+	for (int i = 0; i < 2; i++)
+	{
+		if (wiimote[i] != NULL)
+		{
+			wiimote[i]->Update();
+		}
+	}
 
 	//フェーズの変更
 	ChangeScene();

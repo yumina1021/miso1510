@@ -85,8 +85,8 @@ class CGame  : public CScene
 
 		static bool SphireHit(D3DXVECTOR3 a, float al, D3DXVECTOR3 b, float bl){
 			return (b.x - a.x) * (b.x - a.x) +
-				(b.x - a.x) * (b.x - a.x) +
-				(b.x - a.x) * (b.x - a.x) <= (al + bl) * (al + bl);}
+				(b.y - a.y) * (b.y - a.y) +
+				(b.z - a.z) * (b.z - a.z) <= (al + bl) * (al + bl);}
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
