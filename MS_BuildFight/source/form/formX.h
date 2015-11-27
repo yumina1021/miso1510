@@ -29,6 +29,7 @@ class CformX  : public Cform
 		~CformX(void);//デストラクタ
 
 		static CformX *Create(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot,bool set,bool enemy);
+		static CformX *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pModNameStr, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName);//初期化
 		void Uninit(void);//終了

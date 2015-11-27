@@ -21,15 +21,35 @@
 #include "../../module/ui/Cursor.h"
 #include "../../module/ui/Button.h"
 
+#include "../../module/etc/Camera.h"
+
 #include "../../module/etc/Ball.h"
+#include "../../form/formX.h"
+#include "../../form/form3D.h"
 #include "../../module/field/Field.h"
 
 #include "../../administer/Debugproc.h"
+
+#include "../wiicon/wiimote.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 const float CURSOR_MOVE_COFF(10.0f);
+const float STAGE_DIST_CENT(300.0f);
+const float CAMERA_POS_X(0.0f);
+const float CAMERA_POS_Y(0.0f);
+const float CAMERA_POS_Z(-500.0f);
+
+LPSTR pModName[MAX_BALL]
+{
+
+	"data/MODEL/stage1.x",
+	"data/MODEL/stage2.x",
+	"data/MODEL/stage3.x",
+	"data/MODEL/stage4.x",
+
+};
 
 //*****************************************************************************
 // グローバル変数
@@ -46,6 +66,11 @@ m_nState(STATE::NORMAL)
 {
 	m_pBackGround = NULL;
 	m_pFade = NULL;
+	
+	// カメラの取得
+	CCamera* pTmpCamera = CManager::GetCamera();
+
+	pTmpCamera->SetPosP(D3DXVECTOR3(CAMERA_POS_X, CAMERA_POS_Y, CAMERA_POS_Z));
 
 }
 //=============================================================================
@@ -61,7 +86,7 @@ CStageSelect :: ~CStageSelect(void)
 HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 	//背景の作成
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_SELECT);
+	m_pBackGround = Cform3D::Create(pDevice, "data/TEXTURE/Select.png", D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);
@@ -76,7 +101,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_playerData[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 128, 128);
 	m_playerData[0].nSelectNum = 0;
 
-	m_playerData[1].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(400.0f, 600.0f, 0.0f), 128, 128);
+	m_playerData[1].pCursor = CCursor::Create(pDevice, s_5, D3DXVECTOR3(400.0f, 600.0f, 0.0f), 128, 128);
 	m_playerData[1].nSelectNum = 0;
 
 	m_fDiffuse=1.0f;
@@ -93,7 +118,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	for (int i = 0; i < MAX_BALL; i++)
 	{
-		m_Obj[i].pDispObj = CBall::Create(pDevice, 0, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_Obj[i].pDispObj = CformX::Create(pDevice, pModName[i], D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_Obj[i].fLenCoff = fTmpRad * static_cast<float>(i);
 		m_Obj[i].fLenCoffDest = m_Obj[i].fLenCoff;
 		m_Obj[i].nDestCnt = i;
@@ -105,9 +130,9 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 		m_Obj[i].fLenCoff = CCursor::EsasingNone(m_Obj[i].fLenCoff, m_Obj[m_Obj[i].nDestCnt].fLenCoffDest, m_fTime);
 
 		// 原点0を中心として衛星軌道用の座標を求める
-		tmpObjPos.x = 0.0f + sinf(m_Obj[i].fLenCoff) * 100.0f;
-		tmpObjPos.y = -20.0f;
-		tmpObjPos.z = 0.0f + cosf(m_Obj[i].fLenCoff) * -100.0f;
+		tmpObjPos.x = 0.0f + sinf(m_Obj[i].fLenCoff) * STAGE_DIST_CENT;
+		tmpObjPos.y = 0.0f;
+		tmpObjPos.z = 0.0f + cosf(m_Obj[i].fLenCoff) * -STAGE_DIST_CENT;
 
 		// 座標を更新
 		m_Obj[i].pDispObj->SetPos(tmpObjPos);
@@ -126,6 +151,8 @@ void CStageSelect :: Uninit(void)
 
 	//サウンド再生の作成
 	pSound->Stop();
+
+
 
 	//シーンを全て終了
 	Cform::ReleaseAll();
@@ -174,7 +201,7 @@ void CStageSelect :: Update(void)
 //=============================================================================
 void CStageSelect :: Draw(void)
 {
-	//m_pBackGround->Draw();
+	m_pBackGround->Draw();
 
 	for (int i = 0; i < MAX_BALL; i++)
 	{
@@ -207,9 +234,9 @@ void CStageSelect::UpdateSelectObject()
 		m_Obj[i].fLenCoff = CCursor::EsasingNone(m_Obj[i].fLenCoff, m_Obj[m_Obj[i].nDestCnt].fLenCoffDest, m_fTime);
 
 		// 原点0を中心として衛星軌道用の座標を求める
-		tmpObjPos.x = 0.0f + sinf(m_Obj[i].fLenCoff) * 100.0f;
+		tmpObjPos.x = 0.0f + sinf(m_Obj[i].fLenCoff) * STAGE_DIST_CENT;
 		tmpObjPos.y = 0.0f;
-		tmpObjPos.z = 0.0f + cosf(m_Obj[i].fLenCoff) * -100.0f;
+		tmpObjPos.z = 0.0f + cosf(m_Obj[i].fLenCoff) * -STAGE_DIST_CENT;
 
 		// 座標を更新
 		m_Obj[i].pDispObj->SetPos(tmpObjPos);
@@ -268,6 +295,9 @@ void CStageSelect::UpdateFade(void)
 void CStageSelect::SelectByButton(void)
 {
 
+	// Wiiコンの取得
+	WiiRemote* pTmpPad = CManager::GetWii(1);
+
 	//サウンド取得の作成
 	CSound *pSound;
 	pSound = CManager::GetSound();
@@ -280,7 +310,7 @@ void CStageSelect::SelectByButton(void)
 	float tmpRot((D3DX_PI * 2.0f));
 
 	//エンターキーが押された場合
-	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN)))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
 		// 遷移処理
@@ -293,7 +323,7 @@ void CStageSelect::SelectByButton(void)
 		//pSound->PlayVoice(m_playerData[0].nSelectNum,VOICE_LABEL_SE_START);
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_A) || pInputKeyboard->GetKeyTrigger(DIK_LEFT))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_A) || pInputKeyboard->GetKeyTrigger(DIK_LEFT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
 	{
 
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -316,7 +346,7 @@ void CStageSelect::SelectByButton(void)
 		m_nState = STATE::SATELLITE_ORBIT;
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_D) || pInputKeyboard->GetKeyTrigger(DIK_RIGHT))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_D) || pInputKeyboard->GetKeyTrigger(DIK_RIGHT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 	{
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
 

@@ -61,6 +61,20 @@ CformX *CformX::Create(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot
 	return pformX;
 }
 //=============================================================================
+// CformXê∂ê¨
+//=============================================================================
+CformX *CformX::Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pModNameStr, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	CformX *pformX;
+
+	pformX = new CformX();
+	pformX->Init(pDevice, pModNameStr, NULL);
+	pformX->SetPos(pos);
+	pformX->SetRot(rot);
+
+	return pformX;
+}
+//=============================================================================
 // èâä˙âª
 //=============================================================================
 HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)

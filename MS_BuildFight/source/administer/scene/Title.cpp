@@ -18,17 +18,18 @@
 #include "../../module/ui/Button.h"
 #include "../../module/ui/Cursor.h"
 
+#include "../wiicon/wiimote.h"
+
 #include "../../administer/Debugproc.h"
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 
-#define MENU_X	(SCREEN_WIDTH/2)	//メニューのX位置
-#define MENU_Y	(450.0f)			//メニューのY位置
-
-#define MENU_WIDTH	(400)			//メニューの横サイズ
-#define MENU_HEIGHT	(100)			//メニューの縦サイズ
+const float MENU_X(SCREEN_WIDTH / 2);	//メニューのX位置
+const float MENU_Y(450.0f);			//メニューのY位置
+const int MENU_WIDTH(400);			//メニューの横サイズ
+const int MENU_HEIGHT(100);			//メニューの縦サイズ
 
 //=============================================================================
 // コンストラクタ
@@ -98,6 +99,7 @@ void CTitle :: Uninit(void)
 
 	//サウンド再生の作成
 	//pSound->Stop();
+
 	//シーンを全て終了
 	Cform::ReleaseAll();
 }
@@ -188,6 +190,9 @@ void CTitle :: Draw(void)
 void CTitle::KeyCommand(void)
 {
 
+	// Wiiコンの取得
+	WiiRemote* pTmpPad = CManager::GetWii(0);
+
 	//サウンド取得の作成
 	CSound *pSound;
 	pSound = CManager::GetSound();
@@ -197,7 +202,7 @@ void CTitle::KeyCommand(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//エンターキーが押された場合
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
 		ChangeState();
@@ -206,7 +211,7 @@ void CTitle::KeyCommand(void)
 	else if (m_bChangeFlag != true)
 	{
 
-		if (pInputKeyboard->GetKeyTrigger(DIK_W))
+		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 		{
 			m_nCursor--;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -216,7 +221,7 @@ void CTitle::KeyCommand(void)
 			}
 
 		}
-		else if (pInputKeyboard->GetKeyTrigger(DIK_S))
+		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
 		{
 			m_nCursor++;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);

@@ -26,6 +26,7 @@ const LPSTR CCharPicture::m_apTextureName[]=
 	"data/TEXTURE/s_4.png",
 	"data/TEXTURE/s_5.png",
 	"data/TEXTURE/s_6.png",
+	"data/TEXTURE/s_7.png",
 	"data/TEXTURE/n_b.png",
 	"data/TEXTURE/s_99.png",
 

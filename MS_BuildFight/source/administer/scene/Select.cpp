@@ -23,11 +23,17 @@
 
 #include "../../administer/Debugproc.h"
 
+#include "../wiicon/wiimote.h"
+
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 const int MAX_PLAYER(2);
+const float CHAR_BUTTON_WIDTH(650.0f);
+const float CHAR_BUTTON_HEIGHT(375.0f);
 
+const float CURSOR_WIDTH(128.0f);
+const float CURSOR_HEIGHT(128.0f);
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -46,6 +52,7 @@ m_bSendData(false)
 	m_pFade = NULL;
 	m_pCharPicture[CHARCTER_TYPE::TYPE_MAX] = {};
 
+	
 }
 //=============================================================================
 // デストラクタ
@@ -63,14 +70,19 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_SELECT);
 
 	//文字の配置
-	m_pCharPicture[CHARCTER_TYPE::TYPE_1] = CButton::Create(pDevice, s_0, D3DXVECTOR3(325.0f, 187.5f, 0.0f), 650, 375);
-	m_pCharPicture[CHARCTER_TYPE::TYPE_2] = CButton::Create(pDevice, s_1, D3DXVECTOR3(975.0f, 187.5f, 0.0f), 650, 375);
-	m_pCharPicture[CHARCTER_TYPE::TYPE_3] = CButton::Create(pDevice, s_2, D3DXVECTOR3(325.0f, 562.5f, 0.0f), 650, 375);
-	m_pCharPicture[CHARCTER_TYPE::TYPE_4] = CButton::Create(pDevice, s_3, D3DXVECTOR3(975.0f, 562.5f, 0.0f), 650, 375);
-	
-	m_Select[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 128, 128);
-	m_Select[1].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 128, 128);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_1] = CButton::Create(pDevice, s_0, D3DXVECTOR3(325.0f, 187.5f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_2] = CButton::Create(pDevice, s_1, D3DXVECTOR3(975.0f, 187.5f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_3] = CButton::Create(pDevice, s_2, D3DXVECTOR3(325.0f, 562.5f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharPicture[CHARCTER_TYPE::TYPE_4] = CButton::Create(pDevice, s_3, D3DXVECTOR3(975.0f, 562.5f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pLogo = CButton::Create(pDevice, s_6, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), 900, 100);
 
+	m_Select[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), CURSOR_WIDTH, CURSOR_HEIGHT);
+	m_Select[1].pCursor = CCursor::Create(pDevice, s_5, D3DXVECTOR3(200.0f, 600.0f, 0.0f), CURSOR_WIDTH, CURSOR_HEIGHT);
+
+	m_OnCursorPos[CHARCTER_TYPE::TYPE_1] = D3DXVECTOR3(587.0f, 310.0f, 0.0f);
+	m_OnCursorPos[CHARCTER_TYPE::TYPE_2] = D3DXVECTOR3(715.0f, 310.0f, 0.0f);
+	m_OnCursorPos[CHARCTER_TYPE::TYPE_3] = D3DXVECTOR3(587.0f, 450.0f, 0.0f);
+	m_OnCursorPos[CHARCTER_TYPE::TYPE_4] = D3DXVECTOR3(715.0f, 450.0f, 0.0f);
 	m_Select[0].nSelect = 0;
 	m_Select[1].nSelect = 1;
 
@@ -153,12 +165,13 @@ void CSelect :: Update(void)
 	{
 		// 1Pの操作
 		SelectByKeyboardPlayer1();
-		m_Select[0].pCursor->SyncCharPos(m_pCharPicture[m_Select[0].nSelect]->GetPos());
+		m_Select[0].pCursor->SyncCharPos(m_OnCursorPos[m_Select[0].nSelect]);
 
 		// 2Pの操作
 		SelectByKeyboardPlayer2();
-		m_Select[1].pCursor->SyncCharPos(m_pCharPicture[m_Select[1].nSelect]->GetPos());
+		m_Select[1].pCursor->SyncCharPos(m_OnCursorPos[m_Select[1].nSelect]);
 
+		
 	}
 	// カーソル移動
 	else if (m_nType == SELECT_TYPE::TYPE_CURSOR)
@@ -176,6 +189,10 @@ void CSelect :: Update(void)
 			CButton::ChangeSelectButtonState(m_pCharPicture[tmpCursorOld[i]], m_pCharPicture[m_Select[i].nSelect]);
 
 		}
+
+		// 選択状態にしておく
+		m_pCharPicture[m_Select[i].nSelect]->SetButtonState(BUTTON_STATE::SELECTED);
+
 	}
 #ifdef _DEBUG
 
@@ -207,6 +224,8 @@ void CSelect :: Draw(void)
 		m_Select[i].pCursor->Draw();
 
 	}
+
+	m_pLogo->Draw();
 
 	//フェードの作成
 	m_pFade->Draw();
@@ -244,6 +263,9 @@ void CSelect::UpdateFade(void)
 void CSelect::SelectByKeyboardPlayer2(void)
 {
 
+	// Wiiコンの取得
+	WiiRemote* pTmpPad = CManager::GetWii(1);
+
 	// 
 	if (m_bChangeFlag){ return; }
 
@@ -252,7 +274,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//エンターキーが押された場合
-	if ((pInputKeyboard->GetKeyTrigger(DIK_SPACE)))
+	if ((pInputKeyboard->GetKeyTrigger(DIK_SPACE)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
 		// 選択された場合はスキップ
@@ -265,17 +287,24 @@ void CSelect::SelectByKeyboardPlayer2(void)
 			m_pCharPicture[m_Select[1].nSelect]->GetLen()))
 		{
 
-			m_Select[1].pCursor->SetTime(0.0f);
-			CheckSelectAllCorsor(1);
+			if ((m_Select[0].bDecisionFlg
+				&& m_Select[0].nSelect != m_Select[1].nSelect)
+				|| !m_Select[0].bDecisionFlg)
+			{
 
-			//pSound->PlayVoice(m_Select[1].nSelect,VOICE_LABEL_SE_START);
+				m_Select[1].pCursor->SetTime(0.0f);
+				CheckSelectAllCorsor(1);
+
+				//pSound->PlayVoice(m_Select[1].nSelect,VOICE_LABEL_SE_START);
+
+			}
 
 		}
 
 
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_UP))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_UP) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 	{
 		m_Select[1].pCursor->SetTime(0.0f);
 
@@ -297,7 +326,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 		}
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_DOWN))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_DOWN) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
 	{
 		m_Select[1].pCursor->SetTime(0.0f);
 
@@ -317,7 +346,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 
 		}
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_LEFT))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_LEFT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
 	{
 		m_Select[1].pCursor->SetTime(0.0f);
 
@@ -338,7 +367,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 		}
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_RIGHT))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_RIGHT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 	{
 		m_Select[1].pCursor->SetTime(0.0f);
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -364,6 +393,9 @@ void CSelect::SelectByKeyboardPlayer2(void)
 void CSelect::SelectByKeyboardPlayer1(void)
 {
 
+	// Wiiコンの取得
+	WiiRemote* pTmpPad = CManager::GetWii(0);
+
 	// 
 	if (m_bChangeFlag){ return; }
 
@@ -372,7 +404,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//エンターキーが押された場合
-	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN)))
+	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
 		// 選択された場合はスキップ
@@ -385,17 +417,21 @@ void CSelect::SelectByKeyboardPlayer1(void)
 			m_pCharPicture[m_Select[0].nSelect]->GetLen()))
 		{
 
-			m_Select[0].pCursor->SetTime(0.0f);
-			CheckSelectAllCorsor(0);
+			if ((m_Select[1].bDecisionFlg
+				&& m_Select[1].nSelect != m_Select[0].nSelect)
+				|| !m_Select[1].bDecisionFlg)
+			{
+				m_Select[0].pCursor->SetTime(0.0f);
+				CheckSelectAllCorsor(0);
 
-			//pSound->PlayVoice(m_Select[0].nSelect,VOICE_LABEL_SE_START);
-
+				//pSound->PlayVoice(m_Select[0].nSelect,VOICE_LABEL_SE_START);
+			}
 		}
 
 
 		
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_W))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_W) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 	{
 		m_Select[0].pCursor->SetTime(0.0f);
 
@@ -417,7 +453,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 		}
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_S))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
 	{
 		m_Select[0].pCursor->SetTime(0.0f);
 
@@ -437,7 +473,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 
 		}
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_A))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_A) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
 	{
 		m_Select[0].pCursor->SetTime(0.0f);
 
@@ -458,7 +494,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 		}
 
 	}
-	else if (pInputKeyboard->GetKeyTrigger(DIK_D))
+	else if (pInputKeyboard->GetKeyTrigger(DIK_D) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 	{
 		m_Select[0].pCursor->SetTime(0.0f);
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
