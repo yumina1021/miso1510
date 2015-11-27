@@ -22,8 +22,8 @@ class CScenario;
 class Cform2D;
 class CManager;
 
-#define BLIZZARD_MAX (20)		//紙吹雪の枚数
-
+#define CRACKER_MAX  (50)		//紙噴射の枚数
+#define BLIZZARD_MAX (50)		//紙吹雪の枚数
 
 enum RESULT_TYPE
 {
@@ -47,28 +47,36 @@ class CResult  : public CScene
 		void Win();			//勝利
 		void Lose();		//敗北
 		void TieGame();		//引き分け
-		void PaperBlizzard(float min,float max);	//紙吹雪
+		void PaperCracker(float min, float max);	//紙噴射
+		void PaperBlizzard(float min, float max);	//紙吹雪
+
 	private:
-		void _UpdateBlizzard(void);
+		void _UpdateCracker(void);
 		void _UpdateFade(void);
+		void _UpdatePaperBlizzard(void);
+		void _UpdateFlag(void);
 
 
-		CBackGround* m_pBackGround;				//背景
-		CFade*		m_pFade;					//フェード
-		CReScore*	m_pRescore[4];				//スコア用
-		CBall*		m_pBall;					//フォーム
-		Cform2D*	m_pform2D[5];					//2D表示用
-		Cform2D*	m_pPaperBlizzard[BLIZZARD_MAX];
-		CScenario*	m_pScenerio;				//シナリオ
-		CManager*	m_pManager;					//マネージャー
-		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;	//頂点情報格納ワーク(動的)
-		D3DXVECTOR2 m_Vector[BLIZZARD_MAX];		//紙吹雪の向き
-		RESULT_TYPE m_ResultType;				//勝敗
-		static const LPSTR	m_apTextureName[];	//紙吹雪のテクスチャ
-		float m_a;
+		CBackGround* m_pBackGround;						//背景
+		CFade*		m_pFade;							//フェード
+		CReScore*	m_pRescore[4];						//スコア用
+		CBall*		m_pBall;							//フォーム
+		Cform2D*	m_pform2D[6];						//2D表示用
+		Cform2D*	m_pPaperCracker[CRACKER_MAX];
+		CScenario*	m_pScenerio;						//シナリオ
+		CManager*	m_pManager;							//マネージャー
+		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;			//頂点情報格納ワーク(動的)
+		D3DXVECTOR2 m_CrackerVector[CRACKER_MAX];		//紙吹雪の向き
+		RESULT_TYPE m_ResultType;						//勝敗
+		static const LPSTR	m_apTextureName[];			//紙吹雪のテクスチャ
 		int m_cnt;
 		float m_MaxSpeed;
-		bool m_BlizzardFlag;		//紙吹雪開始フラグ
+		bool m_CrackerFlag;								//紙噴射開始フラグ
+		bool m_BlizzardFlag;							//紙吹雪開始フラグ
+		Cform2D*	m_pPaperBlizzard[BLIZZARD_MAX];		//紙噴射
+		D3DXVECTOR2 m_BlizzardVector[BLIZZARD_MAX];		//紙吹雪の向き
+
+
 };
 
 #endif
