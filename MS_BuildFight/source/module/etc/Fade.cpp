@@ -14,7 +14,9 @@
 //*****************************************************************************
 const LPSTR CFade::m_apTextureName[]=
 {
-	"data/TEXTURE/loading001.jpg"
+	"data/TEXTURE/loading1.jpg",
+	"data/TEXTURE/loading2.jpg",
+	"data/TEXTURE/loading3.jpg",
 };
 //=============================================================================
 // コンストラクタ
@@ -47,13 +49,8 @@ HRESULT CFade :: Init(LPDIRECT3DDEVICE9 pDevice,int type)
 {
 	m_pDevice = pDevice;
 	//フィールドの初期化
-	if(type==0)
-	{
-		Cform2D::Init(m_pDevice,NULL,D3DXVECTOR3(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),SCREEN_WIDTH,SCREEN_HEIGHT);
-	}else
-	{
-		Cform2D::Init(m_pDevice,m_apTextureName[0],D3DXVECTOR3(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),SCREEN_WIDTH,SCREEN_HEIGHT);
-	}
+
+	Cform2D::Init(m_pDevice,m_apTextureName[0],D3DXVECTOR3(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f),SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	m_bfade=false;
 	m_color=D3DXCOLOR(1.0f,1.0f,1.0f,0.0f);
@@ -141,8 +138,9 @@ void CFade :: Draw(void)
 	}
 }
 
-void CFade ::StartFade(FADEMODE fade,int nCount,D3DXCOLOR color)
+void CFade ::StartFade(FADEMODE fade,int nCount,D3DXCOLOR color, int type)
 {
+	Cform2D::SetTexture(m_apTextureName[type]);
 	m_fadeType=fade;
 	m_nCount=nCount;
 	m_color=color;

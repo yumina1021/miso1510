@@ -43,7 +43,7 @@ class CFade  : public Cform2D
 		void Update(void);//çXêV
 		void Draw(void);//ï`âÊ
 
-		void StartFade(FADEMODE fade,int nCount,D3DXCOLOR color);
+		void StartFade(FADEMODE fade,int nCount,D3DXCOLOR color, int type);
 
 		void SetFade(FADEMODE fade){m_fadeType=fade;};
 		FADEMODE GetFade(void){return m_fadeType;};

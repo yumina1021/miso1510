@@ -83,7 +83,7 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//pSound->Play(SOUND_LABEL_BGM000);
 
 	
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 	return S_OK;
 }
@@ -308,7 +308,7 @@ void CTitle::ChangeState(){
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
 		if (m_pFade->GetPlayFade() == false)
 		{
-			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 			CScene::SetVSFlag(false);
 		}
 		break;
@@ -317,7 +317,7 @@ void CTitle::ChangeState(){
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
 		if (m_pFade->GetPlayFade() == false)
 		{
-			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 			CScene::SetVSFlag(true);
 		}
 		break;
@@ -326,7 +326,7 @@ void CTitle::ChangeState(){
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
 		if (m_pFade->GetPlayFade() == false)
 		{
-			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 		}
 		break;
 		//ƒGƒ“ƒh

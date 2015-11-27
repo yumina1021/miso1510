@@ -65,7 +65,7 @@ HRESULT CGameClear :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_nCount=0;
 
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 	return S_OK;
 }
@@ -106,7 +106,7 @@ void CGameClear :: Update(void)
 		if(m_nCount>=1)
 		{
 			//pSound->Play(SOUND_LABEL_SE_SELECT001);
-			m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(0.0f,0.0f,0.0f,0.0f));
+			m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(0.0f,0.0f,0.0f,0.0f),CManager::GetSelectChar(0));
 		}else
 		{
 			m_nCount++;

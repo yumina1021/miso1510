@@ -72,7 +72,7 @@ HRESULT CVsend :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);
 
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 	return S_OK;
 }
@@ -106,7 +106,7 @@ void CVsend :: Update(void)
 		CSound *pSound;
 		pSound = CManager::GetSound();
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
-		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
+		m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f),CManager::GetSelectChar(0));
 	}
 
 	//フェードインが終わったら

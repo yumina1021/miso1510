@@ -85,7 +85,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_bTitleBackFlag=false;
 
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 	m_bSendData=false;
 
 	float fTmpRad = (D3DX_PI * 2.0f) / MAX_BALL;
@@ -289,7 +289,7 @@ void CStageSelect::SelectByButton(void)
 		// 選択したマップを保存
 		CManager::SetSelectMap(m_playerData[0].nSelectNum);
 
-		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 		//pSound->PlayVoice(m_playerData[0].nSelectNum,VOICE_LABEL_SE_START);
 
 	}

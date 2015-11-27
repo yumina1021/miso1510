@@ -193,7 +193,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pEffect[2]->SetView(true);
 
 	// 受信スレッド開始
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 	return S_OK;
 }
@@ -298,14 +298,14 @@ void CGame :: Update(void)
 				case 1 :	m_bChangeFlag=true;
 							//pSound->Play(SOUND_LABEL_SE_SELECT001);
 							CManager::SetpauseFlag(false);
-							m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
+							m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f),CManager::GetSelectChar(0));
 		
 							break;
 				//エンド
 				case 2 :	m_bChangeFlag=true;
 							//pSound->Play(SOUND_LABEL_SE_SELECT001);
 							CManager::SetpauseFlag(false);
-							m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f));
+							m_pFade->StartFade(FADE_IN,100,D3DXCOLOR(1.0f,1.0f,1.0f,0.0f),CManager::GetSelectChar(0));
 							break;
 
 				default : break;
@@ -363,7 +363,7 @@ void CGame :: Update(void)
 			pInputKeyboard->Save();
 		}
 
-		m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
+		m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 		if(m_bVsSelectFlag==false)
 		{
@@ -749,7 +749,7 @@ void CGame::Judge()
 			CScene::SetVSFlag(false);
 		}
 
-		m_pFade->StartFade(FADE_IN, 500, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		m_pFade->StartFade(FADE_IN, 500, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 		m_nCount = 0;
 		m_bChangeFlag = true;
 	}

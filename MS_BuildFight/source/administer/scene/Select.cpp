@@ -83,7 +83,7 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);
-	m_pFade->StartFade(FADE_OUT, 50, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pFade->StartFade(FADE_OUT, 50, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),CManager::GetSelectChar(0));
 
 	//サウンド取得の作成
 	CSound *pSound;
@@ -219,7 +219,7 @@ void CSelect::UpdateFade(void)
 	//if (m_bChangeFlag == true)
 	//{
 	//	//pSound->Play(SOUND_LABEL_SE_SELECT002);
-	//	m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+	//	m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 	//	m_bChangeFlag = false;
 	//}
 
@@ -495,7 +495,7 @@ void CSelect::CheckSelectAllCorsor(int nParamDecisionCursor){
 		CManager::SetSelectChar(1, m_Select[1].nSelect);
 
 		// 選択したキャラを保存
-		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 
 	}
 	else
@@ -568,7 +568,7 @@ void CSelect::SelectByCursor(void){
 //				if (m_pFade->GetPlayFade() == false)
 //				{
 //					//pSound->Play(SOUND_LABEL_SE_SELECT001);
-//					m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+//					m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 //				}
 //			}
 //		}
