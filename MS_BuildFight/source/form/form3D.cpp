@@ -135,6 +135,105 @@ HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 	return S_OK;
 }
 //=============================================================================
+// 初期化
+//=============================================================================
+HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX, float fTexSizeY)
+{
+	m_pDevice = pDevice;
+
+	int nNumBlockX = 1;
+	int nNumBlockZ = 1;
+
+
+	//テクスチャの設定
+	D3DXCreateTextureFromFile(m_pDevice, pTexName, &m_pD3DTex);
+
+	//フィールドの初期化
+	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+	m_fLength = sqrtf((float)(((fTexSizeX / 2) * (fTexSizeX / 2)) + ((fTexSizeY / 2) * (fTexSizeY / 2))));
+	m_fAngle = atan2f((fTexSizeX / 2), (fTexSizeY / 2));
+
+	//頂点情報の設定
+	if (FAILED(m_pDevice->CreateVertexBuffer(sizeof(VERTEX_3D)* NUM_VERTEX,
+		D3DUSAGE_WRITEONLY,
+		FVF_VERTEX_3D,
+		D3DPOOL_MANAGED,
+		&m_pD3DVtxBuff,
+		NULL)))
+	{
+		return E_FAIL;
+	}
+
+	VERTEX_3D *pVtx;
+
+	// 頂点データの範囲をロックし、頂点バッファへのポインタを取得
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// 頂点座標の設定
+	pVtx[0].vtx.x = -sinf(m_fAngle) * m_fLength;
+	pVtx[0].vtx.y = 0.0f;
+	pVtx[0].vtx.z = -cosf(m_fAngle) * m_fLength;
+
+	pVtx[1].vtx.x = -sinf(m_fAngle) * m_fLength;
+	pVtx[1].vtx.y = 0.0f;
+	pVtx[1].vtx.z = cosf(m_fAngle) * m_fLength;
+
+	pVtx[2].vtx.x = sinf(m_fAngle) * m_fLength;
+	pVtx[2].vtx.y = 0.0f;
+	pVtx[2].vtx.z = -cosf(m_fAngle) * m_fLength;
+
+	pVtx[3].vtx.x = sinf(m_fAngle) * m_fLength;
+	pVtx[3].vtx.y = 0.0f;
+	pVtx[3].vtx.z = cosf(m_fAngle) * m_fLength;
+
+	// 頂点座標の設定
+	D3DXVECTOR3 vec0, vec1;
+	D3DXVECTOR3 nor0, nor1;
+
+	vec0 = pVtx[1].vtx - pVtx[0].vtx;
+	vec1 = pVtx[2].vtx - pVtx[1].vtx;
+
+	D3DXVec3Cross(&nor0, &vec0, &vec1);
+
+	D3DXVec3Normalize(&nor0, &nor0);
+
+	vec0 = pVtx[2].vtx - pVtx[1].vtx;
+	vec1 = pVtx[2].vtx - pVtx[3].vtx;
+
+	D3DXVec3Cross(&nor1, &vec0, &vec1);
+
+	D3DXVec3Normalize(&nor1, &nor1);
+
+	pVtx[0].nor = nor0;
+	pVtx[1].nor.x = (nor0.x + nor1.x) / 2;
+	pVtx[1].nor.y = (nor0.y + nor1.y) / 2;
+	pVtx[1].nor.z = (nor0.z + nor1.z) / 2;
+	pVtx[2].nor.x = (nor0.x + nor1.x) / 2;
+	pVtx[2].nor.y = (nor0.y + nor1.y) / 2;
+	pVtx[2].nor.z = (nor0.z + nor1.z) / 2;
+	pVtx[3].nor = nor1;
+
+	// 反射光の設定
+	pVtx[0].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	pVtx[1].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	pVtx[2].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	pVtx[3].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[1].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 0.0f);
+
+	// 頂点データをアンロックする
+	m_pD3DVtxBuff->Unlock();
+
+	return S_OK;
+}
+//=============================================================================
 // 終了
 //=============================================================================
 void Cform3D :: Uninit(void)

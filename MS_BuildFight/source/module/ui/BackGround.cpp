@@ -16,7 +16,7 @@ const LPSTR CBackGround::m_apTextureName[]=
 {
 	"data/TEXTURE/Title.jpg",
 	"data/TEXTURE/tutrial.jpg",
-	"data/TEXTURE/Select.jpg",
+	"data/TEXTURE/Select.png",
 	"data/TEXTURE/loading.jpg",
 	"data/TEXTURE/Pause.jpg",
 	"data/TEXTURE/GameClear.jpg",

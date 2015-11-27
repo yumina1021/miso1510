@@ -73,6 +73,7 @@ class CSelect  : public CScene
 		CBackGround*	m_pBackGround;								//背景
 		CFade*			m_pFade;									//フェード
 		CButton*		m_pCharPicture[CHARCTER_TYPE::TYPE_MAX];	//メニュー用
+		CCharPicture*	m_pLogo;									//メニュー用
 
 		bool			m_bChangeFlag;		//切り換えフラグ
 		float			m_fDiffuse;			//アニメーション用
@@ -81,6 +82,8 @@ class CSelect  : public CScene
 		bool			m_bSendData;		//相手データが送られた
 		SELECT_TYPE		m_nType;
 		SELECT_CURSOR	m_Select[2];
+		D3DXVECTOR3		m_OnCursorPos[CHARCTER_TYPE::TYPE_MAX];
+
 };
 
 #endif

@@ -29,6 +29,7 @@ class CformX  : public Cform
 		~CformX(void);//デストラクタ
 
 		static CformX *Create(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot,bool set,bool enemy);
+		static CformX *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pModNameStr, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName);//初期化
 		void Uninit(void);//終了
@@ -60,6 +61,8 @@ class CformX  : public Cform
 	private:
 
 		LPDIRECT3DTEXTURE9	m_pD3DTex[TEXTURE_MAX];	//テクスチャ表示用
+		LPDIRECT3DCUBETEXTURE9 m_pD3DTextureCube;	// テクスチャ読み込み場所
+
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)	
 
 		D3DXMATRIX			m_MtxView;				//ビューマトリクス

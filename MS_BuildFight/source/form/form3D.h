@@ -35,6 +35,7 @@ class Cform3D  : public Cform
 		static Cform3D *Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot);
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName);//èâä˙âª
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX, float fTexSizeY);
 		void Uninit(void);//èIóπ
 		void Update(void);//çXêV
 		void Draw(void);//ï`âÊ

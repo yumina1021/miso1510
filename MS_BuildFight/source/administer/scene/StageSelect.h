@@ -29,13 +29,14 @@ class CBall;
 class CMeshField;	//前方宣言
 class CCursor;
 class CButton;
-
+class CformX;
+class Cform3D;
 //*****************************************************************************
 // 列挙体定義
 //*****************************************************************************
 struct DISP_PLAY_STAGE
 {
-	CBall*	pDispObj;
+	CformX*	pDispObj;
 	float	fLenCoff;
 	int		nDestCnt;
 	float	fLenCoffDest;
@@ -87,7 +88,7 @@ class CStageSelect  : public CScene
 			const D3DXVECTOR3& paramLen2);
 
 	private:
-		CBackGround*		m_pBackGround;		//背景
+		Cform3D*			m_pBackGround;		//背景
 		CFade*				m_pFade;			//フェード
 		CMeshField*			m_pMeshField;		//メッシュフィールドのポインタ
 		DISP_PLAY_STAGE		m_Obj[MAX_BALL];
