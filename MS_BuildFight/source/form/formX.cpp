@@ -180,6 +180,10 @@ void CformX :: Uninit(void)
 		m_pD3DXBuffMatModel=NULL;
 	}
 
+	if(m_shader.ps != NULL	)m_shader.ps	->Release();
+	if(m_shader.psc!= NULL	)m_shader.psc	->Release();
+	if(m_shader.vs	!= NULL	)m_shader.vs	->Release();
+	if(m_shader.vsc!= NULL	)m_shader.vsc	->Release();
 	Cform::Release();
 }
 //=============================================================================

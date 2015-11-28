@@ -49,6 +49,7 @@ class CCamera
 		D3DXVECTOR3 GetPointView(void){return m_posPointView;};	//íçéãì_ÇÃéÛÇØìnÇµ
 
 		D3DXVECTOR3 GetPosP(void){ return m_posCameraP; }
+		void SetPosP(D3DXVECTOR3 pos){ m_posCameraP = pos; }
 		D3DXVECTOR3 GetPosR(void){ return m_posCameraR; }
 		D3DXVECTOR3 GetVecUp(void){ return m_posCameraU; }
 	private:

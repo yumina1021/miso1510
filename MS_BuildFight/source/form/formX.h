@@ -53,8 +53,15 @@ class CformX  : public Cform
 		void SetTextureNum(int num){nTextureNum=num;};
 		void SetViewFlag(bool	change){m_bDeathFlag=change;};
 		void ResetCount(int nCount){m_nDeathCount=nCount;};
-
-		void SetShader(SHADER_SET shader){ m_shader = shader;};
+		
+		void SetShader(SHADER_SET shader)
+		{
+			if (m_shader.ps != NULL)m_shader.ps->Release();
+			if (m_shader.psc != NULL)m_shader.psc->Release();
+			if (m_shader.vs != NULL)m_shader.vs->Release();
+			if (m_shader.vsc != NULL)m_shader.vsc->Release();
+			m_shader = shader;
+		};
 
 	protected:
 		LPD3DXMESH			m_pD3DXMeshModel;		//メッシュ情報へのポインタ

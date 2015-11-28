@@ -108,6 +108,7 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 		wiimote[i] = new WiiRemote;
 		if (!wiimote[i]->Init(0x1))
 		{
+			delete wiimote[i];
 			MessageBox(hWnd, "wiicon not connet", "Error", MB_OK);
 			wiimote[i] = NULL;
 		}
@@ -274,9 +275,11 @@ HRESULT CManager::RenderInit(HWND hWnd, BOOL bWindow)
 //=============================================================================
 void CManager :: Uninit(void)
 {
-
 	//メモリリークチェック
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	m_pSurfaceBackD->Release();
+	m_pSurfaceBack->Release();
 
 	m_pCamera->Uninit();	//カメラ
 

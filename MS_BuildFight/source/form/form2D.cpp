@@ -218,6 +218,7 @@ void Cform2D :: SetDiffuse(float r,float g,float b,float a)
 
 void Cform2D::SetTexture(LPSTR pFileName)
 {
+	if (m_pD3DTex != NULL)m_pD3DTex->Release();
 	D3DXCreateTextureFromFile(m_pDevice, pFileName, &m_pD3DTex);
 }
 

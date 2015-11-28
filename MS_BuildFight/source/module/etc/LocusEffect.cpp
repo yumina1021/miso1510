@@ -118,6 +118,10 @@ void CLocusEffect :: Uninit(void)
 		m_pD3DVtxBuff->Release();
 		m_pD3DVtxBuff=NULL;
 	}
+	if (shaderSet.ps != NULL)	shaderSet.ps->Release();
+	if (shaderSet.psc != NULL)	shaderSet.psc->Release();
+	if (shaderSet.vs != NULL)	shaderSet.vs->Release();
+	if (shaderSet.vsc != NULL)	shaderSet.vsc->Release();
 
 	Cform::Release();
 }

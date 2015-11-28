@@ -84,6 +84,9 @@ private:
 	D3DXVECTOR3 m_Accel;					//‰Á‘¬“x
 	D3DXVECTOR3 m_CurrentAccel;				//ŒX
 	D3DXVECTOR3 m_Roatation;				//ŒX‚«
+	D3DXVECTOR2 m_YawPitch;				//ŒX‚«
+	D3DXVECTOR3 m_MotionPlus;
+	D3DXVECTOR3 m_MotionRaw;
 	wiimote wiicont;
 	bool m_bVibe;
 	bool m_bSound;

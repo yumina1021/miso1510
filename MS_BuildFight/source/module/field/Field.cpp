@@ -426,6 +426,12 @@ void CMeshField::Uninit(void)
 		delete[] m_pBuffNormal;
 		m_pBuffNormal = NULL;
 	}
+	if (_ps		!= NULL)_ps->Release();
+	if (_psc	!= NULL)_psc->Release();
+	if (_vs[0]	!= NULL)_vs[0]->Release();
+	if (_vs[1]	!= NULL)_vs[1]->Release();
+	if (_vsc[0]	!= NULL)_vsc[0]->Release();
+	if (_vsc[1]	!= NULL)_vsc[1]->Release();
 
 	Cform::Release();
 }

@@ -190,6 +190,10 @@ void CPlayerM :: Uninit(void)
 		}
 	}
 
+	if (shaderSet.ps != NULL)	shaderSet.ps->Release();
+	if (shaderSet.psc != NULL)	shaderSet.psc->Release();
+	if (shaderSet.vs != NULL)	shaderSet.vs->Release();
+	if (shaderSet.vsc != NULL)	shaderSet.vsc->Release();
 	Cform::Release();
 
 }
@@ -227,6 +231,8 @@ void CPlayerM :: Restart(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 
 	// アニメーション設定
 	SetMotion(MOTIONTYPE_NEUTRAL);
+
+
 }
 //=============================================================================
 // 更新

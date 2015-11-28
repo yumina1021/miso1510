@@ -206,6 +206,11 @@ void CDomeU :: Uninit(void)
 		m_pD3DIndexBuff = NULL;
 	}
 
+
+	if (_ps != NULL)	_ps->Release();
+	if (_psc != NULL)	_psc->Release();
+	if (_vs != NULL)	_vs->Release();
+	if (_vsc != NULL)	_vsc->Release();
 	Cform::Release();
 }
 //=============================================================================

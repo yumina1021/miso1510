@@ -91,6 +91,11 @@ void TextBox::Uninitialize (void)
 	}
 
 	font_texture_container_.clear();
+
+	if (shader_.ps != NULL)shader_.ps->Release();
+	if (shader_.psc != NULL)shader_.psc->Release();
+	if (shader_.vs != NULL)shader_.vs->Release();
+	if (shader_.vsc != NULL)shader_.vsc->Release();
 }
 
 //=============================================================================

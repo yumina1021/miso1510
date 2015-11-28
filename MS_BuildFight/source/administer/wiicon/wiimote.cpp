@@ -1062,7 +1062,7 @@ void wiimote::DetectMotionPlusExtensionAsync ()
 // ------------------------------------------------------------------------------------
 bool wiimote::EnableMotionPlus ()
 	{
-	_ASSERT(bMotionPlusDetected);
+	if (bMotionPlusDetected != NULL)_ASSERT(bMotionPlusDetected);
 	if(!bMotionPlusDetected)
 		return false;
 	if(bMotionPlusEnabled)

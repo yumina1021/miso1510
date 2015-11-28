@@ -14,7 +14,6 @@
 #include "../Sound.h"
 
 #include "../../module/ui/BackGround.h"
-#include "../../module/ui/CharPicture.h"
 #include "../../module/ui/Button.h"
 #include "../../module/ui/Cursor.h"
 
