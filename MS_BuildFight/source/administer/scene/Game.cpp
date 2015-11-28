@@ -522,6 +522,8 @@ void CGame::TurnStart()
 			{
 			case 0:	m_pEffect[4]->FadeOut(60, CEffect::LEFT);
 				m_pEffect[2]->SetView(false);
+				m_pScore->SetViewFlag(false);
+				m_pCountPar->SetViewFlag(false);
 				m_nSwitchCount = SCENARIO_PHASE;
 				break;
 			case 1:	m_pEffect[5]->FadeOut(60, CEffect::LEFT);
@@ -582,6 +584,8 @@ void CGame::GameScenario()
 			m_nGameStartCount = 0;
 			m_pScenario->SetViewFlag(false, 0);
 			m_pEffect[2]->SetView(true);
+			m_pScore->SetViewFlag(true);
+			m_pCountPar->SetViewFlag(true);
 			m_nSwitchCount = ANGLE_PHASE;
 		}
 	}
