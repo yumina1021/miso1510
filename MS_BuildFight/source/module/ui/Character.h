@@ -27,6 +27,14 @@ typedef enum
 	FACIAL_NONE,
 	FACIAL_Max
 }FasialType;
+typedef enum
+{
+	FACE_NORMAL = 0,
+	FACE_SMILE,
+	FACE_ANGERY,
+	FACE_SAD,
+	FACE_MAX
+}FaceType;
 /*
 typedef enum
 {
@@ -70,6 +78,7 @@ class CCharacter  : public Cform2D
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		int					m_nCount;
+		LPDIRECT3DTEXTURE9	m_pTexture[FACE_MAX];
 		static const LPSTR	m_apTextureName[];
 		bool				m_ViewFlag;
 		FasialType			m_facialType;

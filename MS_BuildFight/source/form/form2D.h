@@ -35,12 +35,15 @@ class Cform2D  : public Cform
 		static Cform2D *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pFileName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,D3DXVECTOR3 pos,D3DXVECTOR3 rot,float width,float height);//初期化
+		HRESULT Init2(LPDIRECT3DDEVICE9 pDevice, LPDIRECT3DTEXTURE9 pFileName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);//初期化
 		void Uninit(void);//終了
+		void Uninit2(void);//終了
 		void Update(void);//更新
 		void Draw(void);//描画
 
 		void SetDiffuse(float r,float g,float b,float a);
 		void SetTexture(LPSTR pFileName);
+		void SetTexture(LPDIRECT3DTEXTURE9 pTex);
 
 		void SetPos(D3DXVECTOR3 pos){m_Pos=pos;};
 		void SetPos(float fx,float fy,float fz){m_Pos.x=fx;m_Pos.y=fy;m_Pos.z=fz;};

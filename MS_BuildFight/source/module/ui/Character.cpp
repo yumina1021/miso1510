@@ -91,13 +91,16 @@ HRESULT CCharacter::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, 
 		case 3:m_nCharaPas = CHARA_TUORIAL_TEXTURE; break;
 	}
 
-	std::string str1 = m_nCharaPas;
-	std::string str2 = m_apTextureName[m_facialType];
-
-	str1 += str2;
+	for (int i = 0; i < FACE_MAX; i++)
+	{
+		std::string str1 = m_nCharaPas;
+		std::string str2 = m_apTextureName[i];
+		str1 += str2;
+		D3DXCreateTextureFromFile(m_pDevice, (char *)str1.c_str(), &m_pTexture[i]);
+	}
 
 	//フィールドの初期化
-	Cform2D::Init(m_pDevice, (char *)str1.c_str(), pos, rot, 500, 750);
+	Cform2D::Init2(m_pDevice, m_pTexture[m_facialType], pos, rot, 500, 750);
 	return S_OK;
 }
 //=============================================================================
@@ -106,7 +109,15 @@ HRESULT CCharacter::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, 
 void CCharacter :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
-	Cform2D::Uninit();
+	Cform2D::Uninit2();
+	for (int i = 0; i < FACE_MAX; i++)
+	{
+		if (m_pTexture[i] != NULL)
+		{
+			m_pTexture[i]->Release();
+			m_pTexture[i] = NULL;
+		}
+	}
 }
 //=============================================================================
 // 更新
@@ -122,12 +133,8 @@ void CCharacter :: Update(void)
 		if (m_facialType != FACIAL_NONE)
 		{
 			m_ViewFlag = true;
-			std::string str1 = m_nCharaPas;
-			std::string str2 = m_apTextureName[m_facialType];
 
-			str1 += str2;
-
-			Cform2D::SetTexture((char *)str1.c_str());
+			Cform2D::SetTexture(m_pTexture[m_facialType]);
 		}
 		else
 		{
