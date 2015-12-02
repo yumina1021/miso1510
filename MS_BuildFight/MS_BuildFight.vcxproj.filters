@@ -169,6 +169,9 @@
     <ClCompile Include="source\administer\wiicon\wiimote.cpp">
       <Filter>source\administer\wiicontrol</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\Gimmick\Gimmick.cpp">
+      <Filter>source\module\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -360,6 +363,9 @@
     <ClInclude Include="source\administer\wiicon\wiimote.h">
       <Filter>source\administer\wiicontrol</Filter>
     </ClInclude>
+    <ClInclude Include="source\module\Gimmick\Gimmick.h">
+      <Filter>source\module\Gimmick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -397,6 +403,9 @@
     </Filter>
     <Filter Include="source\administer\wiicontrol">
       <UniqueIdentifier>{6d321061-756c-4326-8a73-650139e20240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\module\Gimmick">
+      <UniqueIdentifier>{58b1f297-636a-42c7-85e6-8d5cc538fb52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

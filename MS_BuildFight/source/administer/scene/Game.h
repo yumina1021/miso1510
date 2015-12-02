@@ -35,6 +35,8 @@ class CBall;
 class CGoal;
 class CScenario;
 
+class CGimmick;
+
 enum GAME_PHASE
 {
 	START_PHASE = 0,
@@ -141,6 +143,8 @@ class CGame  : public CScene
 		CGoal*			m_pGoal;
 		CGauge*			m_pGauge;
 		CScenario*		m_pScenario;
+
+		CGimmick*		m_pGimmick[10];
 
 		int				m_nCount;
 		int				m_nClearType;
