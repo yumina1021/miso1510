@@ -61,6 +61,7 @@ public:
 	bool GetKeyRelease(int nKey);
 	D3DXVECTOR2 GetWiiIRPos(void);		// X座標取得
 	D3DXVECTOR3 GetWiiSlope(void);		// wiiリモコン傾き
+	D3DXVECTOR3 GetWiiPlusSpeed(void){ return m_MotionPlus; };		// wiiリモコン傾き
 	float ShakeLevel(void);				// if (ShakeLevel(void) > 5);
 
 	float GetWiiYaw(void);		// X座標取得
@@ -71,7 +72,11 @@ public:
 	void WiiPlaySquare(int id);
 	void WiiStopSpeaker();
 	void VibeLation(bool);
-
+	void PostureUpdate();
+	void SetPostureFlag(bool tf){ m_Postureflag = tf; }
+	bool GetPostureFlag(void){ return m_Postureflag; }
+	void SetResetFlag(bool tf){ m_resetflag = tf; }
+	bool GetResetFlag(void){ return m_resetflag; }
 private:
 	BYTE m_PressWii[WII_BUTTOM_MAX];		//マウスボタンのトリガー情報
 	BYTE m_CurrentWii[WII_BUTTOM_MAX];	//マウスボタンのトリガー情報
@@ -87,9 +92,18 @@ private:
 	D3DXVECTOR2 m_YawPitch;				//傾き
 	D3DXVECTOR3 m_MotionPlus;
 	D3DXVECTOR3 m_MotionRaw;
+	D3DXVECTOR3 m_PlusSpeed;
+	D3DXVECTOR3 m_Posture;
+	D3DXVECTOR3 m_PlusAngle;
+	D3DXVECTOR3 m_OffsetPosture;
+	D3DXVECTOR3 m_PlusSpeedOld;
 	wiimote wiicont;
 	bool m_bVibe;
 	bool m_bSound;
+	bool m_Postureflag;
+	bool m_resetflag;
+	int m_count;
+
 	speaker_freq m_speaker;
 	wiimote_sample m_sample;
 	BYTE m_Volume;

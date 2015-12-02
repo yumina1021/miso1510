@@ -11,6 +11,7 @@
 #include "Ball.h"
 #include "LocusEffect.h"
 #include "../../exten_common.h"
+#include "../../administer/Debugproc.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -94,6 +95,7 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 
 	CformX::SetTexture("data/TEXTURE/tama.jpg", 0);
 
+	m_bmove = false;
 	return S_OK;
 }
 //=============================================================================
@@ -111,16 +113,19 @@ void CBall :: Uninit(void)
 //=============================================================================
 void CBall :: Update(void)
 {
-	m_MovVelocity -= m_MovVelocity * m_MovResist;
-	m_RotVelocity -= m_RotVelocity * m_RotResist;
+	if (m_bmove)
+	{
+		m_MovVelocity -= m_MovVelocity * m_MovResist;
+		m_RotVelocity -= m_RotVelocity * m_RotResist;
 
-	D3DXVECTOR3 pos = CformX::GetPos();
-	pos += m_MovVelocity;
-	CformX::SetPos(pos);
-	//エフェクトに座標設定
-	m_pLocusEffect->SetPosBuffer(CformX::GetPos());
-	m_pLocusEffect->SetPos(CformX::GetPos());
-
+		D3DXVECTOR3 pos = CformX::GetPos();
+		pos += m_MovVelocity;
+		CformX::SetPos(pos);
+		//エフェクトに座標設定
+		m_pLocusEffect->SetPosBuffer(CformX::GetPos());
+		m_pLocusEffect->SetPos(CformX::GetPos());
+	}
+	CDebugProc::Print("velocity::x:%fy:%f:z:%f\n", m_MovVelocity.x, m_MovVelocity.y, m_MovVelocity.z);
 	//更新呼び出し
 	CformX::Update();
 }

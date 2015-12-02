@@ -64,7 +64,8 @@ bool CGame::m_bReplayFlag =false;
 bool CGame::m_bVsSelectFlag = false;
 int	CGame::m_nPlayerNum;
 int	CGame::m_nSwitchCount;
-
+bool g_wiishot;
+float g_currentpower = 0.0f;
 key2Con K2CList[8]={
 	{DIK_Z, COMMAND_SHOT},
 	{DIK_X, COMMAND_ATTACK},
@@ -403,6 +404,7 @@ void CGame :: Update(void)
 			CManager::SetAfterScene(PHASETYPE_VSEND);
 		}
 	}
+	CDebugProc::Print("currentpower:%f\n", g_currentpower);
 }
 //=============================================================================
 // 描画
@@ -489,6 +491,7 @@ void CGame::TurnStart()
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
+	WiiRemote *wiicon = CManager::GetWii(0);
 	//プレイヤースタート表示
 	if (m_nGameStartCount == 0)
 	{
@@ -515,7 +518,7 @@ void CGame::TurnStart()
 	//始まります
 	if (m_nGameStartCount > 60)
 	{
-		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
 			m_nGameStartCount = 0;
 			switch (m_nPlayerNum)
@@ -537,6 +540,7 @@ void CGame::GameScenario()
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
+	WiiRemote *wiicon = CManager::GetWii(0);
 
 	static CScenario::GameAffair affair;
 
@@ -577,7 +581,7 @@ void CGame::GameScenario()
 	if (m_pScenario->GetScenarioEndFlag())
 	{
 		//エンター押して終了
-		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
 			m_nGameStartCount = 0;
 			m_pScenario->SetViewFlag(false, 0);
@@ -588,7 +592,7 @@ void CGame::GameScenario()
 	else
 	{
 		//エンター押して次のシナリオ
-		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
 			m_pScenario->GameScenario(m_nGameStartCount, affair);
 			m_nGameStartCount++;
@@ -601,6 +605,7 @@ void CGame::AngleDecision()
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
+	WiiRemote *wiicon = CManager::GetWii(0);
 
 	m_pEffect[0]->SetView(true);
 	m_pEffect[1]->SetView(true);
@@ -623,12 +628,12 @@ void CGame::AngleDecision()
 
 	D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
 	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
-	if (pInputKeyboard->GetKeyPress(DIK_RIGHT))
+	if (pInputKeyboard->GetKeyPress(DIK_RIGHT) || wiicon->GetKeyPress(WII_BUTTOM_RIGHT))
 	{
 		m_shotrot.y += D3DX_PI * 0.01f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
 	}
-	else if (pInputKeyboard->GetKeyPress(DIK_LEFT))
+	else if (pInputKeyboard->GetKeyPress(DIK_LEFT) || wiicon->GetKeyPress(WII_BUTTOM_LEFT))
 	{
 		m_shotrot.y -= D3DX_PI * 0.01f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
@@ -636,7 +641,7 @@ void CGame::AngleDecision()
 
 	bool rotlimit_x_max = m_shotrot.x - D3DX_PI / 4.0f < 3.14f;
 	bool rotlimit_x_min = m_shotrot.x > 0.3f;
-	if (pInputKeyboard->GetKeyPress(DIK_UP))
+	if (pInputKeyboard->GetKeyPress(DIK_UP) || wiicon->GetKeyPress(WII_BUTTOM_UP))
 	{
 		if (true)
 		{
@@ -644,7 +649,7 @@ void CGame::AngleDecision()
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 		}
 	}
-	else if (pInputKeyboard->GetKeyPress(DIK_DOWN))
+	else if (pInputKeyboard->GetKeyPress(DIK_DOWN) || wiicon->GetKeyPress(WII_BUTTOM_DOWN))
 	{
 		if (true)
 		{
@@ -663,7 +668,7 @@ void CGame::AngleDecision()
 					)*PLAYER_DISTANCE;
 	m_pPlayer[m_nPlayerNum]->SetPos(work);
 	//仮　スピード決めたから次
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		//ベクトルの関数呼ぶ場所
 		m_PowerShot = CheckVector(ball, work);
@@ -671,6 +676,7 @@ void CGame::AngleDecision()
 		m_pEffect[1]->SetView(false);
 		m_pEffect[6]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		m_nSwitchCount = POWER_PHASE;
+		g_wiishot = false;
 	}
 
 }
@@ -680,6 +686,7 @@ void CGame:: PowerDecision()
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
+	WiiRemote *wiicon = CManager::GetWii(0);
 	//弾のスピード調節
 	if (pInputKeyboard->GetKeyPress(DIK_Q))
 	{
@@ -712,6 +719,27 @@ void CGame:: PowerDecision()
 		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(m_MovePow.x*m_PowerShot);
+		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
+		g_currentpower = m_MovePow.x;
+	}
+	//仮　打つ力を決めたから次
+	if (g_wiishot&&wiicon->GetWiiYaw() <-80.0f)
+	{
+		float power = (abs(wiicon->GetWiiPlusSpeed().x))*0.01f;
+		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		m_nSwitchCount = MOVE_PHASE;
+		m_pBall[m_nPlayerNum]->AddForce(power*m_PowerShot);
+		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
+		g_currentpower = power;
+	}
+	if (wiicon->GetKeyTrigger(WII_BUTTOM_A))
+	{
+		wiicon->SetResetFlag(true); 
+		g_wiishot = true;
+	}
+	if (wiicon->GetKeyRelease(WII_BUTTOM_A)){
+		wiicon->SetResetFlag(true);
+		g_wiishot = false;
 	}
 }
 //弾移動
@@ -719,15 +747,17 @@ void CGame::BallMove()
 {
 	D3DXVECTOR3 velocity = m_pBall[m_nPlayerNum]->GetVelocity();
 	ObjHitCheck();
-	if (velocity.x < SHOT_RIMIT && velocity.y < SHOT_RIMIT && velocity.z < SHOT_RIMIT)
+	if (abs(velocity.x) < SHOT_RIMIT && abs(velocity.y) < SHOT_RIMIT && abs(velocity.z) < SHOT_RIMIT)
 	{
 		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
+		m_pBall[m_nPlayerNum]->SetMoveFlag(false);
 	}
 }
 //結果判定
 void CGame::Judge()
 {
+	WiiRemote *wiicon = CManager::GetWii(0);
 	ObjHitCheck();
 	//もしゴールしたら終了
 	if ((m_pBall[0]->GetGoalFlag() && m_pBall[1]->GetGoalFlag()) && !m_bJudge)
@@ -759,19 +789,20 @@ void CGame::Judge()
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//仮　入らなかった交代
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		m_nSwitchCount = END_PHASE;
 	}
 }
 void CGame::End()
 {
+	WiiRemote *wiicon = CManager::GetWii(0);
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//仮　入らなかった交代
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		m_nSwitchCount = CHANGE_PHASE;
 	}

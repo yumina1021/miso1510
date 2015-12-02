@@ -36,6 +36,7 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
+#define WII_CONTROLL	(1)
 LPDIRECT3DDEVICE9 CManager::m_pD3DDevice = NULL;		// デバイスのポインタ
 CInputKeyboard* CManager::m_pKeyboard = NULL;			//インプット
 CInputMouse * CManager ::m_pMouse = NULL;
@@ -103,10 +104,10 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	//m_pJoypad = new CInputJoypad();
 	//m_pJoypad->Init(hInstance,hWnd);
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < WII_CONTROLL; i++)
 	{
 		wiimote[i] = new WiiRemote;
-		if (!wiimote[i]->Init(0x1))
+		if (!wiimote[i]->Init(0x1 * (i + 1)))
 		{
 			delete wiimote[i];
 			MessageBox(hWnd, "wiicon not connet", "Error", MB_OK);
@@ -342,7 +343,7 @@ void CManager :: Uninit(void)
 	}
 
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < WII_CONTROLL; i++)
 	{
 		if (wiimote[i] != NULL)
 		{
@@ -380,7 +381,7 @@ void CManager :: Update(void)
 	m_pMouse->Update();
 	//m_pJoypad->Update();
 	m_pScene->Update();
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < WII_CONTROLL; i++)
 	{
 		if (wiimote[i] != NULL)
 		{
@@ -462,6 +463,14 @@ void CManager :: Update(void)
 	if (m_pKeyboard->GetKeyTrigger(DIK_F8))
 	{
 		SetAfterScene(PHASETYPE_RESULT);
+	}
+	if (m_pKeyboard->GetKeyTrigger(DIK_T))
+	{
+		wiimote[0]->SetPostureFlag(true);
+	}
+	if (m_pKeyboard->GetKeyTrigger(DIK_R))
+	{
+		wiimote[0]->SetResetFlag(true);
 	}
 }
 //=============================================================================
