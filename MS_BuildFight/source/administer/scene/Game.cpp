@@ -65,7 +65,7 @@ bool CGame::m_bVsSelectFlag = false;
 int	CGame::m_nPlayerNum;
 int	CGame::m_nSwitchCount;
 bool g_wiishot;
-float g_currentpower = 0.0f;
+int g_movelimit;
 key2Con K2CList[8]={
 	{DIK_Z, COMMAND_SHOT},
 	{DIK_X, COMMAND_ATTACK},
@@ -183,6 +183,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_nPlayerNum = 0;
 
 	m_nTurnCount = 0;
+
+	g_movelimit = 0;
 
 	//サウンド再生の作成
 	//pSound->Play(SOUND_LABEL_BGM001);
@@ -404,7 +406,6 @@ void CGame :: Update(void)
 			CManager::SetAfterScene(PHASETYPE_VSEND);
 		}
 	}
-	CDebugProc::Print("currentpower:%f\n", g_currentpower);
 }
 //=============================================================================
 // 描画
@@ -643,16 +644,18 @@ void CGame::AngleDecision()
 	bool rotlimit_x_min = m_shotrot.x > 0.3f;
 	if (pInputKeyboard->GetKeyPress(DIK_UP) || wiicon->GetKeyPress(WII_BUTTOM_UP))
 	{
-		if (true)
+		if (g_movelimit > -48)
 		{
+			g_movelimit--;
 			m_shotrot.x -= D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 		}
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_DOWN) || wiicon->GetKeyPress(WII_BUTTOM_DOWN))
 	{
-		if (true)
+		if (g_movelimit < 50)
 		{
+			g_movelimit++;
 			m_shotrot.x += D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 		}
@@ -720,7 +723,6 @@ void CGame:: PowerDecision()
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(m_MovePow.x*m_PowerShot);
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
-		g_currentpower = m_MovePow.x;
 	}
 	//仮　打つ力を決めたから次
 	if (g_wiishot&&wiicon->GetWiiYaw() <-80.0f)
@@ -730,7 +732,6 @@ void CGame:: PowerDecision()
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(power*m_PowerShot);
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
-		g_currentpower = power;
 	}
 	if (wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
@@ -752,6 +753,7 @@ void CGame::BallMove()
 		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
 		m_pBall[m_nPlayerNum]->SetMoveFlag(false);
+		g_movelimit = 0;
 	}
 }
 //結果判定
