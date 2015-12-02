@@ -36,7 +36,7 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-#define WII_CONTROLL	(1)
+#define WII_CONTROLL	(2)
 LPDIRECT3DDEVICE9 CManager::m_pD3DDevice = NULL;		// デバイスのポインタ
 CInputKeyboard* CManager::m_pKeyboard = NULL;			//インプット
 CInputMouse * CManager ::m_pMouse = NULL;
