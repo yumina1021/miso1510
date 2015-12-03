@@ -47,6 +47,8 @@ class CBall  : public CformX
 
 		D3DXVECTOR3 GetVelocity(void){ return m_MovVelocity; }
 		void SetVelocity(D3DXVECTOR3 vel){ m_MovVelocity = vel; }
+
+		void SetMoveFlag(bool mov){ m_bmove = mov; };
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		static const LPSTR	m_ModelName[];			//Modelの名前配列
@@ -62,6 +64,7 @@ class CBall  : public CformX
 		float m_RotResist;
 		D3DXVECTOR3 m_MovVelocity;
 		D3DXVECTOR3 m_RotVelocity;
+		bool m_bmove;
 };
 
 #endif

@@ -3,15 +3,16 @@
 #include <math.h>
 #include "WiiRemote.h"
 #include "../debugproc.h"
-#include <time.h>
+#include <MMSystem.h>
 
+#define CONNECT_TRY_NUM 2
+#define STATIC_CALIB_NUM 100
 #define WAIT_TIME	(20)
 #define PAWER_TWEAK	(0.45f)
 #define	PLUS_ZERO	(7990.0f)
 bool g_IR_connect;
 bool g_Connect = false;
-clock_t timer1, timer2;
-
+static DWORD g_time = timeGetTime();
 
 D3DXVECTOR3 test(0.f,0.f,0.f);
 void on_state_change(wiimote &remote,
@@ -100,7 +101,6 @@ void on_state_change(wiimote &remote,
 //=============================================================================
 bool WiiRemote::Init(BYTE light)
 {
-	bool tf;
 	m_nowIRpos = D3DXVECTOR2(0, 0);
 	m_currentIRpos = D3DXVECTOR2(0, 0);
 	m_Accel = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -108,15 +108,22 @@ bool WiiRemote::Init(BYTE light)
 	m_YawPitch = D3DXVECTOR2(0.0f,0.0f);
 	m_MotionPlus = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_MotionRaw = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_Posture = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_PlusSpeed = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_PlusAngle = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_PlusSpeedOld = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_OffsetPosture = D3DXVECTOR3(5,9,18);
 	wiicont.ChangedCallback = on_state_change;
 	wiicont.CallbackTriggerFlags = (state_change_flags)(CONNECTED | CHANGED_ALL);
 	wiicont.Connect(wiimote::FIRST_AVAILABLE);
+	m_count = 0;
 	
 	if (wiicont.IsConnected())wiicont.SetLEDs(light);
-	timer1 = clock();
 	g_Connect = wiicont.IsConnected();
 	m_bVibe = false;
 	m_bSound = false;
+	m_Postureflag = false;
+	m_resetflag = false;
 	m_speaker = FREQ_NONE;
 	m_Volume = 0x00;
 	m_sample.freq = FREQ_NONE;
@@ -140,6 +147,7 @@ void WiiRemote::Update(void)
 	wiicont.RefreshState();
 	UpdateButtom();
 	UpdateState();
+	PostureUpdate();
 	// 各入力系更新
 	for (int cnt = 0; cnt<WII_BUTTOM_MAX; cnt++)
 	{
@@ -166,6 +174,7 @@ void WiiRemote::Update(void)
 		CDebugProc::Print("加速度:: X:%f Y:%f Z:%f\n", m_Roatation.x, m_Roatation.y, m_Roatation.z);
 		CDebugProc::Print("PLUS  :: X:%f Y:%f Z:%f\n", m_MotionPlus.x, m_MotionPlus.y, m_MotionPlus.z);
 		CDebugProc::Print("RAW   :: X:%f Y:%f Z:%f\n", m_MotionRaw.x, m_MotionRaw.y, m_MotionRaw.z);
+		CDebugProc::Print("Plus  :: X:%f Y:%f Z:%f\n", m_PlusAngle.x, m_PlusAngle.y, m_PlusAngle.z);
 	}
 	
 #endif
@@ -192,11 +201,63 @@ void WiiRemote::UpdateState(void)
 	m_MotionRaw.x = wiicont.MotionPlus.Raw.Yaw;
 	m_MotionRaw.y = wiicont.MotionPlus.Raw.Pitch;
 	m_MotionRaw.z = wiicont.MotionPlus.Raw.Roll;
+	m_PlusSpeed.x = wiicont.MotionPlus.Speed.Yaw;
+	m_PlusSpeed.y = wiicont.MotionPlus.Speed.Pitch;
+	m_PlusSpeed.z = wiicont.MotionPlus.Speed.Roll;
 	if (wiicont.IsConnected())
 	{
 		m_nowIRpos.x = SCREEN_WIDTH - (float)wiicont.IR.Dot[0].X * SCREEN_WIDTH;
 		m_nowIRpos.y = SCREEN_WIDTH - (float)wiicont.IR.Dot[0].Y * SCREEN_WIDTH;
 	}
+}
+void WiiRemote::PostureUpdate()
+{
+	// 静的キャリブレーション
+	if (m_Postureflag) {
+		m_OffsetPosture += m_MotionPlus;
+
+		m_count++;
+		if (m_count >= STATIC_CALIB_NUM) {
+			m_OffsetPosture = m_Posture / STATIC_CALIB_NUM;
+
+			m_Posture = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			m_Postureflag = false;
+			m_count = 0;
+		}
+	}
+	// 角速度補正
+	m_PlusSpeed -= m_OffsetPosture;
+	DWORD frametime = timeGetTime() - g_time;
+	g_time = timeGetTime();
+	// 角度算出
+	if (m_PlusSpeed.x > 10 || m_PlusSpeed.x < - 10) {
+		float yaw = (m_PlusSpeed.x + m_PlusSpeedOld.x) * frametime / 2000;
+		m_PlusAngle.x += yaw;
+		m_PlusSpeedOld.x = m_PlusSpeed.x;
+	}
+	if (m_PlusSpeed.y > 10 || m_PlusSpeed.y < -10) {
+		float pitch = (m_PlusSpeed.y + m_PlusSpeedOld.y) * frametime / 2000;
+		m_PlusAngle.y += pitch;
+		m_PlusSpeedOld.y = m_PlusSpeed.y;
+	}
+	if (m_PlusSpeed.z > 10 || m_PlusSpeed.z < -10) {
+		float roll = (m_PlusSpeed.z + m_PlusSpeedOld.z) * frametime / 2000;
+		m_PlusAngle.z += roll;
+		m_PlusSpeedOld.z = m_PlusSpeed.z;
+	}
+	// 姿勢のリセット
+	if (m_resetflag) {
+		m_PlusAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_resetflag = false;
+	}
+
+	// 角度のオーバーフロー対策
+	if (m_PlusAngle.x <= -180)m_PlusAngle.x = 180;
+	if (m_PlusAngle.x > 180)m_PlusAngle.x = -180;
+	if (m_PlusAngle.y <= -180)m_PlusAngle.y = 180;
+	if (m_PlusAngle.y > 180)m_PlusAngle.y = -180;
+	if (m_PlusAngle.z <= -180)m_PlusAngle.z = 180;
+	if (m_PlusAngle.z > 180)m_PlusAngle.z = -180;
 }
 //=============================================================================
 // wiiリモコンのIR_X座標取得
@@ -248,21 +309,15 @@ bool WiiRemote::GetKeyRepeat(int nKey)
 }
 float WiiRemote::GetWiiYaw(void)
 {
-	return 0.0f;
-	if (!g_Connect) return 0.0f;
-	//return wiicont.MotionPlus.Raw.Yaw;
+	return m_PlusAngle.x;
 }
 float WiiRemote::GetWiiPitch(void)
 {
-	return 0.0f;
-	if (!g_Connect) return 0.0f;
-	//return wiicont.MotionPlus.Raw.Pitch;
+	return m_PlusAngle.y;
 }
 float WiiRemote::GetWiiRoll(void)
 {
-	return 0.0f;
-	if (!g_Connect) return 0.0f;
-	//return wiicont.MotionPlus.Raw.Roll;
+	return m_PlusAngle.z;
 }
 //=============================================================================
 // wiiリモコンの傾き　兼　加速度
@@ -282,11 +337,11 @@ D3DXVECTOR3 WiiRemote::GetWiiSlope(void)
 float WiiRemote::ShakeLevel(void)
 {
 	if (!g_Connect) return 0.0f;
-	int x,y,z;
+	float x,y,z;
 	x = abs(m_Accel.x);
 	y = abs(m_Accel.y);
 	z = abs(m_Accel.z);
-	return (x + y + z);
+	return (float)(x + y + z);
 }
 //=============================================================================
 // wiiリモコンボタン更新

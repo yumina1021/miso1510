@@ -16,7 +16,7 @@
 CCount :: CCount(int nPriority) : Cform(OBJTYPE_2D,nPriority)
 {
 	//ポリゴンの回転値初期化
-	for(int i=0;i<FIGURE_MAX;i++)
+	for(int i=0;i<COUNT_FIGURE_MAX;i++)
 	{
 		m_pNumber[i]=NULL;
 	}
@@ -53,7 +53,7 @@ HRESULT CCount :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot
 
 	m_bViewFlag = true;
 
-	for(int i=0;i<FIGURE_MAX;i++)
+	for(int i=0;i<COUNT_FIGURE_MAX;i++)
 	{
 		m_pNumber[i]=CNumber::Create(m_pDevice,D3DXVECTOR3(m_Pos.x+(i*30),m_Pos.y+27,m_Pos.z),D3DXCOLOR(0.0f,0.0f,1.0f,1.0f),35,70);
 	}
@@ -68,7 +68,7 @@ HRESULT CCount :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot
 void CCount :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
-	for(int i=0;i<FIGURE_MAX;i++)
+	for(int i=0;i<COUNT_FIGURE_MAX;i++)
 	{
 		m_pNumber[i]->Uninit();
 	}
@@ -80,7 +80,7 @@ void CCount :: Uninit(void)
 //=============================================================================
 void CCount :: Update(void)
 {
-	for(int i=0;i<FIGURE_MAX;i++)
+	for(int i=0;i<COUNT_FIGURE_MAX;i++)
 	{
 		m_pNumber[i]->Update();
 	}
@@ -92,7 +92,7 @@ void CCount :: Draw(void)
 {
 	if (m_bViewFlag)
 	{
-		for (int i = 0; i<FIGURE_MAX; i++)
+		for (int i = 0; i<COUNT_FIGURE_MAX; i++)
 		{
 			m_pNumber[i]->Draw();
 		}
@@ -122,7 +122,7 @@ void CCount :: AddCount(int nValue)
 	nCountlock=m_nCount;
 
 	//点数挿入
-	for(int i=FIGURE_MAX;i>0;i--)
+	for(int i=COUNT_FIGURE_MAX;i>0;i--)
 	{
 		float nNumber;
 
@@ -137,7 +137,7 @@ void CCount :: AddCount(int nValue)
 
 		nNumber/=10;
 
-		m_pNumber[FIGURE_MAX-i]->SetNumber(nNumber);
+		m_pNumber[COUNT_FIGURE_MAX-i]->SetNumber(nNumber);
 	}
 }
 
@@ -151,7 +151,7 @@ void CCount :: ResetCount(int nSet)
 	nCountlock=m_nCount;
 
 	//点数挿入
-	for(int i=FIGURE_MAX;i>0;i--)
+	for(int i=COUNT_FIGURE_MAX;i>0;i--)
 	{
 		float nNumber;
 
@@ -166,12 +166,12 @@ void CCount :: ResetCount(int nSet)
 
 		nNumber/=10;
 
-		m_pNumber[FIGURE_MAX-i]->SetNumber(nNumber);
+		m_pNumber[COUNT_FIGURE_MAX-i]->SetNumber(nNumber);
 	}
 }
 void CCount::ChangeColor(D3DXCOLOR color)
 {
-	for(int i=0;i<FIGURE_MAX;i++)
+	for(int i=0;i<COUNT_FIGURE_MAX;i++)
 	{
 		m_pNumber[i]->SetColor(color);
 	}

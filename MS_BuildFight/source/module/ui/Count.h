@@ -18,7 +18,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define FIGURE_MAX			(2)
+#define COUNT_FIGURE_MAX			(2)
 #define SCORE_MAX			(99)
 
 class CNumber;
@@ -63,7 +63,7 @@ class CCount  : public Cform
 		D3DXVECTOR3				m_Pos;			//位置
 		D3DXVECTOR3				m_Rot;			//向き
 
-		CNumber					*m_pNumber[FIGURE_MAX];
+		CNumber					*m_pNumber[COUNT_FIGURE_MAX];
 
 		int						m_nCount;
 		bool					m_bViewFlag;
