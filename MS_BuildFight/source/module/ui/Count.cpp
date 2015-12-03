@@ -51,6 +51,8 @@ HRESULT CCount :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot
 
 	m_nCount=initCnt;
 
+	m_bViewFlag = true;
+
 	for(int i=0;i<FIGURE_MAX;i++)
 	{
 		m_pNumber[i]=CNumber::Create(m_pDevice,D3DXVECTOR3(m_Pos.x+(i*30),m_Pos.y+27,m_Pos.z),D3DXCOLOR(0.0f,0.0f,1.0f,1.0f),35,70);
@@ -88,9 +90,12 @@ void CCount :: Update(void)
 //=============================================================================
 void CCount :: Draw(void)
 {
-	for(int i=0;i<FIGURE_MAX;i++)
+	if (m_bViewFlag)
 	{
-		m_pNumber[i]->Draw();
+		for (int i = 0; i<FIGURE_MAX; i++)
+		{
+			m_pNumber[i]->Draw();
+		}
 	}
 }
 //=============================================================================

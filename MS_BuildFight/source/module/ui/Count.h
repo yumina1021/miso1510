@@ -54,6 +54,8 @@ class CCount  : public Cform
 
 		int GetCount (void){return m_nCount;};
 
+		void SetViewFlag(bool change){ m_bViewFlag = change; };
+
 
 	private:
 		LPDIRECT3DDEVICE9		m_pDevice;		// pDeviceオブジェクト(描画に必要)	
@@ -64,6 +66,7 @@ class CCount  : public Cform
 		CNumber					*m_pNumber[FIGURE_MAX];
 
 		int						m_nCount;
+		bool					m_bViewFlag;
 };
 
 #endif
