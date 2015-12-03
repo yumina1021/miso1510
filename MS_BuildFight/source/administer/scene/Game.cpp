@@ -46,6 +46,8 @@
 #include "../../module/etc/Goal.h"
 #include "../../module/etc/LocusEffect.h"
 
+#include "../../module/Gimmick/Gimmick.h"
+
 #include "../Debugproc.h"
 #include "../../exten_common.h"
 
@@ -100,6 +102,8 @@ CGame :: CGame(void)
 	m_pScenario = NULL;
 
 	m_pBall[1] = {};
+
+	m_pGimmick[10] = {};
 }
 //=============================================================================
 // デストラクタ
@@ -224,6 +228,10 @@ void CGame :: Uninit(void)
 	delete m_pGoal;
 	m_pGoal = NULL;
 
+	//m_pGimmick->Uninit();
+	//delete m_pGimmick;
+	//m_pGimmick = NULL;
+
 	//シーンを全て終了
 	Cform::ReleaseAll();
 }
@@ -237,6 +245,7 @@ void CGame :: Update(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	m_pGoal->Update();
+
 
 	//更新本体
 	if (!m_bChangeFlag)
@@ -261,6 +270,7 @@ void CGame :: Update(void)
 			break;
 		}
 	}
+
 
 	CDebugProc::Print(" X = %f\n Y = %f\n Z = %f\n", m_MovePow.x, m_MovePow.y, m_MovePow.z);
 
@@ -434,6 +444,10 @@ void CGame :: Draw(void)
 		m_pBall[1]->Draw();
 
 		m_pGoal->Draw();
+		for (int i = 0; i < 2; i++)
+		{
+			m_pGimmick[i]->Draw();
+		}
 
 		for (int i = 0; i < 9; i++)
 		{
@@ -840,6 +854,9 @@ void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
 {
 	// ファイル読みこみに後に変更
 	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 500.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_TORNADO, MOVETYPE_STOP, D3DXVECTOR3(0.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGimmick[1] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_UPDOWN, D3DXVECTOR3(0.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 }
 // 当たり判定
 void CGame::ObjHitCheck()
