@@ -106,7 +106,7 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	for (int i = 0; i < 2; i++)
 	{
 		wiimote[i] = new WiiRemote;
-		if (!wiimote[i]->Init(0x1))
+		if (!wiimote[i]->Init(0x1 * (i + 1)))
 		{
 			delete wiimote[i];
 			MessageBox(hWnd, "wiicon not connet", "Error", MB_OK);

@@ -687,7 +687,7 @@ void CGame::AngleDecision()
 					)*PLAYER_DISTANCE;
 	m_pPlayer[m_nPlayerNum]->SetPos(work);
 	//仮　スピード決めたから次
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		//ベクトルの関数呼ぶ場所
 		m_PowerShot = CheckVector(ball, work);
