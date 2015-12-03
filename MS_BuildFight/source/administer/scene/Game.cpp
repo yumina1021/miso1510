@@ -738,6 +738,7 @@ void CGame:: PowerDecision()
 		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(m_MovePow.x*m_PowerShot);
+		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
 	}
 	//‰¼@‘Å‚Â—Í‚ðŒˆ‚ß‚½‚©‚çŽŸ
 	if (g_wiishot&&wiicon->GetWiiYaw() <-80.0f)
