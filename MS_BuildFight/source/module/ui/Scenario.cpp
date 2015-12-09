@@ -59,12 +59,12 @@ HRESULT CScenario::Init(LPDIRECT3DDEVICE9 pDevice, Character chara, bool viewfla
 
 	m_ViewFlag = viewflag;
 
-	m_charaType = CHARA_LILA;
+	m_charaType = chara;
 
 	m_bScenarioEndFlag = false;
 
 	//フィールドの初期化
-	m_CCharacter = CCharacter::Create(m_pDevice, 0, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_CCharacter = CCharacter::Create(m_pDevice, chara, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_window = Cform2D::Create(m_pDevice, "data/TEXTURE/window.png", D3DXVECTOR3(SCREEN_WIDTH / 2, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1300, 200);
 
