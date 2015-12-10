@@ -69,6 +69,8 @@ HRESULT CGoal::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, D3DXV
 	m_nRotChangeCount = 800;
 
 	m_fChangerot = 0.0f;
+
+	m_fhit = 0.5f;
 	
 	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet[0].vs, &shaderSet[0].vsc, m_pDevice);
 	Create_PS("source/shader/basicPS.hlsl", "PS_GOAL", &shaderSet[0].ps, &shaderSet[0].psc, m_pDevice);
@@ -93,6 +95,7 @@ void CGoal :: Uninit(void)
 //=============================================================================
 void CGoal :: Update(void)
 {
+	shaderSet[0].psc->SetFloatArray(m_pDevice, "g_goalhit", (float*)&m_fhit, 1);
 	D3DXVECTOR3 rot = m_pGoalLing->GetRot();
 
 	if (m_nRotChangeCount > 800)

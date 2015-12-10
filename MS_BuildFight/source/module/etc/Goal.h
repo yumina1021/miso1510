@@ -39,6 +39,7 @@ class CGoal
 		bool GetGoalFlag(void){ return m_bGoal; };
 
 		D3DXVECTOR3 GetPos(void){ return m_pGoal->GetPos(); };
+		void Sethit(float num){ m_fhit = num; }
 
 	private:
 		CformX*				m_pGoal;
@@ -51,6 +52,7 @@ class CGoal
 		bool				m_bGoal;				//ÉSÅ[ÉãÇµÇΩîªíË
 		int					m_nRotChangeCount;
 		float				m_fChangerot;
+		float				m_fhit;
 };
 
 #endif

@@ -106,6 +106,7 @@ class CGame  : public CScene
 				(b.y - a.y) * (b.y - a.y) +
 				(b.z - a.z) * (b.z - a.z) <= (al + bl) * (al + bl);}
 		static bool ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length);
+		static D3DXVECTOR3 GetVectorShot(void){ return m_PowerShot; }
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -142,7 +143,9 @@ class CGame  : public CScene
 		static CBall*	m_pBall[2];
 		CGoal*			m_pGoal;
 		CGauge*			m_pGauge;
-		CScenario*		m_pScenario;
+		CScenario*		m_pScenario[2];
+
+		CGimmick*		m_pGimmick[10];
 
 		CGimmick*		m_pGimmick[10];
 
@@ -162,10 +165,11 @@ class CGame  : public CScene
 		int				m_nPnum;
 		bool			m_bJudge;
 		int				m_nTurnCount;
+		int				m_GimmickMax;
 		static int		m_nSwitchCount;
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
-		D3DXVECTOR3		m_PowerShot;
+		static D3DXVECTOR3		m_PowerShot;
 };
 
 #endif

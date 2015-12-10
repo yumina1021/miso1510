@@ -11,6 +11,8 @@ float2 ScreenResolution;
 
 float4 gColor;
 float gValue;
+float g_ballalpha;
+float g_goalhit;
 
 float4 cubeMap(sampler cubemap, float3 toEye, float3 normalW);
 
@@ -106,7 +108,7 @@ float4 PS_EFFECT(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 /////////////////////////////////////////////////////////
 float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
-	float4 color = float4(1.0f,0.0f,1.0f,1.0f);
+	float4 color = float4(1.0f, 0.0f, 1.0f, g_ballalpha);
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -114,7 +116,7 @@ float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 /////////////////////////////////////////////////////////
 float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
-	float4 color = float4(0.2f, 0.6f, 1.0f, 1.0f);
+	float4 color = float4(0.2f, 0.6f, 1.0f, g_ballalpha);
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -122,7 +124,7 @@ float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 /////////////////////////////////////////////////////////
 float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
-	float4 color = float4(1.0f, 1.0f, 0.0f, 1.0f);
+	float4 color = float4(1.0f, 1.0f, 0.0f, g_ballalpha);
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -130,14 +132,15 @@ float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 /////////////////////////////////////////////////////////
 float4 PS_BALL_HAGE(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
-	float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 color = float4(1.0f, 1.0f, 1.0f, g_ballalpha);
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
-// ゴールリング用
+// ゴール用
 /////////////////////////////////////////////////////////
 float4 PS_GOAL(float4 diffuse : COLOR0) : COLOR0
 {
+	diffuse.r *= g_goalhit;
 	return float4(diffuse.rgb, 0.5f);
 }
 /////////////////////////////////////////////////////////
