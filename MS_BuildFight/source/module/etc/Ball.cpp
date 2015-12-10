@@ -92,6 +92,7 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 	m_MOI = 100.0f;
 	m_MovResist = 0.02f;
 	m_RotResist = 0.02f;
+	m_alpha = 0.4f;
 
 	CformX::SetTexture("data/TEXTURE/tama.jpg", 0);
 
@@ -134,6 +135,7 @@ void CBall :: Update(void)
 //=============================================================================
 void CBall :: Draw(void)
 {
+	shaderSet.psc->SetFloatArray(m_pDevice, "g_ballalpha", (float*)&m_alpha, 1);
 	if (m_bViewFlag)
 	{
 		m_pLocusEffect->Draw();

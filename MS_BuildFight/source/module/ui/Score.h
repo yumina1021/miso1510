@@ -52,6 +52,7 @@ class CScore  : public Cform
 		void SetRotCamera (D3DXVECTOR3 rotCamera){};
 
 		int GetScore(void){return m_nScore;};
+		void SetViewFlag(bool change){ m_bViewFlag = change; };
 
 	private:
 		LPDIRECT3DDEVICE9		m_pDevice;		// pDeviceオブジェクト(描画に必要)	
@@ -62,6 +63,7 @@ class CScore  : public Cform
 		CNumber					*m_pNumber[FIGURE_MAX];
 
 		int						m_nScore;
+		bool					m_bViewFlag;
 };
 
 #endif

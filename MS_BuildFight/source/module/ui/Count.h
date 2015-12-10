@@ -18,7 +18,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define FIGURE_MAX			(2)
+#define COUNT_FIGURE_MAX			(2)
 #define SCORE_MAX			(99)
 
 class CNumber;
@@ -54,6 +54,8 @@ class CCount  : public Cform
 
 		int GetCount (void){return m_nCount;};
 
+		void SetViewFlag(bool change){ m_bViewFlag = change; };
+
 
 	private:
 		LPDIRECT3DDEVICE9		m_pDevice;		// pDeviceオブジェクト(描画に必要)	
@@ -61,9 +63,10 @@ class CCount  : public Cform
 		D3DXVECTOR3				m_Pos;			//位置
 		D3DXVECTOR3				m_Rot;			//向き
 
-		CNumber					*m_pNumber[FIGURE_MAX];
+		CNumber					*m_pNumber[COUNT_FIGURE_MAX];
 
 		int						m_nCount;
+		bool					m_bViewFlag;
 };
 
 #endif
