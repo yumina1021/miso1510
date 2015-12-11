@@ -900,8 +900,8 @@ D3DXVECTOR3 CGame::CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player)
 //
 void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 {
-	m_nPnum = CScene::GetFrame();
-	m_nEnum = CScene::GetEnemy();
+	m_nPnum = CManager::GetSelectChar(0);
+	m_nEnum = CManager::GetSelectChar(1);
 	ObjectInit(pDevice);
 
 	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
