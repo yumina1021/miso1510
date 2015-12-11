@@ -311,6 +311,9 @@ void CDomeU :: Draw(void)
 	//ƒ|ƒŠƒSƒ“‚Ì•`‰æ
 	m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,0,0,m_nNumVertex,0,m_nNumVertexIndex-2);
 
+	pDevice->SetVertexShader(nullptr);
+
+	pDevice->SetPixelShader(nullptr);
 
 }
 /////////////EOF////////////

@@ -18,8 +18,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define TEXTURE_SIZE_X		(50)	// テクスチャの幅
-#define TEXTURE_SIZE_Y		(50)	// テクスチャの高さ
+#define TEXTURE_SIZE_X		(500)	// テクスチャの幅
+#define TEXTURE_SIZE_Y		(500)	// テクスチャの高さ
 #define	NUM_VERTEX			(4)		// 頂点数
 #define	NUM_POLYGON			(2)		// ポリゴン数
 #define SUM_INDEX(X,Z) ((X+1)*(Z-1)+((X+1)*(Z+1))+(Z-1)*2)
@@ -32,9 +32,8 @@ class Cform3D  : public Cform
 		Cform3D(int nPriority = 4);//コンストラクタ
 		~Cform3D(void);//デストラクタ
 
-		static Cform3D *Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot);
+		static Cform3D *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 		static Cform3D *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);
-
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName);//初期化
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX, float fTexSizeY);
@@ -50,21 +49,12 @@ class Cform3D  : public Cform
 		D3DXVECTOR3 GetRot(void){return m_Rot;};
 		void SetMtxView (D3DXMATRIX changeMtx){m_MtxView=changeMtx;};
 		void SetRotCamera (D3DXVECTOR3 rotCamera){m_RotCamera=rotCamera;};
-		void SetTexture(LPDIRECT3DTEXTURE9 pTex){m_pD3DTex=pTex;};
-	
+		void SetTexture(LPDIRECT3DTEXTURE9 pTex){ m_pD3DTex = pTex; };
+		void SetDiffuse(float r, float g, float b, float a);
+
 		float GetHeight(D3DXVECTOR3 pos, D3DXVECTOR3 *pNormal);
 		float GetHeightPolygon(const D3DXVECTOR3& P0, const D3DXVECTOR3& P1, const D3DXVECTOR3& P2,
 											D3DXVECTOR3 pos, D3DXVECTOR3 *pNormal = NULL);
-
-		void SetLength(float width, float height);
-		D3DXVECTOR2 GetLengthWH(void){ return D3DXVECTOR2(m_fLength, m_fAngle); };
-		void SetLength(float length){ m_fLength = length; };
-		float GetLength(void){ return m_fLength; };
-
-
-
-
-
 	protected:
 		LPDIRECT3DTEXTURE9  	m_pD3DTex;			//テクスチャ表示用
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;		//頂点情報格納ワーク(動的)

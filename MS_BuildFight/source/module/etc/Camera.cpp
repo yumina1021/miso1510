@@ -38,7 +38,7 @@ CCamera :: ~CCamera(void)
 HRESULT CCamera :: Init(void)
 {
 	//座標初期化
-	m_posCameraP = D3DXVECTOR3(0.0f,50.0f,200.0f);
+	m_posCameraP = D3DXVECTOR3(0.0f,50.0f,+200.0f);
 	m_posCameraR = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_posCameraU = D3DXVECTOR3(0.0f,1.0f,0.0f);
 
@@ -416,14 +416,14 @@ void CCamera :: ShotCamera(void)
 
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
-	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
+	D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
 
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
 	//m_posPointView = pBall->GetPos();
 	m_posCameraP = posModel;
-	m_posCameraR = EposModel;
+	m_posCameraR = pBall->GetPos();
 	//m_posCameraP = posModel;
 }
 //=============================================================================
@@ -449,12 +449,12 @@ void CCamera::MoveCamera(void)
 
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
-	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
+	D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
 
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
-	m_posCameraP = EposModel + ErotModel * -200.0f;
+	m_posCameraP = posModel;
 	m_posCameraR = EposModel;
 	//m_posPointView = pBall->GetPos();
 }
@@ -481,7 +481,7 @@ void CCamera::JudgeCamera(void)
 
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
-	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
+	D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
 
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
@@ -512,12 +512,12 @@ void CCamera::PowerCamera(void)
 
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
-	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
+	D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
 
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
-	m_posCameraP = posModel + ErotModel * -400.0f;
+	m_posCameraP = posModel;
 	m_posCameraR = EposModel;
 }
 //=============================================================================

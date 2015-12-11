@@ -23,9 +23,13 @@
 
 #include "../../module/etc/Camera.h"
 
+#include "../../module/field/Domeunder.h"
+#include "../../module/field/Dome.h"
+
 #include "../../module/etc/Ball.h"
 #include "../../form/formX.h"
 #include "../../form/form3D.h"
+#include "../../form/form2D.h"
 #include "../../module/field/Field.h"
 
 #include "../../administer/Debugproc.h"
@@ -41,7 +45,17 @@ const float CAMERA_POS_X(0.0f);
 const float CAMERA_POS_Y(0.0f);
 const float CAMERA_POS_Z(-500.0f);
 
-LPSTR pModName[MAX_BALL]
+const float NAME_POS_X(650.0f);
+const float NAME_POS_Y(550.0f);
+const float NAME_WIDTH(450.0f);
+const float NAME_HEIGHT(150.0f);
+
+const float STAR_OFFSET(0.0f);
+const float STAR_POS_Y(NAME_POS_Y + 90.0f);
+const float STAR_WIDTH(64.0f);
+const float STAR_HEIGHT(64.0f);
+
+LPSTR pModName[MAX_STAGE]
 {
 
 	"data/MODEL/stage1.x",
@@ -85,12 +99,6 @@ CStageSelect :: ~CStageSelect(void)
 //=============================================================================
 HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
-	//背景の作成
-	m_pBackGround = Cform3D::Create(pDevice, "data/TEXTURE/Select.png", D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	//フェードの作成
-	m_pFade=CFade::Create(pDevice,1);
-
 	//サウンド取得の作成
 	CSound *pSound;
 	pSound = CManager::GetSound();
@@ -98,35 +106,53 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//サウンド再生の作成
 	//pSound->Play(SOUND_LABEL_BGM004);
 
-	m_playerData[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 128, 128);
-	m_playerData[0].nSelectNum = 0;
+	//空の作成
+	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//空の作成
+	m_pDome2 = CDomeU::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+	// キャラ選択用ロゴ
+	m_pLogo = CButton::Create(pDevice, s_6, D3DXVECTOR3(SCREEN_WIDTH / 2, 100.0f, 0.0f), 900, 100);
+
+	//背景の作成
+	m_pBackGround = Cform3D::Create(pDevice, "data/TEXTURE/Select.png", D3DXVECTOR3(0.0f, 0.0f, 406.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pBackGround->SetDiffuse(1.0f, 1.0f, 1.0f, 0.6f);
+
+	//フェードの作成
+	m_pFade=CFade::Create(pDevice,1);
+
+	// カーソルの作成
+	m_playerData[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 128, 128);
 	m_playerData[1].pCursor = CCursor::Create(pDevice, s_5, D3DXVECTOR3(400.0f, 600.0f, 0.0f), 128, 128);
+	m_playerData[0].nSelectNum = 0;
 	m_playerData[1].nSelectNum = 0;
 
-	m_fDiffuse=1.0f;
+	// ステージ名
+	m_pStageName[0] = Cform2D::Create(pDevice, "data/TEXTURE/StageName1.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[1] = Cform2D::Create(pDevice, "data/TEXTURE/StageName2.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[2] = Cform2D::Create(pDevice, "data/TEXTURE/StageName3.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[3] = Cform2D::Create(pDevice, "data/TEXTURE/StageName4.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
 
-	m_bVsSelectFlag = CScene::GetVSFlag();
-
-	m_bTitleBackFlag=false;
-
-	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
-	m_bSendData=false;
-
-	float fTmpRad = (D3DX_PI * 2.0f) / MAX_BALL;
+	// 変数定義
+	float fTmpRad((D3DX_PI * 2.0f) / MAX_STAGE);
 	float tmpRot((D3DX_PI * 2.0f));
+	D3DXVECTOR3 tmpObjPos;
+	int nlevelArray[MAX_STAGE]{1, 3, 6, 10};
 
-	for (int i = 0; i < MAX_BALL; i++)
+	// 全てのステージを生成
+	for (int i = 0; i < MAX_STAGE; i++)
 	{
+
+		// 生成
 		m_Obj[i].pDispObj = CformX::Create(pDevice, pModName[i], D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		
+		// 各値の設定
 		m_Obj[i].fLenCoff = fTmpRad * static_cast<float>(i);
 		m_Obj[i].fLenCoffDest = m_Obj[i].fLenCoff;
 		m_Obj[i].nDestCnt = i;
-
-		D3DXVECTOR3 tmpObjPos;
 		tmpObjPos = m_Obj[i].pDispObj->GetPos();
 
-		//		// 衛星軌道用の係数をイージング曲線で求める
+		// 衛星軌道用の係数をイージング曲線で求める
 		m_Obj[i].fLenCoff = CCursor::EsasingNone(m_Obj[i].fLenCoff, m_Obj[m_Obj[i].nDestCnt].fLenCoffDest, m_fTime);
 
 		// 原点0を中心として衛星軌道用の座標を求める
@@ -136,7 +162,46 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 		// 座標を更新
 		m_Obj[i].pDispObj->SetPos(tmpObjPos);
+
+		// 難易度の設定
+		m_Obj[i].nlevel = nlevelArray[i];
+
 	}
+
+	int levelCnt(1);
+	float posX(0.0f);
+
+	// 難易度可視化用の★
+	for (int i = 0; i < MAX_LEVEL; i++)
+	{
+		// 座標の計算
+		posX = (NAME_POS_X - NAME_WIDTH * 0.25f) + STAR_WIDTH * i;
+
+		// 生成
+		m_pLevelStar[i] = Cform2D::Create(pDevice, "data/TEXTURE/LevelStar.png", D3DXVECTOR3(posX, STAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), STAR_WIDTH, STAR_HEIGHT);
+
+		// 色付け
+		// 中間
+		if (levelCnt > 3 && levelCnt < 8)
+		{
+			m_pLevelStar[i]->SetDiffuse(0.0f, 1.0f, 0.0f, 1.0f);
+		}
+		else if (levelCnt > 7)
+		{
+			m_pLevelStar[i]->SetDiffuse(1.0f, 0.0f, 0.0f, 1.0f);
+
+		}
+		else
+		{
+			m_pLevelStar[i]->SetDiffuse(0.0f, 0.0f, 1.0f, 1.0f);
+
+		}
+
+		levelCnt++;
+
+	}
+	// フェードアウトの開始
+	m_pFade->StartFade(FADE_OUT, 50, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), CManager::GetSelectChar(0));
 
 	return S_OK;
 }
@@ -151,8 +216,6 @@ void CStageSelect :: Uninit(void)
 
 	//サウンド再生の作成
 	pSound->Stop();
-
-
 
 	//シーンを全て終了
 	Cform::ReleaseAll();
@@ -181,6 +244,8 @@ void CStageSelect :: Update(void)
 		break;
 
 	case STATE::CHANGE_SCENE:
+
+		// フェードの更新
 		UpdateFade();
 
 		break;
@@ -201,22 +266,47 @@ void CStageSelect :: Update(void)
 //=============================================================================
 void CStageSelect :: Draw(void)
 {
+
+	m_pDome->Draw();
+	m_pDome2->Draw();
+
+	// 背景の描画
 	m_pBackGround->Draw();
 
-	for (int i = 0; i < MAX_BALL; i++)
+
+	// 全てのステージ
+	for (int i = 0; i < MAX_STAGE; i++)
 	{
 
+		// 描画
 		m_Obj[i].pDispObj->Draw();
 
 	}
 
+	// 全てのカーソル
 	for (int i = 0; i < 2; i++)
 	{
+
+		// 描画
 		m_playerData[i].pCursor->Draw();
 
 	}
-	//フェードの作成
+
+	// 難易度設定用の★
+	for (int i = 0; i < m_Obj[m_playerData[0].nSelectNum].nlevel; i++)
+	{
+		m_pLevelStar[i]->Draw();
+	}
+
+	// ロゴ
+	m_pLogo->Draw();
+
+	// 現在選択中のステージ名
+	m_pStageName[m_playerData[0].nSelectNum]->Draw();
+
+	//フェード
 	m_pFade->Draw();
+
 }
 //=============================================================================
 // 描画
@@ -225,12 +315,14 @@ void CStageSelect::UpdateSelectObject()
 {
 	D3DXVECTOR3 tmpObjPos;
 
-	for (int i = 0; i < MAX_BALL; i++)
+	// 全てのステージ
+	for (int i = 0; i < MAX_STAGE; i++)
 	{
 
+		// 座標の取得
 		tmpObjPos = m_Obj[i].pDispObj->GetPos();
 
-		//		// 衛星軌道用の係数をイージング曲線で求める
+		// 衛星軌道用の係数をイージング曲線で求める
 		m_Obj[i].fLenCoff = CCursor::EsasingNone(m_Obj[i].fLenCoff, m_Obj[m_Obj[i].nDestCnt].fLenCoffDest, m_fTime);
 
 		// 原点0を中心として衛星軌道用の座標を求める
@@ -258,7 +350,7 @@ void CStageSelect::UpdateSelectObject()
 
 		m_nState = STATE::NORMAL;
 
-		for (int i = 0; i < MAX_BALL; i++)
+		for (int i = 0; i < MAX_STAGE; i++)
 		{
 			m_Obj[i].fLenCoff = m_Obj[m_Obj[i].nDestCnt].fLenCoffDest;
 		}
@@ -274,20 +366,14 @@ void CStageSelect::UpdateSelectObject()
 //=============================================================================
 void CStageSelect::UpdateFade(void)
 {
+
 	//フェードインが終わったら
 	if (m_pFade->GetFade() == FADE_IN_END)
 	{
-		if (m_bTitleBackFlag == false)
-		{
-			//次のフェーズを変える
-			CManager::SetAfterScene(PHASETYPE_GAME);
-		}
-		else
-		{
-			//次のフェーズを変える
-			CManager::SetAfterScene(PHASETYPE_TITLE);
-		}
+		//次のフェーズを変える
+		CManager::SetAfterScene(PHASETYPE_GAME);
 	}
+
 }
 //=============================================================================
 // キーボードでの選択
@@ -306,7 +392,7 @@ void CStageSelect::SelectByButton(void)
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
-	float fTmpRad = (D3DX_PI * 2.0f) / MAX_BALL;
+	float fTmpRad = (D3DX_PI * 2.0f) / MAX_STAGE;
 	float tmpRot((D3DX_PI * 2.0f));
 
 	//エンターキーが押された場合
@@ -331,7 +417,7 @@ void CStageSelect::SelectByButton(void)
 		m_playerData[0].nSelectNum--;
 		NomalizeSelectObject(m_playerData[0].nSelectNum);
 
-		for (int i = 0; i < MAX_BALL; i++)
+		for (int i = 0; i < MAX_STAGE; i++)
 		{
 			m_Obj[i].nDestCnt--;
 			NomalizeSelectObject(m_Obj[i].nDestCnt);
@@ -353,7 +439,7 @@ void CStageSelect::SelectByButton(void)
 		m_playerData[0].nSelectNum++;
 		NomalizeSelectObject(m_playerData[0].nSelectNum);
 
-		for (int i = 0; i < MAX_BALL; i++)
+		for (int i = 0; i < MAX_STAGE; i++)
 		{
 			m_Obj[i].nDestCnt++;
 			NomalizeSelectObject(m_Obj[i].nDestCnt);
@@ -403,14 +489,15 @@ void CStageSelect::NomalizeSelectObject(int& nParamVal)
 	if (nParamVal < 0)
 	{
 
-		nParamVal = MAX_BALL - 1;
+		nParamVal = MAX_STAGE - 1;
 
 	}
-	else if (nParamVal >= MAX_BALL)
+	else if (nParamVal >= MAX_STAGE)
 	{
 
 		nParamVal = 0;
 
 	}
 
-}////////////EOF////////////
+}
+////////////EOF////////////
