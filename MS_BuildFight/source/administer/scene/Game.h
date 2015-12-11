@@ -147,8 +147,6 @@ class CGame  : public CScene
 
 		CGimmick*		m_pGimmick[10];
 
-		CGimmick*		m_pGimmick[10];
-
 		int				m_nCount;
 		int				m_nClearType;
 		int				m_nCursor;

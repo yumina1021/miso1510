@@ -204,6 +204,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	// 受信スレッド開始
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
+	CManager::SetWin(PLAYER_DRAW);
 	return S_OK;
 }
 //=============================================================================
@@ -806,7 +807,18 @@ void CGame::Judge()
 		{
 			CScene::SetVSFlag(false);
 		}
-
+		if (m_pBall[0]->GetShotNum() < m_pBall[1]->GetShotNum())
+		{
+			CManager::SetWin(PLAYER1_WIN);
+		}
+		else if (m_pBall[0]->GetShotNum() > m_pBall[1]->GetShotNum())
+		{
+			CManager::SetWin(PLAYER2_WIN);
+		}
+		else
+		{
+			CManager::SetWin(PLAYER_DRAW);
+		}
 		m_pFade->StartFade(FADE_IN, 500, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 		m_nCount = 0;
 		m_bChangeFlag = true;
