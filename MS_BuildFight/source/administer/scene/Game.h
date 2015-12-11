@@ -34,6 +34,7 @@ class CDomeU;
 class CBall;
 class CGoal;
 class CScenario;
+class CformX;
 
 class CGimmick;
 
@@ -144,6 +145,7 @@ class CGame  : public CScene
 		CGoal*			m_pGoal;
 		CGauge*			m_pGauge;
 		CScenario*		m_pScenario[2];
+		CformX*			m_cursol;
 
 		CGimmick*		m_pGimmick[10];
 

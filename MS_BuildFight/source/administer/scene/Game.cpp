@@ -454,7 +454,7 @@ void CGame :: Draw(void)
 		{
 			m_pGimmick[i]->Draw();
 		}
-
+		m_cursol->Draw();
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
 		for (int i = 0; i < 9; i++)
@@ -861,6 +861,19 @@ void CGame::charachange()
 		m_nPlayerNum = 0;
 	}
 
+
+	if (m_pBall[m_nPlayerNum]->GetGoalFlag())
+	{
+		if (m_nPlayerNum == 0)
+		{
+			m_nPlayerNum = 1;
+		}
+		else
+		{
+			m_nPlayerNum = 0;
+		}
+	}
+
 	m_nSwitchCount = START_PHASE;
 }
 void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
@@ -902,6 +915,8 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+	m_cursol = CformX::Create(pDevice, "data/MODEL/cube.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_cursol->SetViewFlag(false);
 }
 //
 void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
