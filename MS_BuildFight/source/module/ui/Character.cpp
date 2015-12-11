@@ -13,8 +13,8 @@
 
 #define CHARA_ROSA_TEXTURE		"data/TEXTURE/character/rosa/"
 #define CHARA_LILA_TEXTURE		"data/TEXTURE/character/lila/"
-#define CHARA_OJYO_TEXTURE		"data/TEXTURE/character/ojyo/"
-#define CHARA_TUORIAL_TEXTURE	"data/TEXTURE/character/tutorial/"
+#define CHARA_OJYO_TEXTURE		"data/TEXTURE/character/licht/"
+#define CHARA_TUORIAL_TEXTURE	"data/TEXTURE/character/navi/"
 
 //*****************************************************************************
 // 静的変数
@@ -78,8 +78,6 @@ HRESULT CCharacter::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, 
 {
 	m_pDevice = pDevice;
 
-	nType = 1;
-
 	m_facialType = FACIAL_SMILE;
 	m_facialTypeOld = m_facialType;
 
@@ -99,8 +97,16 @@ HRESULT CCharacter::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, 
 		D3DXCreateTextureFromFile(m_pDevice, (char *)str1.c_str(), &m_pTexture[i]);
 	}
 
-	//フィールドの初期化
-	Cform2D::Init2(m_pDevice, m_pTexture[m_facialType], pos, rot, 500, 750);
+	if (nType == 0)
+	{
+		//フィールドの初期化
+		Cform2D::Init2(m_pDevice, m_pTexture[m_facialType], pos, rot, 625, 750);
+	}
+	else
+	{
+		//フィールドの初期化
+		Cform2D::Init2(m_pDevice, m_pTexture[m_facialType], pos, rot, 500, 750);
+	}
 	return S_OK;
 }
 //=============================================================================
