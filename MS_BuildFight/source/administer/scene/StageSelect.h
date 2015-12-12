@@ -15,8 +15,8 @@
 //*****************************************************************************
 // 
 //*****************************************************************************
-const int MAX_BALL(4);
-
+const int MAX_STAGE(4);
+const int MAX_LEVEL(10);
 
 //*****************************************************************************
 // クラス定義
@@ -31,6 +31,9 @@ class CCursor;
 class CButton;
 class CformX;
 class Cform3D;
+class Cform2D;
+class CDome;
+class CDomeU;
 //*****************************************************************************
 // 列挙体定義
 //*****************************************************************************
@@ -40,6 +43,7 @@ struct DISP_PLAY_STAGE
 	float	fLenCoff;
 	int		nDestCnt;
 	float	fLenCoffDest;
+	int		nlevel;
 
 };
 
@@ -91,8 +95,12 @@ class CStageSelect  : public CScene
 		Cform3D*			m_pBackGround;		//背景
 		CFade*				m_pFade;			//フェード
 		CMeshField*			m_pMeshField;		//メッシュフィールドのポインタ
-		DISP_PLAY_STAGE		m_Obj[MAX_BALL];
-		float				m_fDiffuse;			//アニメーション用
+		CButton*			m_pLogo;;
+		DISP_PLAY_STAGE		m_Obj[MAX_STAGE];
+		Cform2D*			m_pStageName[MAX_STAGE];//ステージ名
+		Cform2D*			m_pLevelStar[MAX_LEVEL];//ステージ名
+		CDome*				m_pDome;
+		CDomeU*				m_pDome2;
 		bool				m_bVsSelectFlag;	//VSモード用
 		bool				m_bTitleBackFlag;	//タイトルに行きました
 		bool				m_bSendData;		//相手データが送られた

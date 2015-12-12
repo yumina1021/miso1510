@@ -9,7 +9,7 @@
 
 #define DEFAULT_TEXT_X	(210)
 #define DEFAULT_TEXT_Y	(590)
-#define DEFAULT_TEXT_SPEED	(10)
+#define DEFAULT_TEXT_SPEED	(5)
 
 #define LAST	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, 0, FACIAL_NONE, "・・・", true }
 
@@ -26,17 +26,31 @@ typedef struct
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //rosa（ピンク）
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-GameScenarioData scenario_rosa_start[5] = 
+GameScenarioData scenario_rosa_start[4] = 
 {
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "ああ", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "いい", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "うう", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "ええ", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "あなたが私の相手？", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "私に勝てるかしら？", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "勝てたらご褒美あげるわっ♪", false },
 	LAST
 };
-GameScenarioData scenario_rosa_win[4];
-GameScenarioData scenario_rosa_lose[4];
-GameScenarioData scenario_rosa_harf[4];
+GameScenarioData scenario_rosa_win[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "なかなかやるじゃない", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "ご褒美につられてるのかな？", false },
+	LAST
+};
+GameScenarioData scenario_rosa_lose[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "つまらないわねぇ", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "あんたマグロ？", false },
+	LAST
+};
+GameScenarioData scenario_rosa_harf[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "同じくらいか", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "まぁまだ本気出してないし…", false },
+	LAST
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //リーラ（青）
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,14 +82,55 @@ GameScenarioData scenario_lila_harf[3] =
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //ojyo(黄)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-GameScenarioData scenario_ojyo_start[5];
-GameScenarioData scenario_ojyo_win[4];
-GameScenarioData scenario_ojyo_lose[4];
-GameScenarioData scenario_ojyo_harf[4];
+GameScenarioData scenario_ojyo_start[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "わたくしの相手はあなた？", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "平民の分際でわたくしと戦えるのです。光栄に思いなさい！", false },
+	LAST
+};
+GameScenarioData scenario_ojyo_win[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "ふーん。この程度？(平民の分際でやるじゃない…)", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "手加減してあげただけだから。これからよ！", false },
+	LAST
+};
+GameScenarioData scenario_ojyo_lose[3]=
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "こんなものなのかしら？わたくしの圧勝ね", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "さぁもっと差を開いて差し上げますわ！", false },
+	LAST
+};
+GameScenarioData scenario_ojyo_harf[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "天に仰ぎ見るべきこの我を同じ大地に立たせるか！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "その不敬、万死に値する！！", false },
+	LAST
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //tutorial(チュートリアル子)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-GameScenarioData scenario_tutorial_start[5];
-GameScenarioData scenario_tutorial_win[4];
-GameScenarioData scenario_tutorial_lose[4];
-GameScenarioData scenario_tutorial_harf[4];
+GameScenarioData scenario_tutorial_start[4] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "さぁゲームスタートです！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "勝利の女神はどちらに微笑むか！？", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "注目の一戦です！！", false },
+	LAST
+};
+GameScenarioData scenario_tutorial_win[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "現在相手が先行しております！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "あなたも頑張ってください！", false },
+	LAST
+};
+GameScenarioData scenario_tutorial_lose[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "相手を突き放す快進撃！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "すごい！すごいですよー", false },
+	LAST
+};
+GameScenarioData scenario_tutorial_harf[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "現在同じくらいの距離です。", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "まだまだ勝敗はわかりません！", false },
+	LAST
+};

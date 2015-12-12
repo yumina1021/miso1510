@@ -32,7 +32,12 @@ typedef enum			//フェーズの種類
 	PHASETYPE_VSEND,
 	PHASETYPE_MAX
 }PHASETYPE;
-
+typedef enum
+{
+	PLAYER1_WIN = 0,
+	PLAYER2_WIN,
+	PLAYER_DRAW
+}JUDGETYPE;
 struct RenderTagets		//レンダーターゲット
 {
 	LPDIRECT3DTEXTURE9		texture;		//テクスチャ用ポインタ
@@ -109,6 +114,9 @@ class CManager
 		void RemoveRenderTargets(int i);
 		RenderTagets* GetRenderTargets(int i){ return m_renderTargets[i]; };
 
+		static void SetWin(int win){ m_gamewin = win; }
+		static int GetWin(void){ return m_gamewin; }
+
 		static WiiRemote* GetWii(int id){ return wiimote[id]; }
 	private:
 		void RenderTargetDraw(void);
@@ -162,6 +170,8 @@ class CManager
 
 		static int				m_nSelectMap;		//選んだマップ
 		static int				m_nSelectChar[2];	//選んだキャラ
+
+		static int				m_gamewin;
 };
 
 #endif

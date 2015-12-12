@@ -63,6 +63,7 @@ bool CManager::m_gameEndFlag = false;
 bool CManager::m_night0PlayFlag = false;
 int CManager::m_nSelectMap = 0;
 int CManager::m_nSelectChar[] = { 0, 1 };
+int CManager::m_gamewin = 0;
 
 //インプット
 //=============================================================================

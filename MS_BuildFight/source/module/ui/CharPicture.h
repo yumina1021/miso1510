@@ -32,6 +32,7 @@ typedef enum
 	s_5,
 	s_6,
 	s_7,
+	s_8,
 	n_b,
 	s_99,
 	p_continue,

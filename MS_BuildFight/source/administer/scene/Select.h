@@ -13,6 +13,7 @@
 #include "scene.h"
 
 const int MAX_CURSOR(2);
+const int MAX_PLAYER(2);
 
 //*****************************************************************************
 // 列挙体定義
@@ -35,9 +36,22 @@ class CCharPicture;
 class CEffect;
 class CButton;
 class CCursor;
-
+class Cform3D;
+class Cform2D;
+class CformX;
+class CDome;
+class CDomeU;
 class CSelect  : public CScene
 {
+
+	enum class STATE
+	{
+		NORMAL,
+		SELECT_BUTTON,
+		SELECT_CUSOR,
+		CHANGE_SCENE,
+
+	};
 
 	enum SELECT_TYPE
 	{
@@ -68,12 +82,22 @@ class CSelect  : public CScene
 		void ChangeButton(void);				// ボタンの遷移
 		void CheckSelectAllCorsor(int nParamDecisionCursor);// 全カーソルが選択したかどうかの検査
 		void CheckSelectOverlapCorsor(int nParamDecisionCursor);// 重複したカーソルがあるかどうかの検査
+		void ChkSelectButton(int nParamSelectCursor);
+		int NomalizeSelectPlayer(int nParamVal);
 
 	private:
-		CBackGround*	m_pBackGround;								//背景
+		Cform3D*		m_pBackGround;								//背景
 		CFade*			m_pFade;									//フェード
 		CButton*		m_pCharPicture[CHARCTER_TYPE::TYPE_MAX];	//メニュー用
+		Cform2D*		m_pCharFrame[CHARCTER_TYPE::TYPE_MAX];	//メニュー用
 		CCharPicture*	m_pLogo;									//メニュー用
+		CformX*			m_pCharModPlayer1[CHARCTER_TYPE::TYPE_MAX];
+		CformX*			m_pCharModPlayer2[CHARCTER_TYPE::TYPE_MAX];
+		Cform2D*		m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_MAX];
+		Cform2D*		m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_MAX];
+		Cform2D*		m_pPlayerPic[MAX_PLAYER];
+		CDome*			m_pDome;
+		CDomeU*			m_pDome2;
 
 		bool			m_bChangeFlag;		//切り換えフラグ
 		float			m_fDiffuse;			//アニメーション用

@@ -17,6 +17,15 @@
 #include "../../module/ui/Button.h"
 #include "../../module/ui/Cursor.h"
 
+#include "../../module/etc/Camera.h"
+#include "../../module/field/Dome.h"
+#include "../../module/field/Field.h"
+#include "../../module/field/meshfielddata.h"
+#include "../../module/field/Domeunder.h"
+#include "../../form/formX.h"
+#include "../../form/form2D.h"
+#include "../../module/robot/PlayerM.h"
+
 #include "../wiicon/wiimote.h"
 
 #include "../../administer/Debugproc.h"
@@ -24,11 +33,21 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
+const float CAMERA_POS_X(0.0f);
+const float CAMERA_POS_Y(0.0f);
+const float CAMERA_POS_Z(-5000.0f);
+const float MENU_WIDTH(400.0f);			//メニューの横サイズ
+const float MENU_HEIGHT(100.0f);			//メニューの縦サイズ
+const float MENU_X((float)SCREEN_WIDTH / 2.0f - MENU_WIDTH / 2.0f);	//メニューのX位置
+const float MENU_Y(675.0f);			//メニューのY位置
 
-const float MENU_X(SCREEN_WIDTH / 2);	//メニューのX位置
-const float MENU_Y(450.0f);			//メニューのY位置
-const int MENU_WIDTH(400);			//メニューの横サイズ
-const int MENU_HEIGHT(100);			//メニューの縦サイズ
+const float CHAR_POS_X((float)SCREEN_WIDTH / 2.0f);
+const float CHAR_POS_Y(300.0f);
+const float CHAR_WIDTH(450.0f);
+const float CHAR_HEIGHT(600.0f);
+
+const int LOGO_WIDTH(800.0f);			//メニューの横サイズ
+const int LOGO_HEIGHT(250.0f);			//メニューの縦サイズ
 
 //=============================================================================
 // コンストラクタ
@@ -41,10 +60,16 @@ m_nType(SELECT_TYPE::TYPE_BUTTON)
 {
 	m_pBackGround = NULL;
 	m_pFade = NULL;
-	m_pCharPicture[0] = { };
-	m_pCharPicture[1] = { };
-	m_pCharPicture[2] = { };
-	m_pCharPicture[3] = { };
+	m_pMenueButton[0] = { };
+	m_pMenueButton[1] = { };
+	m_pMenueButton[2] = { };
+	m_pMenueButton[3] = { };
+
+	// カメラの取得
+	CCamera* pTmpCamera = CManager::GetCamera();
+
+	pTmpCamera->SetPosP(D3DXVECTOR3(CAMERA_POS_X, CAMERA_POS_Y, CAMERA_POS_Z));
+
 }
 //=============================================================================
 // デストラクタ
@@ -58,22 +83,31 @@ CTitle :: ~CTitle(void)
 //=============================================================================
 HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
+
 	//背景の作成
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
+	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
+
+	m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, 500.0f, 0.0f), LOGO_WIDTH, LOGO_HEIGHT);
+	m_pLogo->SetDiffuse(0.0f, 0.0f, 1.0f, 1.0f);
+
+	//空の作成
+	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//空の作成
+	m_pDome2 = CDomeU::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//文字の配置
-	m_pCharPicture[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X, 450.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCharPicture[VS_MODE] = CButton::Create(pDevice, t_vs, D3DXVECTOR3(MENU_X, MENU_Y + 75.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCharPicture[TUTORIAL] = CButton::Create(pDevice, t_tutorial, D3DXVECTOR3(MENU_X, MENU_Y + (75.0f * 2), 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pCharPicture[GAME_END] = CButton::Create(pDevice, t_end, D3DXVECTOR3(MENU_X, MENU_Y + (75.0f * 3), 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pMenueButton[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X - 10.0f, MENU_Y, 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pMenueButton[GAME_END] = CButton::Create(pDevice, t_end, D3DXVECTOR3(MENU_X + MENU_WIDTH + 10.0f, MENU_Y, 0.0f), MENU_WIDTH, MENU_HEIGHT);
 	m_pCursor[0] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 64, 64);
 	m_pCursor[1] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 64, 64);
 
-	// 選択状態にしておく
-	m_pCharPicture[m_nCursor]->SetButtonState(BUTTON_STATE::SELECTED);
+	// ロゴ用キャラクター
+	//m_pCharcterPic[0] = Cform2D::Create(pDevice, "data/TEXTURE/Rosa.png", D3DXVECTOR3(CHAR_POS_X, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
+	//m_pCharcterPic[1] = Cform2D::Create(pDevice, "data/TEXTURE/Lila.png", D3DXVECTOR3(CHAR_POS_X - CHAR_WIDTH, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
+	//m_pCharcterPic[2] = Cform2D::Create(pDevice, "data/TEXTURE/Licht.png", D3DXVECTOR3(CHAR_POS_X + CHAR_WIDTH, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
 
-	//フェードの作成
-	m_pFade=CFade::Create(pDevice,1);
+	// 選択状態にしておく
+	m_pMenueButton[m_nCursor]->SetButtonState(BUTTON_STATE::SELECTED);
 
 	//サウンド取得の作成
 	CSound *pSound;
@@ -82,7 +116,9 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//サウンド再生の作成
 	//pSound->Play(SOUND_LABEL_BGM000);
 
-	
+
+	//フェードの作成
+	m_pFade = CFade::Create(pDevice, 1);
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 	return S_OK;
@@ -110,6 +146,21 @@ void CTitle :: Update(void)
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
+
+	//LookAround();
+	CCamera* pTmpCamera = CManager::GetCamera();
+	D3DXVECTOR3 fTmpRot = pTmpCamera->GetRotCamera();
+	D3DXVECTOR3 fTmpPosR = pTmpCamera->GetPosR();
+	D3DXVECTOR3 fTmpPosP = pTmpCamera->GetPosP();
+
+	fTmpRot.y -= (D3DX_PI / 180.0f);
+
+	// カメラ視点右
+	fTmpPosR.x = fTmpPosP.x + sinf(fTmpRot.y / 180.0f * D3DX_PI) * -5000.0f;
+	fTmpPosR.z = fTmpPosP.z + cosf(fTmpRot.y / 180.0f * D3DX_PI) * 5000.0f;
+
+	pTmpCamera->SetRotCamera(fTmpRot);
+	pTmpCamera->SetPosR(fTmpPosR);
 	
 	// 一時的に保存
 	int tmpCursorOld = m_nCursor;
@@ -134,7 +185,7 @@ void CTitle :: Update(void)
 	if (m_nType == SELECT_TYPE::TYPE_BUTTON)
 	{
 		KeyCommand();
-		m_pCursor[0]->SyncCharPos(m_pCharPicture[m_nCursor]->GetPos());
+		m_pCursor[0]->SyncCharPos(m_pMenueButton[m_nCursor]->GetPos());
 
 	}
 	// カーソル移動
@@ -146,7 +197,7 @@ void CTitle :: Update(void)
 	// 違うボタンに移ったら
 	if (tmpCursorOld != m_nCursor)
 	{
-		CButton::ChangeSelectButtonState(m_pCharPicture[tmpCursorOld], m_pCharPicture[m_nCursor]);
+		CButton::ChangeSelectButtonState(m_pMenueButton[tmpCursorOld], m_pMenueButton[m_nCursor]);
 
 	}
 
@@ -162,7 +213,13 @@ void CTitle :: Update(void)
 //=============================================================================
 void CTitle :: Draw(void)
 {
-	m_pBackGround->Draw();
+	//m_pBackGround->Draw();
+
+	m_pDome->Draw();
+	m_pDome2->Draw();
+
+	m_pMenueButton[GAME_START]->Draw();
+	m_pMenueButton[GAME_END]->Draw();
 
 	//文字
 	for (int i = 0; i < 2; i++)
@@ -171,13 +228,15 @@ void CTitle :: Draw(void)
 		m_pCursor[i]->Draw();
 
 	}
-	//文字
-	for (int i = 0; i < MAX; i++)
+
+	for (int i = 0; i < 3; i++)
 	{
 
-		m_pCharPicture[i]->Draw();
+		//m_pCharcterPic[i]->Draw();
 
 	}
+
+	m_pLogo->Draw();
 
 	//フェード
 	m_pFade->Draw();
@@ -210,7 +269,7 @@ void CTitle::KeyCommand(void)
 	else if (m_bChangeFlag != true)
 	{
 
-		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
+		if (pInputKeyboard->GetKeyTrigger(DIK_D) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 		{
 			m_nCursor--;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -220,7 +279,7 @@ void CTitle::KeyCommand(void)
 			}
 
 		}
-		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
+		else if (pInputKeyboard->GetKeyTrigger(DIK_A) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
 		{
 			m_nCursor++;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -253,23 +312,23 @@ void CTitle::SelectByCursor(void){
 	{
 
 		// 座標の取得
-		tmpCharPos = m_pCharPicture[i]->GetPos();
+		tmpCharPos = m_pMenueButton[i]->GetPos();
 
 		// 矩形でのあたり判定
-		if (CCursor::HitChkRect(tmpCurPos, tmpCharPos, m_pCursor[0]->GetLen(), m_pCharPicture[i]->GetLen()))
+		if (CCursor::HitChkRect(tmpCurPos, tmpCharPos, m_pCursor[0]->GetLen(), m_pMenueButton[i]->GetLen()))
 		{
 
 			// 当たっていることを記録
 			tmpOnFlg = true;
 
 			// 選択状態から解除
-			m_pCharPicture[m_nCursor]->SetButtonState(BUTTON_STATE::PUSH_OFF);
+			m_pMenueButton[m_nCursor]->SetButtonState(BUTTON_STATE::PUSH_OFF);
 
 			// 選択中のカーソルの更新
 			m_nCursor = i;
 
 			// 選択状態にしておく
-			m_pCharPicture[m_nCursor]->SetButtonState(BUTTON_STATE::SELECTED);
+			m_pMenueButton[m_nCursor]->SetButtonState(BUTTON_STATE::SELECTED);
 
 			break;
 		}
@@ -308,7 +367,7 @@ void CTitle::ChangeState(){
 	switch (m_nCursor)
 	{
 		//スタート
-	case 0:	m_bChangeFlag = true;
+	case 0: m_bChangeFlag = true;
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
 		if (m_pFade->GetPlayFade() == false)
 		{
@@ -316,25 +375,8 @@ void CTitle::ChangeState(){
 			CScene::SetVSFlag(false);
 		}
 		break;
-		//VS
-	case 1:	m_bChangeFlag = true;
-		//pSound->Play(SOUND_LABEL_SE_SELECT001);
-		if (m_pFade->GetPlayFade() == false)
-		{
-			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
-			CScene::SetVSFlag(true);
-		}
-		break;
-		//コンフィグ
-	case 2:	m_bChangeFlag = true;
-		//pSound->Play(SOUND_LABEL_SE_SELECT001);
-		if (m_pFade->GetPlayFade() == false)
-		{
-			m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
-		}
-		break;
 		//エンド
-	case 3:	m_bChangeFlag = false;
+	case 1:	m_bChangeFlag = false;
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
 		GameEnd();
 		break;

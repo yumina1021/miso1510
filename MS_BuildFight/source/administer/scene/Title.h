@@ -24,7 +24,10 @@ class CFade;
 class CButton;
 class CCharPicture;
 class CCursor;
-
+class CDome;
+class CDomeU;
+class CMeshField;
+class Cform2D;
 class CTitle  : public CScene
 {
 	enum SELECT_TYPE
@@ -37,8 +40,6 @@ class CTitle  : public CScene
 	enum BUTTON_TYPE : int
 	{
 		GAME_START = 0,
-		VS_MODE,
-		TUTORIAL,
 		GAME_END,
 		MAX,
 
@@ -52,6 +53,8 @@ class CTitle  : public CScene
 		void Uninit(void);					//終了
 		void Update(void);					//更新
 		void Draw(void);					//描画
+		void LookAround();
+
 	private:
 		void KeyCommand(void);				//入力系
 		void SelectByCursor(void);
@@ -60,8 +63,12 @@ class CTitle  : public CScene
 
 		CBackGround*	m_pBackGround;		//背景
 		CFade*			m_pFade;			//フェード
-		CButton*		m_pCharPicture[MAX];//メニュー用画像
-
+		CButton*		m_pMenueButton[MAX];//メニュー用画像
+		CDome*			m_pDome;
+		CDomeU*			m_pDome2;
+		CMeshField*		m_pMeshField;
+		Cform2D*		m_pLogo;
+		Cform2D*		m_pCharcterPic[3];
 		int				m_nCursor;			//カーソル
 		bool			m_bChangeFlag;		//シーン切替フラグ
 		float			m_fDiffuse;			//メニューアニメーション用

@@ -36,6 +36,20 @@ Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 po
 	return pform3D;
 }
 //=============================================================================
+// Cform3D生成
+//=============================================================================
+Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height)
+{
+	Cform3D *pform3D;
+
+	pform3D = new Cform3D();
+	pform3D->Init(pDevice, pTexName, width, height);
+	pform3D->SetPos(pos);
+	pform3D->SetRot(rot);
+
+	return pform3D;
+}
+//=============================================================================
 // 初期化
 //=============================================================================
 HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
@@ -134,6 +148,8 @@ HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 
 	return S_OK;
 }
+
+
 //=============================================================================
 // 初期化
 //=============================================================================
@@ -175,46 +191,32 @@ HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX
 	// 頂点座標の設定
 	pVtx[0].vtx.x = -sinf(m_fAngle) * m_fLength;
 	pVtx[0].vtx.y = 0.0f;
-	pVtx[0].vtx.z = -cosf(m_fAngle) * m_fLength;
+	pVtx[0].vtx.z = cosf(m_fAngle) * m_fLength;
 
-	pVtx[1].vtx.x = -sinf(m_fAngle) * m_fLength;
+	pVtx[1].vtx.x = sinf(m_fAngle) * m_fLength;
 	pVtx[1].vtx.y = 0.0f;
 	pVtx[1].vtx.z = cosf(m_fAngle) * m_fLength;
 
-	pVtx[2].vtx.x = sinf(m_fAngle) * m_fLength;
+	pVtx[2].vtx.x = -sinf(m_fAngle) * m_fLength;
 	pVtx[2].vtx.y = 0.0f;
 	pVtx[2].vtx.z = -cosf(m_fAngle) * m_fLength;
 
 	pVtx[3].vtx.x = sinf(m_fAngle) * m_fLength;
 	pVtx[3].vtx.y = 0.0f;
-	pVtx[3].vtx.z = cosf(m_fAngle) * m_fLength;
+	pVtx[3].vtx.z = -cosf(m_fAngle) * m_fLength;
 
-	// 頂点座標の設定
-	D3DXVECTOR3 vec0, vec1;
-	D3DXVECTOR3 nor0, nor1;
-
-	vec0 = pVtx[1].vtx - pVtx[0].vtx;
-	vec1 = pVtx[2].vtx - pVtx[1].vtx;
-
-	D3DXVec3Cross(&nor0, &vec0, &vec1);
-
-	D3DXVec3Normalize(&nor0, &nor0);
-
-	vec0 = pVtx[2].vtx - pVtx[1].vtx;
-	vec1 = pVtx[2].vtx - pVtx[3].vtx;
-
-	D3DXVec3Cross(&nor1, &vec0, &vec1);
-
-	D3DXVec3Normalize(&nor1, &nor1);
-
-	pVtx[0].nor = nor0;
-	pVtx[1].nor.x = (nor0.x + nor1.x) / 2;
-	pVtx[1].nor.y = (nor0.y + nor1.y) / 2;
-	pVtx[1].nor.z = (nor0.z + nor1.z) / 2;
-	pVtx[2].nor.x = (nor0.x + nor1.x) / 2;
-	pVtx[2].nor.y = (nor0.y + nor1.y) / 2;
-	pVtx[2].nor.z = (nor0.z + nor1.z) / 2;
-	pVtx[3].nor = nor1;
+	pVtx[0].nor.x = 0.0f;
+	pVtx[0].nor.y = 1.0f;
+	pVtx[0].nor.z = 0.0f;
+	pVtx[1].nor.x = 0.0f;
+	pVtx[1].nor.y = 1.0f;
+	pVtx[1].nor.z = 0.0f;
+	pVtx[2].nor.x = 0.0f;
+	pVtx[2].nor.y = 1.0f;
+	pVtx[2].nor.z = 0.0f;
+	pVtx[3].nor.x = 0.0f;
+	pVtx[3].nor.y = 1.0f;
+	pVtx[3].nor.z = 0.0f;
 
 	// 反射光の設定
 	pVtx[0].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -290,6 +292,25 @@ void Cform3D :: Draw(void)
 	m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, NUM_POLYGON);
 
 
+}
+//=============================================================================
+// カラー設定
+//=============================================================================
+void Cform3D::SetDiffuse(float r, float g, float b, float a)
+{
+	VERTEX_3D *pVtx;
+
+	//ロック
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//ポリゴンの設定
+	pVtx[0].diffuse = D3DXCOLOR(r, g, b, a);
+	pVtx[1].diffuse = D3DXCOLOR(r, g, b, a);
+	pVtx[2].diffuse = D3DXCOLOR(r, g, b, a);
+	pVtx[3].diffuse = D3DXCOLOR(r, g, b, a);
+
+	//アンロック
+	m_pD3DVtxBuff->Unlock();
 }
 //=============================================================================
 // 地面の高さを取得

@@ -15,12 +15,15 @@
 #include "../Input.h"
 #include "../Maneger.h"
 #include "../Sound.h"
+#include "../../module/etc/Camera.h"
 
 #include "../../module/etc/Fade.h"
 #include "../../module/ui/BackGround.h"
 #include "../../module/ui/ResultScore.h"
 
+
 #include "../../form/formX.h"
+#include "../../form/form3D.h"
 
 #include "../../module/etc/Ball.h"
 
@@ -32,6 +35,10 @@
 //*****************************************************************************
 #define SCORE_X	(1000)
 #define SCORE_Y	(100)
+
+const float CAMERA_POS_X(0.0f);
+const float CAMERA_POS_Y(0.0f);
+const float CAMERA_POS_Z(-3500.0f);
 
 //*****************************************************************************
 // 静的変数
@@ -67,12 +74,15 @@ const LPSTR g_StandTexture[][4] =
 	 "data/TEXTURE/character/lila/do.png" },
 };
 
+LPDIRECT3DDEVICE9 CResult::m_pD3DDevice = NULL;		// デバイスのポインタ
+
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CResult :: CResult(void)
 {
-	for (int i = 0; i < 6; i++){m_pform2D[i] = NULL;}
+	for (int i = 0; i < 6; i++){m_pform3D[i] = NULL;}
 	for (int i = 0; i < CRACKER_MAX; i++) { m_pPaperCracker[i] = NULL; }
 	for (int i = 0; i < BLIZZARD_MAX; i++){ m_pPaperBlizzard[i] = NULL; }
 
@@ -87,6 +97,8 @@ CResult :: CResult(void)
 	m_ResultType	= LOSE_TYPE;
 	m_CrackerFlag   = false;
 	m_BlizzardFlag	= false;
+
+
 }
 //=============================================================================
 // デストラクタ
@@ -100,13 +112,21 @@ CResult :: ~CResult(void)
 //=============================================================================
 HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
-	m_pBall = CBall::Create(pDevice, 0,D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	// カメラの取得
+	CCamera* pTmpCamera = CManager::GetCamera();
+	pTmpCamera->SetPosP(D3DXVECTOR3(CAMERA_POS_X, CAMERA_POS_Y, CAMERA_POS_Z));
+
 
 	//最初に表示する勝敗のやつ
-	Lose();
+	//1Pが負けたかどうかで勝敗が決定される
+	TieGame();
+
+	D3DXVECTOR3 Camera = pTmpCamera->GetPosP();
 
 	//背景の作成
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_RESULT);
+
+
 
 	//シナリオ
 	//m_pScenerio = CScenario::Create(pDevice,true);
@@ -180,7 +200,7 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	//背景生成
-	m_pform2D[0] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/sky004.jpg", D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),3900, 2250);
+	m_pform3D[0] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/sky004.jpg", D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
 
 	//スコア表示
 	m_pRescore[0] = CReScore::Create(pDevice, scoreone, D3DXVECTOR3(SCORE_X, SCORE_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -230,12 +250,15 @@ void CResult::Update(void)
 //=============================================================================
 void CResult :: Draw(void)
 {
+	m_pD3DDevice = CManager::GetDevice();
 
+	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//キャラと背景描画
 	for (int i = 0; i < 6; i++)
 	{
-		if (m_pform2D[i]){ m_pform2D[i]->Draw(); }
+		if (m_pform3D[i]){ m_pform3D[i]->Draw(); }
 	}
+
 	//紙噴射描画
 	if (m_CrackerFlag == true)
 	{
@@ -253,19 +276,22 @@ void CResult :: Draw(void)
 			m_pPaperBlizzard[i]->Draw();
 		}
 	}
+	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);			// 裏面をカリング
+
+
 	//フェード
 	m_pFade->Draw();
 }
 //勝利時
 void CResult::Win()
 {
-	PaperCracker(0, 200);
-	PaperBlizzard(0, 200);
-	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(300, 100, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 400, 200);							//Win表示
-	m_pform2D[2] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(900, 100, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 400, 200);							//Lose表示
-	m_pform2D[3] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(300, 0, 0.0f),   D3DXVECTOR3(0.0f, 0.0f, 0.0f), 200, 1800);							//スポットライト表示
-	m_pform2D[4] = Cform2D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(-200, 600, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1280, 752);		//敗者表示
-	m_pform2D[5] = Cform2D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(890, 500, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1366, 768);		//勝者表示
+	PaperCracker(0.0f, 400.0f);
+	PaperBlizzard(0.0f, 1700.0f);
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(1400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Win表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(-1600.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Lose表示
+	m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(-1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);						//スポットライト表示
+	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(1400.0f, -400.0f, 0.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2307);	//敗者表示
+	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2307);	//勝者表示
 	m_ResultType = MAX_TYPE;
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
@@ -273,81 +299,98 @@ void CResult::Win()
 //敗北時
 void CResult::Lose()
 {
-	PaperCracker(800, 1000);
-	PaperBlizzard(700, 1000);
-	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(300, 100, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 400, 200);							//Lose表示
-	m_pform2D[2] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(900, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 200, 1800);								//スポットライト表示
-	m_pform2D[3] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(900, 100, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 400, 200);							//Win表示
-	m_pform2D[4] = Cform2D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][2], D3DXVECTOR3(300, 500, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 500, 750);			//勝者表示
-	m_pform2D[5] = Cform2D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(900, 500, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 500, 750);			//敗者表示
+	PaperCracker(-400.0f, 0.0f);
+	PaperBlizzard(-1700.0f, 0.0f);
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(1400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Lose表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(-1800.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Win表示
+	m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(-1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);								//スポットライト表示
+	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][2], D3DXVECTOR3(1400.0f,  -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2307);			//勝者表示
+	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2307);			//敗者表示
 	m_ResultType = MAX_TYPE;
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
 }
-//引き分け
+//引き分け	
 void CResult::TieGame()
 {
-	//PaperBlizzard();
-	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), "data/TEXTURE/Draw.png", D3DXVECTOR3(600, 100, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 400, 200);								//ドロー表示
-	m_pform2D[2] = Cform2D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(-200, 600, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1280, 752);		//顔表示
-	m_pform2D[3] = Cform2D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(700, 600, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1280, 752);		//顔表示2
+	PaperCracker(-200.0f, 200.0f);
+	PaperBlizzard(-800.0f, 800.0f);
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Draw.png", D3DXVECTOR3(0.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);															//ドロー表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2307);		//顔表示
+	m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2307);	//顔表示2
 	m_ResultType = MAX_TYPE;
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
 }
-//紙吹雪
+//紙噴射
 void CResult::PaperCracker(float min, float max)
 {
 	for (int i = 0; i < CRACKER_MAX; i++)
 	{
 		if (i < CRACKER_MAX / 2)
 		{
-			m_pPaperCracker[i] = Cform2D::Create(m_pManager->GetDevice(), m_apTextureName[mersenne_twister_u16(0, 3)], D3DXVECTOR3(mersenne_twister_u16(min, min + 150), mersenne_twister_u16(700, 850), 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f);
-			m_CrackerVector[i] = D3DXVECTOR2(mersenne_twister_f32(1.0f, 4.0f), -2.0f);
+			//左側
+			m_pPaperCracker[i] = Cform3D::Create(m_pManager->GetDevice(), m_apTextureName[mersenne_twister_u16(0, 3)], D3DXVECTOR3(mersenne_twister_u16(min, min + 1500.0f), mersenne_twister_u16(-600, 50), mersenne_twister_f32(-300.0f, -250.0f)), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), 200.0f, 200.0f);
+			m_CrackerVector[i] = D3DXVECTOR3(mersenne_twister_f32(1.0f, 4.0f), -2.0f,0.0f);
 		}
 		else
 		{
-			m_pPaperCracker[i] = Cform2D::Create(m_pManager->GetDevice(), m_apTextureName[mersenne_twister_u16(0, 3)], D3DXVECTOR3(mersenne_twister_u16(max - 150, max), mersenne_twister_u16(700, 850), 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 50.0f, 50.0f);
-			m_CrackerVector[i] = D3DXVECTOR2(mersenne_twister_f32(-4.0f, -1.0f), -2.0f);
+			//右側
+			m_pPaperCracker[i] = Cform3D::Create(m_pManager->GetDevice(), m_apTextureName[mersenne_twister_u16(0, 3)], D3DXVECTOR3(mersenne_twister_u16(max - 1500.0f, max), mersenne_twister_u16(-600, 50), mersenne_twister_f32(-300.0f, -250.0f)), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), 200.0f, 200.0f);
+			m_CrackerVector[i] = D3DXVECTOR3(mersenne_twister_f32(-3.0f, -1.0f), -2.0f,0.0f);
 		}
-		D3DXVec2Normalize(&m_CrackerVector[i], &m_CrackerVector[i]);
+		D3DXVec3Normalize(&m_CrackerVector[i], &m_CrackerVector[i]);
 	}
 }
 
+//紙吹雪
 void CResult::PaperBlizzard(float min, float max)
 {
 	for (int i = 0; i < BLIZZARD_MAX; i++)
 	{
-		m_pPaperBlizzard[i] = Cform2D::Create(m_pManager->GetDevice(), m_apTextureName[mersenne_twister_u16(0, 3)], D3DXVECTOR3(mersenne_twister_u16(min, max), mersenne_twister_u16(-300, -50), 0), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 70.0f, 50.0f);
-		m_BlizzardVector[i] = D3DXVECTOR2(mersenne_twister_f32(-1.0f, 1.0f), 1.0f);
-		D3DXVec2Normalize(&m_BlizzardVector[i], &m_BlizzardVector[i]);
+		m_pPaperBlizzard[i] = Cform3D::Create(m_pManager->GetDevice(), m_apTextureName[mersenne_twister_u16(0, 3)], D3DXVECTOR3(mersenne_twister_u16(min, max), mersenne_twister_u16(1500, 1900), mersenne_twister_f32(-300.0f, -250.0f)), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), 150.0f, 150.0f);
+		m_BlizzardVector[i] = D3DXVECTOR3(mersenne_twister_f32(-1.0f, 1.0f), 1.0f,0.0f);
+		D3DXVec3Normalize(&m_BlizzardVector[i], &m_BlizzardVector[i]);
 	}
 }
 
 void CResult::_UpdateCracker(void)
 {
-	float G = 0.02f;		//重力
+	float G = 0.001f;		//重力
 	float Power = 8.0f;		//上がる力
-	D3DXVECTOR2 Speed = D3DXVECTOR2(0.0f, 0.0f);
-	D3DXVECTOR2 Pos = D3DXVECTOR2(0.0f, 0.0f);
-
+	D3DXVECTOR3 Speed = D3DXVECTOR3(0.0f, 0.0f,0.0f);
+	D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f,0.0f);
+	D3DXVECTOR3 Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < CRACKER_MAX; i++)
+	{
+		Pos.z += m_CrackerVector[i].z*10.0f;
+	}
 	if (m_CrackerFlag == true)
 	{
 		//紙噴射関係の挙動
 		for (int i = 0; i < CRACKER_MAX; i++)
 		{
-			D3DXVECTOR2 Pos = m_pPaperCracker[i]->GetPos();
-			Pos.y += G;
-			Pos.y += m_CrackerVector[i].y * m_MaxSpeed + 2.0f;
+			Pos = m_pPaperCracker[i]->GetPos();
+			Rot = m_pPaperCracker[i]->GetRot();
+			Pos.y -= G;
+			Pos.y -= m_CrackerVector[i].y * m_MaxSpeed;
+			Rot.x += mersenne_twister_f32(0.01f, 0.13f);
+			Rot.y -= mersenne_twister_f32(0.01f, 0.04f);
+			Rot.z += mersenne_twister_f32(0.01f, 0.09f);
+			
 
-			if (m_MaxSpeed >= 0.0f){ Pos.x += m_CrackerVector[i].x * m_MaxSpeed; }
+			if (m_MaxSpeed >= 0.0f)
+			{ 
+				Pos.x += m_CrackerVector[i].x * m_MaxSpeed; 
+			}
 			else
 			{
-				Pos.x += m_CrackerVector[i].x*20.0f;
+				Pos.x += m_CrackerVector[i].x*5.0f;
 			}
-			m_pPaperCracker[i]->SetPos(Pos.x, Pos.y, 0.0f);
+			m_pPaperCracker[i]->SetPos(Pos.x, Pos.y, Pos.z);
+			m_pPaperCracker[i]->SetRot(Rot.x, Rot.y, Rot.z);
 		}
-		m_MaxSpeed -= 1.6f;
+		m_MaxSpeed -= 1.0f;
 	}
 }
 
@@ -379,13 +422,21 @@ void CResult::_UpdateFade(void)
 
 void CResult::_UpdatePaperBlizzard(void)
 {
+	D3DXVECTOR3 Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	//紙吹雪関係の挙動
 	for (int i = 0; i < BLIZZARD_MAX; i++)
 	{
+		Rot = m_pPaperBlizzard[i]->GetRot();
+		Rot.x += mersenne_twister_f32(0.01f, 0.13f);
+		Rot.y += mersenne_twister_f32(0.01f, 0.08f);
+		Rot.z += mersenne_twister_f32(0.01f, 0.07f);
+
 		float Length = m_pPaperBlizzard[i]->GetLength();
-		D3DXVECTOR2 Pos = m_pPaperBlizzard[i]->GetPos();
-		Pos += 2.0f*m_BlizzardVector[i] * mersenne_twister_f32(0.01f, 1.0f);
-		m_pPaperBlizzard[i]->SetPos(D3DXVECTOR3(Pos.x, Pos.y, 0));
+		D3DXVECTOR3 Pos = m_pPaperBlizzard[i]->GetPos();
+		Pos -=10.0f*m_BlizzardVector[i] * mersenne_twister_f32(0.02f, 1.0f);
+		m_pPaperBlizzard[i]->SetPos(D3DXVECTOR3(Pos.x, Pos.y, 0));		//座標設定
+		m_pPaperBlizzard[i]->SetRot(Rot.x,Rot.y,Rot.z);					//角度設定
 
 		Length += mersenne_twister_f32(-1.0f, 1.0f);
 		if (Length > 15.0f){ Length = 15.0f; }
