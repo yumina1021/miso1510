@@ -20,10 +20,12 @@
 #include "../../module/etc/Fade.h"
 #include "../../module/ui/BackGround.h"
 #include "../../module/ui/ResultScore.h"
+#include "../../module/field/Dome.h"
 
 
 #include "../../form/formX.h"
 #include "../../form/form3D.h"
+#include "../../form/form2D.h"
 
 #include "../../module/etc/Ball.h"
 
@@ -51,6 +53,18 @@ const LPSTR CResult::m_apTextureName[] =
 	"data/TEXTURE/Arrow.png"
 
 };
+
+//ご褒美CG用
+const LPSTR g_RewardTexture[][2] =
+{
+	{"data/TEXTURE/result/licht_win.jpg",
+	 "data/TEXTURE/result/aaa.jpg" },
+
+	{"data/TEXTURE/character/lila/do.png",
+	 "data/TEXTURE/character/lila/naki.png", },
+};
+
+//立ち絵表示用
 const LPSTR g_StandTexture[][4] =
 {
 	{"data/TEXTURE/character/lila/do.png",
@@ -83,21 +97,31 @@ LPDIRECT3DDEVICE9 CResult::m_pD3DDevice = NULL;		// デバイスのポインタ
 CResult :: CResult(void)
 {
 	for (int i = 0; i < 6; i++){m_pform3D[i] = NULL;}
+	for (int i = 0; i < 2; i++){ m_pform2D[i] = NULL; }
 	for (int i = 0; i < CRACKER_MAX; i++) { m_pPaperCracker[i] = NULL; }
 	for (int i = 0; i < BLIZZARD_MAX; i++){ m_pPaperBlizzard[i] = NULL; }
 
-	m_pBackGround	= NULL;
-	m_pFade			= NULL;
-	m_pBall			= NULL;
-	m_pScenerio		= NULL;
-	m_pManager		= NULL;
-	m_cnt			= 0;
-	m_MaxSpeed		= 50;
-	m_pRescore[3]	= { };
-	m_ResultType	= LOSE_TYPE;
-	m_CrackerFlag   = false;
-	m_BlizzardFlag	= false;
+	m_pBackGround		= NULL;
+	m_pFade				= NULL;
+	m_pBall				= NULL;
+	m_pScenerio			= NULL;
+	m_pManager			= NULL;
+	m_pDome				= NULL;
 
+	m_cnt				= 0;
+	m_ButtonCounter		= 0;
+	m_MaxSpeed			= 50;
+	m_pRescore[3]		= { };
+	m_ResultType		= LOSE_TYPE;
+
+	m_CrackerFlag		= 
+	m_BlizzardFlag		= 
+	m_AfterRewardFlag	= false;
+
+	m_DomeRot = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
+	m_Alpha[0] = 0.0f;
+	m_Alpha[1] = 0.0f;
 
 }
 //=============================================================================
@@ -116,12 +140,11 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	CCamera* pTmpCamera = CManager::GetCamera();
 	pTmpCamera->SetPosP(D3DXVECTOR3(CAMERA_POS_X, CAMERA_POS_Y, CAMERA_POS_Z));
 
+	m_pD3DDevice = m_pManager->GetDevice();
 
 	//最初に表示する勝敗のやつ
 	//1Pが負けたかどうかで勝敗が決定される
 	TieGame();
-
-	D3DXVECTOR3 Camera = pTmpCamera->GetPosP();
 
 	//背景の作成
 	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_RESULT);
@@ -200,7 +223,12 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	//背景生成
-	m_pform3D[0] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/sky004.jpg", D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
+	m_pform3D[0] = Cform3D::Create(m_pD3DDevice, "data/TEXTURE/sky004.jpg", D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
+
+	m_pform2D[0] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(0)][1], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pform2D[0]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[0]);
+	m_pform2D[1]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[1]);
 
 	//スコア表示
 	m_pRescore[0] = CReScore::Create(pDevice, scoreone, D3DXVECTOR3(SCORE_X, SCORE_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -239,9 +267,20 @@ void CResult :: Uninit(void)
 //=============================================================================
 void CResult::Update(void)
 {
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+	WiiRemote* Player1 = CManager::GetWii(0);		//1P
+
+
 	_UpdateCracker();			//紙噴射の更新
 	_UpdatePaperBlizzard();		//紙吹雪の更新
 	_UpdateFlag();				//描画フラグの更新
+
+
+
+
+
 	_UpdateFade();				//フェードの更新
 
 }
@@ -258,6 +297,7 @@ void CResult :: Draw(void)
 	{
 		if (m_pform3D[i]){ m_pform3D[i]->Draw(); }
 	}
+
 
 	//紙噴射描画
 	if (m_CrackerFlag == true)
@@ -276,13 +316,25 @@ void CResult :: Draw(void)
 			m_pPaperBlizzard[i]->Draw();
 		}
 	}
+
+
+	//ご褒美CG用描画
+	for (int i = 0; i < 2; i++)
+	{
+		if (m_pform2D[i]){ m_pform2D[i]->Draw(); }
+	}
+
+
 	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);			// 裏面をカリング
 
 
 	//フェード
 	m_pFade->Draw();
 }
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 //勝利時
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::Win()
 {
 	PaperCracker(0.0f, 400.0f);
@@ -296,7 +348,10 @@ void CResult::Win()
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
 }
-//敗北時
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//負け
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::Lose()
 {
 	PaperCracker(-400.0f, 0.0f);
@@ -310,7 +365,9 @@ void CResult::Lose()
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
 }
-//引き分け	
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//引き分け
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::TieGame()
 {
 	PaperCracker(-200.0f, 200.0f);
@@ -322,7 +379,9 @@ void CResult::TieGame()
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
 }
-//紙噴射
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//紙噴射の生成
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::PaperCracker(float min, float max)
 {
 	for (int i = 0; i < CRACKER_MAX; i++)
@@ -343,7 +402,9 @@ void CResult::PaperCracker(float min, float max)
 	}
 }
 
-//紙吹雪
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//紙吹雪生成
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::PaperBlizzard(float min, float max)
 {
 	for (int i = 0; i < BLIZZARD_MAX; i++)
@@ -354,6 +415,9 @@ void CResult::PaperBlizzard(float min, float max)
 	}
 }
 
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//紙噴射の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::_UpdateCracker(void)
 {
 	float G = 0.001f;		//重力
@@ -393,7 +457,9 @@ void CResult::_UpdateCracker(void)
 		m_MaxSpeed -= 1.0f;
 	}
 }
-
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//フェードの更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::_UpdateFade(void)
 {
 	//キーボードインプットの受け取り
@@ -402,13 +468,73 @@ void CResult::_UpdateFade(void)
 	WiiRemote* Player1 = CManager::GetWii(0);		//1P
 
 
+	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 0)
+	{
+		m_ButtonCounter += 1;
+	}
+	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 1)
+	{
+		m_ButtonCounter += 1;
+	}
+	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 2)
+	{
+		m_ButtonCounter += 1;
+	}
+	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 3)
+	{
+		m_ButtonCounter += 1;
+		m_AfterRewardFlag = true;
+	}
+
+	if (m_ButtonCounter == 1)
+	{
+		m_Alpha[0] += 0.01f;
+
+		if (m_Alpha[0] > 255.0f)
+		{
+			m_Alpha[0] = 255.0f;
+		}
+		m_pform2D[0]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[0]);
+	}
+
+	if (m_ButtonCounter == 2)
+	{
+		m_Alpha[1] += 0.01f;
+
+		if (m_Alpha[1] > 255.0f)
+		{
+			m_Alpha[1] = 255.0f;
+		}
+		m_pform2D[1]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[1]);
+
+
+	}
+
+	if (m_ButtonCounter == 3)
+	{
+		m_Alpha[0] -= 0.05f;
+		m_Alpha[1] -= 0.01f;
+		if (m_Alpha[0] < 0.0f)
+		{
+			m_Alpha[0] = 0.0f;
+		}
+		if (m_Alpha[1] < 0.0f)
+		{
+			m_Alpha[1] = 0.0f;
+		}
+
+		m_pform2D[0]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[0]);
+		m_pform2D[1]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[1]);
+
+	}
+
 	//フェードの開始
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A))
+	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_AfterRewardFlag == true && m_ButtonCounter==4)
 	{
 		CSound *pSound;
 		pSound = CManager::GetSound();
 		//pSound->Play(SOUND_LABEL_SE_SELECT001);
-		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
+		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), CManager::GetSelectChar(0));
 	}
 
 	//フェードインが終わったら
@@ -418,8 +544,14 @@ void CResult::_UpdateFade(void)
 		CManager::SetAfterScene(PHASETYPE_TITLE);
 	}
 
+
+
+
 }
 
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//紙吹雪の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::_UpdatePaperBlizzard(void)
 {
 	D3DXVECTOR3 Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -445,6 +577,9 @@ void CResult::_UpdatePaperBlizzard(void)
 	}
 }
 
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//紙吹雪の描画フラグの更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::_UpdateFlag(void)
 {
 	m_cnt++;
