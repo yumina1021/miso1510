@@ -108,6 +108,7 @@ class CGame  : public CScene
 				(b.z - a.z) * (b.z - a.z) <= (al + bl) * (al + bl);}
 		static bool ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length);
 		static D3DXVECTOR3 GetVectorShot(void){ return m_PowerShot; }
+
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -145,7 +146,7 @@ class CGame  : public CScene
 		CGoal*			m_pGoal;
 		CGauge*			m_pGauge;
 		CScenario*		m_pScenario[2];
-		CformX*			m_cursol;
+		CformX*		m_cursol;
 
 		CGimmick*		m_pGimmick[10];
 
@@ -169,7 +170,9 @@ class CGame  : public CScene
 		static int		m_nSwitchCount;
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
+		D3DXVECTOR3		m_vecrot;
 		static D3DXVECTOR3		m_PowerShot;
+		bool			m_bcursol;
 };
 
 #endif

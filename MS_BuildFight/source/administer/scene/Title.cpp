@@ -85,7 +85,7 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 
 	//”wŒi‚Ìì¬
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
+	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
 	m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, 500.0f, 0.0f), LOGO_WIDTH, LOGO_HEIGHT);
 	m_pLogo->SetDiffuse(0.0f, 0.0f, 1.0f, 1.0f);

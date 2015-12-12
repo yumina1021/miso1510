@@ -104,6 +104,7 @@ CGame :: CGame(void)
 
 	m_pScenario[0] = NULL;
 	m_pScenario[1] = NULL;
+	m_bcursol = false;
 
 	m_pBall[1] = {};
 
@@ -449,12 +450,12 @@ void CGame :: Draw(void)
 		}
 
 
+		if (m_bcursol)m_cursol->Draw();
 		m_pGoal->Draw();
 		for (int i = 0; i < 2; i++)
 		{
 			m_pGimmick[i]->Draw();
 		}
-		m_cursol->Draw();
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
 		for (int i = 0; i < 9; i++)
@@ -462,6 +463,7 @@ void CGame :: Draw(void)
 			m_pEffect[i]->Draw();
 		}
 		m_pCountPar->Draw();
+
 		m_pScore->Draw();
 		m_pScenario[m_nPlayerNum]->Draw();
 	}
@@ -531,6 +533,7 @@ void CGame::TurnStart()
 		CManager::SetgameEndFlag(false);
 		m_MovePow = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_shotrot = D3DXVECTOR3(-2.4f, 0, 0);
+		m_vecrot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	}
 
 	m_nGameStartCount++;
@@ -615,6 +618,7 @@ void CGame::GameScenario()
 			m_pScore->SetViewFlag(true);
 			m_pCountPar->SetViewFlag(true);
 			m_nSwitchCount = ANGLE_PHASE;
+			m_bcursol = true;
 		}
 	}
 	else
@@ -659,12 +663,16 @@ void CGame::AngleDecision()
 	if (pInputKeyboard->GetKeyPress(DIK_RIGHT) || wiicon->GetKeyPress(WII_BUTTOM_RIGHT))
 	{
 		m_shotrot.y += D3DX_PI * 0.01f;
+		m_vecrot.y += D3DX_PI * 0.01f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
+		m_vecrot.y = Rotation_Normalizer(m_vecrot.y);
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_LEFT) || wiicon->GetKeyPress(WII_BUTTOM_LEFT))
 	{
 		m_shotrot.y -= D3DX_PI * 0.01f;
+		m_vecrot.y -= D3DX_PI * 0.01f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
+		m_vecrot.y = Rotation_Normalizer(m_vecrot.y);
 	}
 
 	bool rotlimit_x_max = g_movelimit > -48;
@@ -675,7 +683,9 @@ void CGame::AngleDecision()
 		{
 			g_movelimit--;
 			m_shotrot.x -= D3DX_PI * 0.01f;
+			m_vecrot.x -= D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
+			m_vecrot.x = Rotation_Normalizer(m_vecrot.x);
 		}
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_DOWN) || wiicon->GetKeyPress(WII_BUTTOM_DOWN))
@@ -684,31 +694,40 @@ void CGame::AngleDecision()
 		{
 			g_movelimit++;
 			m_shotrot.x += D3DX_PI * 0.01f;
+			m_vecrot.x += D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
+			m_vecrot.x = Rotation_Normalizer(m_vecrot.x);
 		}
 	}
-	work.x = ball.x -((sinf(m_shotrot.y) + cosf(m_shotrot.y))
-					* (cosf(-m_shotrot.x) - sinf(-m_shotrot.x)))*PLAYER_DISTANCE;
+	float work_x = (sinf(m_shotrot.y) + cosf(m_shotrot.y)) * (cosf(-m_shotrot.x) - sinf(-m_shotrot.x));
+	float work_z = (cosf(m_shotrot.y) - sinf(m_shotrot.y)) * (sinf(m_shotrot.x) + cosf(m_shotrot.x));
+	work.x = ball.x - work_x * PLAYER_DISTANCE;
 	
-	work.z = ball.z -((cosf(m_shotrot.y) - sinf(m_shotrot.y))
-					* (sinf(m_shotrot.x) + cosf(m_shotrot.x)))*PLAYER_DISTANCE;
+	work.z = ball.z - work_z *PLAYER_DISTANCE;
 	
 	work.y = ball.y - ((cosf(m_shotrot.x) - sinf(m_shotrot.x))
 					)*PLAYER_DISTANCE;
 	m_pPlayer[m_nPlayerNum]->SetPos(work);
+	m_PowerShot = CheckVector(ball, work);
+	// カーソルの表示
+	m_cursol->SetPos(ball + m_PowerShot * 500.0f);
+	m_cursol->SetRotReal(D3DXVECTOR3(m_vecrot.x,
+									 m_vecrot.y + D3DX_PI / 4,
+									 0.0f
+									 )
+									 );
 	//仮　スピード決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		m_pBall[m_nPlayerNum]->SetAlpha(1.0f);
 		//ベクトルの関数呼ぶ場所
-		m_PowerShot = CheckVector(ball, work);
 		m_pEffect[0]->SetView(false);
 		m_pEffect[1]->SetView(false);
 		m_pEffect[6]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		m_nSwitchCount = POWER_PHASE;
 		g_wiishot = false;
+		m_bcursol = false;
 	}
-
 }
 //打つ力の決定
 void CGame:: PowerDecision()
@@ -915,8 +934,7 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_cursol = CformX::Create(pDevice, "data/MODEL/cube.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_cursol->SetViewFlag(false);
+	m_cursol = CformX::Create(pDevice, "data/MODEL/cursol.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 //
 void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
@@ -1049,4 +1067,3 @@ bool CGame::ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot,
 	length = D3DXVec3Length(&Vec);   // 長さを出力
 	return length < sphire_length;
 }
-/////////////EOF////////////

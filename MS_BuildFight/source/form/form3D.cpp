@@ -138,16 +138,18 @@ HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 	pVtx[3].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// テクスチャ座標の設定
-	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[1].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 0.0f);
 
 	// 頂点データをアンロックする
 	m_pD3DVtxBuff->Unlock();
 
 	return S_OK;
 }
+
+
 //=============================================================================
 // 初期化
 //=============================================================================
@@ -223,10 +225,10 @@ HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX
 	pVtx[3].diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// テクスチャ座標の設定
-	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[1].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 0.0f);
 
 	// 頂点データをアンロックする
 	m_pD3DVtxBuff->Unlock();
@@ -292,7 +294,7 @@ void Cform3D :: Draw(void)
 
 }
 //=============================================================================
-// 地面の高さを取得
+// カラー設定
 //=============================================================================
 void Cform3D::SetDiffuse(float r, float g, float b, float a)
 {

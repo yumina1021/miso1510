@@ -38,7 +38,8 @@ class CformX  : public Cform
 
 		void SetPos(D3DXVECTOR3 pos){m_Pos=pos;};
 		void SetPos(float fx,float fy,float fz){m_Pos.x=fx;m_Pos.y=fy;m_Pos.z=fz;};
-		D3DXVECTOR3 GetPos(void){return m_Pos;};
+		D3DXVECTOR3 GetPos(void){ return m_Pos; };
+		void SetRotReal(D3DXVECTOR3 rot){ m_Rot = rot; };
 		void SetRot(D3DXVECTOR3 rot){m_rotDestModel=rot;};
 		void SetRot(float fx,float fy,float fz){m_rotDestModel.x=fx;m_rotDestModel.y=fy;m_rotDestModel.z=fz;};
 		D3DXVECTOR3 GetRot(void){return m_Rot;};
