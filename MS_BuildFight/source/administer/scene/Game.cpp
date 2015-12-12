@@ -618,7 +618,7 @@ void CGame::GameScenario()
 			m_pScore->SetViewFlag(true);
 			m_pCountPar->SetViewFlag(true);
 			m_nSwitchCount = ANGLE_PHASE;
-			m_bcursol = true;
+			m_bcursolmove = 0.0f;
 		}
 	}
 	else
@@ -635,6 +635,13 @@ void CGame::GameScenario()
 void CGame::AngleDecision()
 {
 	//キーボードインプットの受け取り
+	m_bcursol = true;
+	
+	m_bcursolmove += 25.0f;
+	if (m_bcursolmove > 500.0f)
+	{
+		m_bcursolmove = 0.0f;
+	}
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 	WiiRemote *wiicon = CManager::GetWii(0);
@@ -710,7 +717,7 @@ void CGame::AngleDecision()
 	m_pPlayer[m_nPlayerNum]->SetPos(work);
 	m_PowerShot = CheckVector(ball, work);
 	// カーソルの表示
-	m_cursol->SetPos(ball + m_PowerShot * 500.0f);
+	m_cursol->SetPos(ball + m_PowerShot * m_bcursolmove);
 	m_cursol->SetRotReal(D3DXVECTOR3(m_vecrot.x,
 									 m_vecrot.y + D3DX_PI / 4,
 									 0.0f

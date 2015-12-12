@@ -173,6 +173,7 @@ class CGame  : public CScene
 		D3DXVECTOR3		m_vecrot;
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
+		float			m_bcursolmove;
 };
 
 #endif
