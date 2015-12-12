@@ -55,24 +55,21 @@ class CPlayerM  : public Cform
 		D3DXVECTOR3 GetRotCamera (void){return m_RotCamera;};
 		void SetRotCamera (D3DXVECTOR3 rotCamera){m_RotCamera=rotCamera;};
 
-		void SetTexture(LPSTR pTexName,int num);
-		void SetTextureNum(int num){m_nTextureNum=num;};
-		int GetTextureNum(void){return m_nTextureNum;};
-
 		D3DXVECTOR3 GetMove(void){return m_Move;};
 
 		bool IsFinishMotion(void){ return m_bFinishMotion;}
-
 
 		void SetMotion(MOTIONTYPE motionType);
 
 		int GetType(void){return m_nType;};
 
-		void SetVsFlag(bool set){ m_bVsFlag = set;};
-	protected:
+	private:
 
-		D3DXVECTOR3 GetPosSword(void){ return m_apModel[4]->GetPos(); };
-		D3DXVECTOR3 GetRotSword(void){ return m_apModel[4]->GetRot(); };
+		void UpdateMotion(void);
+		void UpdateShotMotion(void);
+
+		float lerp(float a, float b, float per){ return (a*per) + (b*(1 - per)); };
+		D3DXVECTOR3 lerpVec(D3DXVECTOR3 a, D3DXVECTOR3 b, float per);
 
 		LPDIRECT3DDEVICE9	m_pDevice;			// pDeviceオブジェクト(描画に必要)
 
@@ -84,33 +81,15 @@ class CPlayerM  : public Cform
 		D3DXVECTOR3		m_Move;					// 現在の移動量
 
 		D3DXVECTOR3		m_RotCamera;			//カメラの向き
-		bool			m_bJump;				// ジャンプ中かどうか
 
 		MOTIONTYPE		m_motionType;			// モーションタイプ
-		int				m_nEffectFinishCount;	//エフェクト終了カウント
 
-		bool			m_bCPUFlag;				//自動移動フラグ
-
-		int				m_moveCnt;				//移動カウント
-
-		bool			m_bVsFlag;
 		SHADER_SET		shaderSet;
 
-	private:
-		void UpdateMotion(void);
-		void ShaderSet(void);
-
-		float lerp(float a,float b,float per){return (a*per)+(b*(1-per));};
-
-		D3DXVECTOR3 lerpVec(D3DXVECTOR3 a,D3DXVECTOR3 b,float per);
-
 		CModel				*m_apModel[MODELPARTS_MAX];	// モデルへのポインタ
-		LPDIRECT3DTEXTURE9	m_pD3DTex[TEXTURE_MAX];		//テクスチャ表示用
-		int					m_nTextureNum;				//テクスチャーの番号
+		LPDIRECT3DTEXTURE9	m_pD3DTex;		//テクスチャ表示用
 
 		D3DXMATRIX		m_mtxWorld;				// ワールドマトリックス
-
-		float			m_fHeightField;			// 地面の高さ
 
 		int				m_nNumModel;			// モデル数
 
@@ -129,7 +108,8 @@ class CPlayerM  : public Cform
 		bool			m_bDispDebug;			// デバッグ表示ON/OFF
 		int				m_nType;				//タイプ保存用
 
-		float			m_fPosHightPlus;
+		float			m_fShotMotionRatio;		//打つモーションの割合
+		int				m_nShotMotionCntPlus;
 
 		D3DXVECTOR3		m_Min;
 		D3DXVECTOR3		m_Max;

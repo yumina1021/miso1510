@@ -241,9 +241,6 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 	D3DXVec3Normalize(&cameraVec, &cameraVec);
 	D3DXVec3Normalize(&lightVec, &lightVec);
 
-	// ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
 	//デフォルトのマテリアル情報取得
 	m_pDevice->GetMaterial(&matDef);
 	pD3DXMat = (D3DXMATERIAL*)m_pD3DXBuffMatModel->GetBufferPointer();

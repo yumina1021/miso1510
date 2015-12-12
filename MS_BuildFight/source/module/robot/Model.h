@@ -45,21 +45,7 @@ typedef enum
 typedef enum
 {
 	MOTIONTYPE_NEUTRAL = 0,	// [0]ニュートラル
-	MOTIONTYPE_RUN,			// [1]走り
-	MOTIONTYPE_JUMP,		// [2]ジャンプ
-	MOTIONTYPE_LANDING,		// [3]着地
-	MOTIONTYPE_PUNCH_W,		// [4]パンチ(弱)
-	MOTIONTYPE_PUNCH_S,		// [5]パンチ(強)
-	MOTIONTYPE_KICK_W,		// [6]キック(弱)
-	MOTIONTYPE_KICK_S,		// [7]キック(強)
-	MOTIONTYPE_SHOT,		// [8]ショット
-	MOTIONTYPE_OVER_LOAD,	// [9]スキル発動
-	MOTIONTYPE_OVER_LOAD2,	// [10]スキル発動
-	MOTIONTYPE_TURBO,		// [11]ターボ
-	MOTIONTYPE_DAMAGE,		// [12]ダメージ
-	MOTIONTYPE_DOWN,		// [13]ダメージ
-	MOTIONTYPE_ATTACK,		// [12]アタック
-	MOTIONTYPE_ATTACKDAMEGE,// [12]特殊ダメージ
+	MOTIONTYPE_SHOT,		// [1]ショット
 	MOTIONTYPE_MAX
 } MOTIONTYPE;
 
