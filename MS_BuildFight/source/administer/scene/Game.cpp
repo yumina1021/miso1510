@@ -38,8 +38,6 @@
 #include "../../module/ui/Scenario.h"
 
 #include "../../module/robot/PlayerM.h"
-#include "../../module/robot/EnemyM.h"
-#include "../../module/robot/PlayerGun1.h"
 
 #include "../../module/etc/Fade.h"
 #include "../../module/etc/Ball.h"
@@ -458,6 +456,9 @@ void CGame :: Draw(void)
 		}
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
+
+		m_pPlayer[0]->Draw();
+
 		for (int i = 0; i < 9; i++)
 		{
 			m_pEffect[i]->Draw();
@@ -930,13 +931,10 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_nEnum = CManager::GetSelectChar(1);
 	ObjectInit(pDevice);
 
-	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, 250.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_pPlayer[0]->SetVsFlag(m_bVsSelectFlag);
+	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 100, -450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	m_pPlayer[1]->SetVsFlag(m_bVsSelectFlag);
 
 	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));

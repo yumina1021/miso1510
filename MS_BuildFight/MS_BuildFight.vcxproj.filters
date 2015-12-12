@@ -64,16 +64,10 @@
     <ClCompile Include="source\module\field\Field.cpp">
       <Filter>source\module\field</Filter>
     </ClCompile>
-    <ClCompile Include="source\module\robot\EnemyM.cpp">
-      <Filter>source\module\robot</Filter>
-    </ClCompile>
     <ClCompile Include="source\module\robot\Model.cpp">
       <Filter>source\module\robot</Filter>
     </ClCompile>
     <ClCompile Include="source\module\robot\PlayerBace.cpp">
-      <Filter>source\module\robot</Filter>
-    </ClCompile>
-    <ClCompile Include="source\module\robot\PlayerGun1.cpp">
       <Filter>source\module\robot</Filter>
     </ClCompile>
     <ClCompile Include="source\module\robot\PlayerM.cpp">
@@ -243,25 +237,16 @@
     <ClInclude Include="source\module\field\meshfielddata.h">
       <Filter>source\module\field</Filter>
     </ClInclude>
-    <ClInclude Include="source\module\robot\EnemyM.h">
-      <Filter>source\module\robot</Filter>
-    </ClInclude>
     <ClInclude Include="source\module\robot\Model.h">
       <Filter>source\module\robot</Filter>
     </ClInclude>
     <ClInclude Include="source\module\robot\PlayerBace.h">
       <Filter>source\module\robot</Filter>
     </ClInclude>
-    <ClInclude Include="source\module\robot\PlayerGun1.h">
-      <Filter>source\module\robot</Filter>
-    </ClInclude>
     <ClInclude Include="source\module\robot\PlayerM.h">
       <Filter>source\module\robot</Filter>
     </ClInclude>
     <ClInclude Include="source\module\robot\robotmotiondata.h">
-      <Filter>source\module\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="source\module\robot\robotMotiondataGN3.h">
       <Filter>source\module\robot</Filter>
     </ClInclude>
     <ClInclude Include="source\module\ui\BackGround.h">
