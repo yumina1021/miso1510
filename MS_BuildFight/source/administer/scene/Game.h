@@ -108,7 +108,7 @@ class CGame  : public CScene
 				(b.z - a.z) * (b.z - a.z) <= (al + bl) * (al + bl);}
 		static bool ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length);
 		static D3DXVECTOR3 GetVectorShot(void){ return m_PowerShot; }
-
+		static D3DXVECTOR3 GetPlayerCamera(void){ return m_playercamera; }
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -174,6 +174,7 @@ class CGame  : public CScene
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
 		float			m_bcursolmove;
+		static D3DXVECTOR3		m_playercamera;
 };
 
 #endif

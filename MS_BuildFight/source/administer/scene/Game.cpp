@@ -65,6 +65,7 @@ bool CGame::m_bVsSelectFlag = false;
 int	CGame::m_nPlayerNum;
 int	CGame::m_nSwitchCount;
 D3DXVECTOR3		CGame::m_PowerShot;
+D3DXVECTOR3		CGame::m_playercamera;
 
 bool g_wiishot;
 int g_movelimit;
@@ -103,7 +104,7 @@ CGame :: CGame(void)
 	m_pScenario[0] = NULL;
 	m_pScenario[1] = NULL;
 	m_bcursol = false;
-
+	m_playercamera = D3DXVECTOR3(0.f, 0.0f, 0.f);
 	m_pBall[1] = {};
 
 	m_pGimmick[10] = {};
@@ -709,22 +710,27 @@ void CGame::AngleDecision()
 	}
 	float work_x = (sinf(m_shotrot.y) + cosf(m_shotrot.y)) * (cosf(-m_shotrot.x) - sinf(-m_shotrot.x));
 	float work_z = (cosf(m_shotrot.y) - sinf(m_shotrot.y)) * (sinf(m_shotrot.x) + cosf(m_shotrot.x));
+	float work_xp = (sinf(m_shotrot.y - D3DX_PI / 2) + cosf(m_shotrot.y - D3DX_PI / 2));
+	float work_zp = (cosf(m_shotrot.y - D3DX_PI / 2) - sinf(m_shotrot.y - D3DX_PI / 2));
 	work.x = ball.x - work_x * PLAYER_DISTANCE;
 	
 	work.z = ball.z - work_z *PLAYER_DISTANCE;
 	
-	work.y = ball.y - ((cosf(m_shotrot.x) - sinf(m_shotrot.x))
-					)*PLAYER_DISTANCE;
-	m_pPlayer[m_nPlayerNum]->SetPos(work);
+	work.y = ball.y - ((cosf(m_shotrot.x) - sinf(m_shotrot.x)))*PLAYER_DISTANCE;
+	D3DXVECTOR3 work_p;
+
+	m_playercamera = work;	
+	work_p.x = ball.x - work_xp * 20.0f;
+
+	work_p.z = ball.z - work_zp * 20.0f;
+
+	work_p.y = ball.y;
 	m_PowerShot = CheckVector(ball, work);
 	// カーソルの表示
 	m_cursol->SetPos(ball + m_PowerShot * m_bcursolmove);
-	m_cursol->SetRotReal(D3DXVECTOR3(m_vecrot.x,
-									 m_vecrot.y + D3DX_PI / 4,
-									 0.0f
-									 )
-									 );
-	//仮　スピード決めたから次
+	m_cursol->SetRotReal(D3DXVECTOR3(m_vecrot.x, m_vecrot.y + D3DX_PI / 4, 0.0f));
+	m_pPlayer[m_nPlayerNum]->SetRot(D3DXVECTOR3(m_vecrot.x, m_vecrot.y + D3DX_PI / 4, 0.0f));
+	m_pPlayer[m_nPlayerNum]->SetPos(work_p.x, work_p.y - 30.0f, work_p.z);
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		m_pBall[m_nPlayerNum]->SetAlpha(1.0f);
@@ -790,7 +796,14 @@ void CGame:: PowerDecision()
 	if (wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		wiicon->SetResetFlag(true);
+		m_pPlayer[m_nPlayerNum]->SetMotion(MOTIONTYPE_SHOT);
 		g_wiishot = true;
+	}
+	if (wiicon->GetKeyPress(WII_BUTTOM_A))
+	{
+		float y = wiicon->GetWiiYaw();
+		y = abs(y);
+		m_pPlayer[m_nPlayerNum]->SetMotionRatio(y);
 	}
 	if (wiicon->GetKeyRelease(WII_BUTTOM_A)){
 		wiicon->SetResetFlag(true);

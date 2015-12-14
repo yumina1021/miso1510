@@ -61,6 +61,9 @@ class CPlayerM  : public Cform
 
 		void SetMotion(MOTIONTYPE motionType);
 
+		void SetMotionRatio(float ratio){ m_fShotMotionRatio = ratio; }
+		float GetMotionRatio(void){ return m_fShotMotionRatio; }
+
 		int GetType(void){return m_nType;};
 
 	private:

@@ -95,6 +95,9 @@ class CModel
 
 		HRESULT SetModel(const char *pFilename);
 
+		void SetPosOrg(D3DXVECTOR3 pos){ m_PosOrg = pos; };
+		void SetRotOrg(D3DXVECTOR3 rot){ m_RotOrg = rot; };
+
 		void EnableDisp(bool bDisp){ m_bDisp = bDisp; };
 		D3DXMATRIX GetMtxWorld(void){ return m_mtxWorld; };
 
@@ -108,7 +111,7 @@ class CModel
 		void SetParent(CModel *pModel){ m_pParent = pModel; };
 		void SetChild(CModel *pModel){ m_pChild = pModel; };
 
-		void SetMtxView (D3DXMATRIX changeMtx){};
+		void SetMtxView(D3DXMATRIX changeMtx){ m_mtxview = changeMtx; };
 		void SetRotCamera (D3DXVECTOR3 rotCamera){};
 
 	private:
@@ -121,12 +124,15 @@ class CModel
 		DWORD				m_nNumMatModel;			//マテリアル情報の数
 
 		D3DXMATRIX			m_mtxWorld;				//ワールドマトリックス
+		D3DXMATRIX			m_mtxview;				//ワールドマトリックス
 
 		D3DXVECTOR3			m_vtxMin;				//頂点の最小値
 		D3DXVECTOR3			m_vtxMax;				//頂点の最大値
 
 		D3DXVECTOR3			m_Pos;					//位置
 		D3DXVECTOR3			m_Rot;					//向き
+		D3DXVECTOR3			m_PosOrg;					//位置
+		D3DXVECTOR3			m_RotOrg;					//向き
 		D3DXVECTOR3			m_Scl;					//大きさ
 
 		D3DXVECTOR3			m_RotCamera;			//カメラの向き

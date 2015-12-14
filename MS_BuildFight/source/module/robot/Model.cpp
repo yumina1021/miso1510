@@ -128,6 +128,8 @@ HRESULT CModel :: Init(LPDIRECT3DDEVICE9 pDevice,int nType,int nModelNum)
 	m_Pos = D3DXVECTOR3(0.0f,0.00001f,0.0f);
 	m_Rot = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_Scl = D3DXVECTOR3(1.0f,1.0f,1.0f);
+	m_PosOrg = D3DXVECTOR3(0.0f,0.0f,0.0f);
+	m_RotOrg = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
 	SetModel(m_apModelName[nType+nModelNum]);
 
@@ -155,6 +157,7 @@ HRESULT CModel :: Init(LPDIRECT3DDEVICE9 pDevice,int nType,int nModelNum)
 		pTempMesh = NULL;
 	}
 
+	D3DXMatrixIdentity(&m_mtxview);
 	return S_OK;
 }
 //=============================================================================
@@ -218,13 +221,14 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 	}
 
 	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&rot, m_Rot.y, m_Rot.x, m_Rot.z);
+	D3DXMatrixRotationYawPitchRoll(&rot, m_Rot.y + m_RotOrg.y, m_Rot.x + m_RotOrg.x, m_Rot.z + m_RotOrg.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &rot);
 
 	//移動を反映
-	D3DXMatrixTranslation(&pos, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixTranslation(&pos, m_Pos.x + m_PosOrg.x, m_Pos.y + m_PosOrg.y, m_Pos.z + m_PosOrg.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &pos);
 
+	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxview);
 	// 親のマトリックスと算出したマトリックスを掛け合わせる
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
 

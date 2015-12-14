@@ -213,20 +213,20 @@ void CPlayerM :: Update(void)
 
 	if (m_bPause == false)
 	{
-		// 目的の角度までの差分
-		fDiffRotY = Rotation_Normalizer(m_rotDestModel.y - m_Rot.y);
+		//// 目的の角度までの差分
+		//fDiffRotY = Rotation_Normalizer(m_rotDestModel.y - m_Rot.y);
 
-		// 目的の角度まで慣性をかける
-		m_Rot.y +=fDiffRotY * RATE_ROTATE_PLAYER;
+		//// 目的の角度まで慣性をかける
+		//m_Rot.y +=fDiffRotY * RATE_ROTATE_PLAYER;
 
-		m_Rot.y = Rotation_Normalizer(m_Rot.y);
+		//m_Rot.y = Rotation_Normalizer(m_Rot.y);
 
-		// 位置移動
-		m_Pos.x += m_Move.x;
-		m_Pos.z += m_Move.z;
+		//// 位置移動
+		//m_Pos.x += m_Move.x;
+		//m_Pos.z += m_Move.z;
 
-		m_Move.x += (0.0f - m_Move.x) * REGIST_MOVE;
-		m_Move.z += (0.0f - m_Move.z) * REGIST_MOVE;
+		//m_Move.x += (0.0f - m_Move.x) * REGIST_MOVE;
+		//m_Move.z += (0.0f - m_Move.z) * REGIST_MOVE;
 
 		if((m_motionType == MOTIONTYPE_SHOT && IsFinishMotion() == true))
 		{// ショットモーション終了
@@ -276,25 +276,28 @@ void CPlayerM::Draw(void)
 
 	CCamera* pCamera = CManager::GetCamera();
 
-	SetRotCamera(pCamera->GetRotCamera());
+	//SetRotCamera(pCamera->GetRotCamera());
 
-	SetMtxView(pCamera->GetMtxView());
+	//SetMtxView(pCamera->GetMtxView());
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
+	//// ワールドマトリックスの初期化
+	//D3DXMatrixIdentity(&m_mtxWorld);
 
-	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Rot.y, m_Rot.x, m_Rot.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+	//// 回転を反映
+	//D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Rot.y, m_Rot.x, m_Rot.z);
+	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-	// 移動を反映
-	D3DXMatrixTranslation(&mtxTranslate, m_Pos.x, m_Pos.y, m_Pos.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTranslate);
+	//// 移動を反映
+	//D3DXMatrixTranslation(&mtxTranslate, m_Pos.x, m_Pos.y, m_Pos.z);
+	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTranslate);
 
 	// ワールドマトリックスの設定
 
-	CDebugProc::Print("%f,%f,%f\n", m_Pos.x, m_Pos.y, m_Pos.z);
+	CDebugProc::Print("PlayerM%f,%f,%f\n", m_Pos.x, m_Pos.y, m_Pos.z);
+	CDebugProc::Print("PlayerM%f,%f,%f\n", m_Rot.x, m_Rot.y, m_Rot.z);
 	// モデルパーツの描画
+	m_apModel[0]->SetPosOrg(m_Pos);
+	m_apModel[0]->SetRotOrg(m_Rot);
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		if (m_apModel[nCntModel])
