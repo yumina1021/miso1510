@@ -117,10 +117,8 @@
     <ClCompile Include="source\module\field\Dome.cpp" />
     <ClCompile Include="source\module\field\Domeunder.cpp" />
     <ClCompile Include="source\module\field\Field.cpp" />
-    <ClCompile Include="source\module\robot\EnemyM.cpp" />
     <ClCompile Include="source\module\robot\Model.cpp" />
     <ClCompile Include="source\module\robot\PlayerBace.cpp" />
-    <ClCompile Include="source\module\robot\PlayerGun1.cpp" />
     <ClCompile Include="source\module\robot\PlayerM.cpp" />
     <ClCompile Include="source\module\ui\BackGround.cpp" />
     <ClCompile Include="source\module\ui\Bar.cpp" />
@@ -181,13 +179,10 @@
     <ClInclude Include="source\module\field\Domeunder.h" />
     <ClInclude Include="source\module\field\Field.h" />
     <ClInclude Include="source\module\field\meshfielddata.h" />
-    <ClInclude Include="source\module\robot\EnemyM.h" />
     <ClInclude Include="source\module\robot\Model.h" />
     <ClInclude Include="source\module\robot\PlayerBace.h" />
-    <ClInclude Include="source\module\robot\PlayerGun1.h" />
     <ClInclude Include="source\module\robot\PlayerM.h" />
     <ClInclude Include="source\module\robot\robotmotiondata.h" />
-    <ClInclude Include="source\module\robot\robotMotiondataGN3.h" />
     <ClInclude Include="source\module\ui\BackGround.h" />
     <ClInclude Include="source\module\ui\Bar.h" />
     <ClInclude Include="source\module\ui\Character.h" />
