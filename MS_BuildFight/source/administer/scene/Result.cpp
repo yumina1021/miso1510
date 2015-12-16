@@ -58,16 +58,16 @@ const LPSTR CResult::m_apTextureName[] =
 const LPSTR g_RewardTexture[][2] =
 {
 	{"data/TEXTURE/result/licht_win.jpg",
-	 "data/TEXTURE/result/rosa_win.jpg" },
+	 "data/TEXTURE/result/aaa.jpg" },
 
-	{"data/TEXTURE/character/lila/do.png",
-	 "data/TEXTURE/character/lila/naki.png", },
+	{"data/TEXTURE/result/rosa_win.jpg",
+	 "data/TEXTURE/result/bbb.png", },
 
-	 { "data/TEXTURE/result/aaa.jpg", 
-	  "data/TEXTURE/result/bbb.jpg" },
+	 { "data/TEXTURE/result/ccc.png", 
+	  "data/TEXTURE/result/ddd.jpg" },
 
-	 { "data/TEXTURE/character/lila/do.png",
-	 "data/TEXTURE/character/lila/naki.png", },
+	 { "data/TEXTURE/result/eee.jpg",
+	 "data/TEXTURE/result/fff.jpg", },
 };
 
 //—§‚¿ŠG•\Ž¦—p
@@ -243,7 +243,7 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pform3D[0] = Cform3D::Create(m_pD3DDevice, "data/TEXTURE/sky004.jpg", D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
 
 	m_pform2D[0] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
-	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(0)][1], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_pform2D[0]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[0]);
 	m_pform2D[1]->SetDiffuse(255.0f, 255.0f, 255.0f, m_Alpha[1]);
 
