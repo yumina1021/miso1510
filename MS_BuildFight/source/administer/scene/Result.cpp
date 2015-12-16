@@ -62,6 +62,12 @@ const LPSTR g_RewardTexture[][2] =
 
 	{"data/TEXTURE/character/lila/do.png",
 	 "data/TEXTURE/character/lila/naki.png", },
+
+	 { "data/TEXTURE/result/aaa.jpg", 
+	  "data/TEXTURE/result/bbb.jpg" },
+
+	 { "data/TEXTURE/character/lila/do.png",
+	 "data/TEXTURE/character/lila/naki.png", },
 };
 
 //立ち絵表示用
@@ -96,7 +102,7 @@ CResult :: CResult(void)
 {
 	for (int i = 0; i < 6; i++){m_pform3D[i] = NULL;}
 	for (int i = 0; i < 2; i++){ m_pform2D[i] = NULL; }
-	for (int i = 0; i < CRACKER_MAX; i++) { m_pPaperCracker[i] = NULL; }
+	for (int i = 0; i < CRACKER_MAX; i++) { m_pPaperCracker[i] = NULL; } 
 	for (int i = 0; i < BLIZZARD_MAX; i++){ m_pPaperBlizzard[i] = NULL; }
 
 	m_pBackGround		= NULL;
@@ -117,9 +123,10 @@ CResult :: CResult(void)
 	m_BlizzardFlag		= 
 	m_AfterRewardFlag	= false;
 
-
-	m_Alpha[0] = 0.0f;
-	m_Alpha[1] = 0.0f;
+	m_Speed				= 1.0f;
+	m_SlideSpeed		= 30.0f;
+	m_Alpha[0]			= 0.0f;
+	m_Alpha[1]			= 0.0f;
 
 }
 //=============================================================================
@@ -279,13 +286,13 @@ void CResult :: Uninit(void)
 //=============================================================================
 void CResult::Update(void)
 {
-	m_Timer++;
-	if (m_Timer==100)
-	{m_pSound->Play(SOUND_LABEL_SE_TRUMPET);}
+	_UpdateTimer();				//効果音再生タイマーの更新
 	_UpdateCracker();			//紙噴射の更新
 	_UpdatePaperBlizzard();		//紙吹雪の更新
 	_UpdateFlag();				//描画フラグの更新
 	_UpdateFade();				//フェードの更新
+	_UpdateWinningOrLosing();
+
 
 }
 //=============================================================================
@@ -344,8 +351,8 @@ void CResult::Win()
 {
 	PaperCracker(0.0f, 400.0f);
 	PaperBlizzard(0.0f, 1700.0f);
-	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(1400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Win表示
-	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(-1600.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Lose表示
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(2400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Win表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(-2600.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Lose表示
 	//m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);						//スポットライト表示
 	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][3], D3DXVECTOR3(1400.0f, -400.0f, 0.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);	//敗者表示
 	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);	//勝者表示
@@ -361,8 +368,8 @@ void CResult::Lose()
 {
 	PaperCracker(-400.0f, 0.0f);
 	PaperBlizzard(-1700.0f, 0.0f);
-	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(1400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Lose表示
-	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(-1800.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Win表示
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(2400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Lose表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(-2800.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Win表示
 	//m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(-1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);								//スポットライト表示
 	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][1], D3DXVECTOR3(1400.0f,  -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);			//勝者表示
 	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][3], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);			//敗者表示
@@ -603,6 +610,63 @@ void CResult::_UpdateFlag(void)
 		m_cnt = 0;
 
 	}
+}
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//効果音再生タイミングの更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+void CResult::_UpdateTimer(void)
+{
+	m_Timer++;
+	if (m_Timer == 100)
+	{
+		m_pSound->Play(SOUND_LABEL_SE_TRUMPET);
+	}
+
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//Win,Lose画像の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+void CResult::_UpdateWinningOrLosing(void)
+{
+	if (m_pform3D[1])
+	{
+		D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		Pos = m_pform3D[1]->GetPos();
+		Pos.y += m_Speed;
+		Pos.x -= m_SlideSpeed;
+		if (Pos.x < 1400)
+		{
+			m_SlideSpeed = 0.0f;
+		}
+		if (Pos.y > 1100 || Pos.y < 900)
+		{
+			m_Speed *= -1.0f;
+		}
+		m_pform3D[1]->SetPos(Pos.x, Pos.y, Pos.z);
+	}
+
+	if (m_pform3D[2])
+	{
+		D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		Pos = m_pform3D[2]->GetPos();
+		Pos.y += m_Speed;
+		Pos.x += m_SlideSpeed;
+
+		if (Pos.x > -1600)
+		{
+			m_SlideSpeed = 0.0f;
+		}
+		if (Pos.y > 1100 || Pos.y < 900)
+		{
+			m_Speed *= -1.0f;
+		}
+
+		m_pform3D[2]->SetPos(Pos.x, Pos.y, Pos.z);
+	}
+
 }
 
 /////////////EOF////////////

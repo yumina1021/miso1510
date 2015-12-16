@@ -59,6 +59,8 @@ class CResult  : public CScene
 		void _UpdateFade(void);
 		void _UpdatePaperBlizzard(void);
 		void _UpdateFlag(void);
+		void _UpdateTimer(void);
+		void _UpdateWinningOrLosing(void);
 
 		static LPDIRECT3DDEVICE9	m_pD3DDevice;			// pDeviceオブジェクト(描画に必要)
 
@@ -76,6 +78,8 @@ class CResult  : public CScene
 		static const LPSTR	m_apTextureName[];			//紙吹雪のテクスチャ
 		int m_cnt;
 		float m_MaxSpeed;
+		float m_SlideSpeed;
+		float m_Speed;									//画像の動く速度
 		bool m_CrackerFlag;								//紙噴射開始フラグ
 		bool m_BlizzardFlag;							//紙吹雪開始フラグ
 		bool m_AfterRewardFlag;							//ご褒美CG出し終わったフラグ
