@@ -13,6 +13,18 @@
 // 各音素材のパラメータ
 PARAM g_aParam[SOUND_LABEL_MAX] =
 {
+	{ "data/BGM/BGM_TITLE.wav"		,true},
+	{ "data/BGM/BGM_GAME.wav"		,true},
+	{ "data/BGM/BGM_RESULT.wav"		,true},
+	{ "data/BGM/INFINITE_SKY.wav"	,true},
+	{ "data/SE/cursor.wav"			,false},
+	{ "data/SE/button.wav"			,false },
+	{ "data/SE/prayer1.wav"			,false },
+	{ "data/SE/sceneswitch1.wav"	,false },
+	{ "data/SE/shine1.wav"			,false },
+	{ "data/SE/trumpet1.wav"		,false },
+
+
 };
 
 PARAM g_aParamVoice[CHARACTER_MAX][VOICE_LABEL_MAX] =
