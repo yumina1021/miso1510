@@ -24,6 +24,7 @@ class Cform3D;
 class CManager;
 class CformX;
 class CDome;
+class CSound;
 
 #define CRACKER_MAX  (50)		//紙噴射の枚数
 #define BLIZZARD_MAX (50)		//紙吹雪の枚数
@@ -58,6 +59,8 @@ class CResult  : public CScene
 		void _UpdateFade(void);
 		void _UpdatePaperBlizzard(void);
 		void _UpdateFlag(void);
+		void _UpdateTimer(void);
+		void _UpdateWinningOrLosing(void);
 
 		static LPDIRECT3DDEVICE9	m_pD3DDevice;			// pDeviceオブジェクト(描画に必要)
 
@@ -75,16 +78,19 @@ class CResult  : public CScene
 		static const LPSTR	m_apTextureName[];			//紙吹雪のテクスチャ
 		int m_cnt;
 		float m_MaxSpeed;
+		float m_SlideSpeed;
+		float m_Speed;									//画像の動く速度
 		bool m_CrackerFlag;								//紙噴射開始フラグ
 		bool m_BlizzardFlag;							//紙吹雪開始フラグ
 		bool m_AfterRewardFlag;							//ご褒美CG出し終わったフラグ
 		D3DXVECTOR3 m_BlizzardVector[BLIZZARD_MAX];		//紙吹雪の向き
 		Cform3D*	m_pPaperBlizzard[BLIZZARD_MAX];		//紙噴射
-		CDome*		m_pDome;							//ドーム
-		D3DXVECTOR3 m_DomeRot;	
 		Cform2D* m_pform2D[2];								//ご褒美CG用
 		int m_ButtonCounter;	
-		float m_Alpha[2];									//画像のアルファ値
+		float m_Alpha[2];									//ご褒美CGのアルファ値
+		CSound *m_pSound;
+		int m_Timer;
+
 };
 
 #endif
