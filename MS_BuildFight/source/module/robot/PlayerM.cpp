@@ -297,7 +297,7 @@ void CPlayerM::Draw(void)
 	CDebugProc::Print("PlayerM%f,%f,%f\n", m_Rot.x, m_Rot.y, m_Rot.z);
 	// モデルパーツの描画
 	m_apModel[0]->SetPosOrg(m_Pos);
-	m_apModel[0]->SetRotOrg(m_Rot);
+	m_apModel[0]->SetRot(m_Rot);
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		if (m_apModel[nCntModel])

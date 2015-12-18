@@ -458,7 +458,7 @@ void CGame :: Draw(void)
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
 
-		m_pPlayer[0]->Draw();
+		if ((m_nSwitchCount == POWER_PHASE) || (m_nSwitchCount == MOVE_PHASE))m_pPlayer[0]->Draw();
 
 		for (int i = 0; i < 9; i++)
 		{
@@ -536,6 +536,7 @@ void CGame::TurnStart()
 		m_MovePow = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_shotrot = D3DXVECTOR3(-2.4f, 0, 0);
 		m_vecrot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_playerrot_x = m_shotrot.x;
 	}
 
 	m_nGameStartCount++;
@@ -693,8 +694,10 @@ void CGame::AngleDecision()
 			g_movelimit--;
 			m_shotrot.x -= D3DX_PI * 0.01f;
 			m_vecrot.x -= D3DX_PI * 0.01f;
+			m_playerrot_x += D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 			m_vecrot.x = Rotation_Normalizer(m_vecrot.x);
+			m_playerrot_x = Rotation_Normalizer(m_playerrot_x);
 		}
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_DOWN) || wiicon->GetKeyPress(WII_BUTTOM_DOWN))
@@ -704,33 +707,39 @@ void CGame::AngleDecision()
 			g_movelimit++;
 			m_shotrot.x += D3DX_PI * 0.01f;
 			m_vecrot.x += D3DX_PI * 0.01f;
+			m_playerrot_x -= D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 			m_vecrot.x = Rotation_Normalizer(m_vecrot.x);
+			m_playerrot_x = Rotation_Normalizer(m_playerrot_x);
 		}
 	}
 	float work_x = (sinf(m_shotrot.y) + cosf(m_shotrot.y)) * (cosf(-m_shotrot.x) - sinf(-m_shotrot.x));
-	float work_z = (cosf(m_shotrot.y) - sinf(m_shotrot.y)) * (sinf(m_shotrot.x) + cosf(m_shotrot.x));
-	float work_xp = (sinf(m_shotrot.y - D3DX_PI / 2) + cosf(m_shotrot.y - D3DX_PI / 2));
-	float work_zp = (cosf(m_shotrot.y - D3DX_PI / 2) - sinf(m_shotrot.y - D3DX_PI / 2));
+	float work_z = (cosf(m_shotrot.y) - sinf(m_shotrot.y)) * (sinf(m_shotrot.x) + cosf(m_shotrot.x))  ;
+	float work_xp = (sinf(m_shotrot.y + D3DX_PI * 0.5f) + cosf(m_shotrot.y + D3DX_PI * 0.5f));
+	float work_zp = (cosf(m_shotrot.y + D3DX_PI * 0.5f) - sinf(m_shotrot.y + D3DX_PI * 0.5f));
+	float work_xpp = (sinf(m_shotrot.y - D3DX_PI) + cosf(m_shotrot.y - D3DX_PI)) * (cosf(-m_shotrot.x - D3DX_PI) - sinf(-m_shotrot.x - D3DX_PI));
+	float work_zpp = (cosf(m_shotrot.y - D3DX_PI) - sinf(m_shotrot.y - D3DX_PI)) * (sinf(m_shotrot.x - D3DX_PI) + cosf(m_shotrot.x - D3DX_PI));
 	work.x = ball.x - work_x * PLAYER_DISTANCE;
 	
 	work.z = ball.z - work_z *PLAYER_DISTANCE;
 	
-	work.y = ball.y - ((cosf(m_shotrot.x) - sinf(m_shotrot.x)))*PLAYER_DISTANCE;
+	work.y = ball.y - ((cosf(m_shotrot.x) - sinf(m_shotrot.x)))*(PLAYER_DISTANCE + 100);
 	D3DXVECTOR3 work_p;
 
 	m_playercamera = work;	
-	work_p.x = ball.x - work_xp * 20.0f;
+	work_p.x = ball.x + work_xp * 20.0f - work_xpp * 10.0f;
 
-	work_p.z = ball.z - work_zp * 20.0f;
+	work_p.z = ball.z + work_zp * 20.0f - work_zpp * 10.0f;
 
-	work_p.y = ball.y;
+	work_p.y = ball.y + ((cosf(m_playerrot_x) - sinf(m_playerrot_x))) * 10.0f;
 	m_PowerShot = CheckVector(ball, work);
 	// カーソルの表示
 	m_cursol->SetPos(ball + m_PowerShot * m_bcursolmove);
 	m_cursol->SetRotReal(D3DXVECTOR3(m_vecrot.x, m_vecrot.y + D3DX_PI / 4, 0.0f));
-	m_pPlayer[m_nPlayerNum]->SetRot(D3DXVECTOR3(m_vecrot.x, m_vecrot.y + D3DX_PI / 4, 0.0f));
-	m_pPlayer[m_nPlayerNum]->SetPos(work_p.x, work_p.y - 30.0f, work_p.z);
+	m_pPlayer[m_nPlayerNum]->SetRot(D3DXVECTOR3(m_vecrot.x + D3DX_PI  * 0.005f * sinf(m_vecrot.x),
+												m_vecrot.y + D3DX_PI  * 0.5f - D3DX_PI  * 0.225f * cosf(m_vecrot.x),
+												D3DX_PI  * 0.25f * sinf(m_vecrot.x)));
+	m_pPlayer[m_nPlayerNum]->SetPos(work_p);
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		m_pBall[m_nPlayerNum]->SetAlpha(1.0f);

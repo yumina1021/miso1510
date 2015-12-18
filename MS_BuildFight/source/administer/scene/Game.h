@@ -171,6 +171,7 @@ class CGame  : public CScene
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
 		D3DXVECTOR3		m_vecrot;
+		float		m_playerrot_x;
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
 		float			m_bcursolmove;

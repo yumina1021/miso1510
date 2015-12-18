@@ -492,7 +492,7 @@ void CCamera::PowerCamera(void)
 	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//íçéãì_ç¿ïWê›íË
-	m_posCameraP = posModel + ErotModel * -200.0f;
+	m_posCameraP = m_posCameraR + ErotModel * -150.0f;
 	m_posCameraR = EposModel;
 }
 //=============================================================================

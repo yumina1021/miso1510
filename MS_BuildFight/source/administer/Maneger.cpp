@@ -123,7 +123,8 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	m_pCamera->Init();
 
 	//フェーズの初期化
-	m_pScene=new CTitle();
+	//m_pScene=new CTitle();
+	m_pScene=new CStageSelect();
 	m_pScene->Init(m_pD3DDevice);
 
 #ifdef _DEBUG
