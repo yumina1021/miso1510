@@ -127,7 +127,7 @@ class CGame  : public CScene
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
 		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
-		CEffect*		m_pEffect[9];		//エフェクトのポインター
+		CEffect*		m_pEffect[11];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
 
 		CCount*			m_pCountPar;		//パーポインター

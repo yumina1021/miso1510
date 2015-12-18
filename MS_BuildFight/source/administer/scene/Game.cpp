@@ -52,6 +52,7 @@
 #define PLAYER_MAX	(2)	//プレイヤー数
 #define SHOT_RIMIT	(0.05f)
 #define PLAYER_DISTANCE	(100.0f)
+#define EFFECT_MAX	(11)
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -95,7 +96,7 @@ CGame :: CGame(void)
 	m_pFade = NULL;
 	m_pCharPicture[2] = {};
 
-	m_pEffect[8] = {};
+	m_pEffect[10] = {};
 	m_pLocusEffect[19] = {};
 
 	m_pIcon = NULL;
@@ -153,7 +154,11 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pEffect[5] = CEffect::Create(pDevice, ready2, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[6] = CEffect::Create(pDevice, please_shot, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[7] = CEffect::Create(pDevice, shot_ball, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[8] = CEffect::Create(pDevice, judge_timeout, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pEffect[8] = CEffect::Create(pDevice, (EffectNum)(please_shot_rosa + m_nEnum), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[9] = CEffect::Create(pDevice, (EffectNum)(shot_ball_rosa + m_nEnum), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pEffect[10] = CEffect::Create(pDevice, judge_timeout, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//シナリオ
 	m_pScenario[0] = CScenario::Create(pDevice, (CScenario::Character)m_nPnum, false);
@@ -460,7 +465,7 @@ void CGame :: Draw(void)
 
 		if ((m_nSwitchCount == POWER_PHASE) || (m_nSwitchCount == MOVE_PHASE))m_pPlayer[0]->Draw();
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < EFFECT_MAX; i++)
 		{
 			m_pEffect[i]->Draw();
 		}
@@ -746,7 +751,14 @@ void CGame::AngleDecision()
 		//ベクトルの関数呼ぶ場所
 		m_pEffect[0]->SetView(false);
 		m_pEffect[1]->SetView(false);
-		m_pEffect[6]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		if (m_nPlayerNum == 0)
+		{
+			m_pEffect[6]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		}
+		else
+		{
+			m_pEffect[8]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		}
 		m_nSwitchCount = POWER_PHASE;
 		g_wiishot = false;
 		m_bcursol = false;
@@ -788,7 +800,14 @@ void CGame:: PowerDecision()
 	//仮　打つ力を決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
-		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		if (m_nPlayerNum == 0)
+		{
+			m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		}
+		else
+		{
+			m_pEffect[9]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		}
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(m_MovePow.x*m_PowerShot);
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
@@ -797,7 +816,14 @@ void CGame:: PowerDecision()
 	if (g_wiishot&&wiicon->GetWiiYaw() <-80.0f)
 	{
 		float power = (abs(wiicon->GetWiiPlusSpeed().x))*0.01f;
-		m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		if (m_nPlayerNum == 0)
+		{
+			m_pEffect[7]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		}
+		else
+		{
+			m_pEffect[9]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
+		}
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(power*m_PowerShot);
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
@@ -846,7 +872,7 @@ void CGame::Judge()
 	//終了判定  ターン数：時間経過：ゴール入った
 	if ((m_nTurnCount>5) || (m_bJudge) && !(m_bChangeFlag))
 	{
-		m_pEffect[8]->SetView(true);
+		m_pEffect[10]->SetView(true);
 		CManager::SetgameEndFlag(true);
 
 		m_nClearType = 2;
