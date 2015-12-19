@@ -74,7 +74,7 @@ class CResult  : public CScene
 		CReScore*	m_pRescore[4];						//スコア用
 		CBall*		m_pBall;							//フォーム
 		Cform3D*	m_pform3D[8];						//3D表示用
-		CScenario*	m_pScenerio;						//シナリオ
+		CScenario*	m_pScenerio[2];						//シナリオ
 		CManager*	m_pManager;							//マネージャー
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;			//頂点情報格納ワーク(動的)
 		D3DXVECTOR3 m_CrackerVector[CRACKER_MAX];		//紙吹雪の向き
@@ -85,7 +85,6 @@ class CResult  : public CScene
 		float m_MaxSpeed;
 		float m_SlideSpeed;								//Win,Loseの画像の移動速度
 		float m_LauncherSpeed[2];							//クラッカー発射装置の速度
-
 		float m_Speed;									//画像の動く速度
 		bool m_CrackerFlag;								//紙噴射開始フラグ
 		bool m_BlizzardFlag;							//紙吹雪開始フラグ
