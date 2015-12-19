@@ -47,67 +47,67 @@ struct DISP_PLAY_STAGE
 
 };
 
-class CStageSelect  : public CScene
+class CStageSelect : public CScene
 {
-	
-	public:
 
-		enum class STATE
-		{
-			NORMAL,
-			SATELLITE_ORBIT,
-			CHANGE_SCENE,
-		};
-		enum BUTTON_TYPE
-		{
-			LEFT = 0,
-			RIGHT,
-			BUTTON_TYPE_MAX,
-		};
+public:
+
+	enum class STATE
+	{
+		NORMAL,
+		SATELLITE_ORBIT,
+		CHANGE_SCENE,
+	};
+	enum BUTTON_TYPE
+	{
+		LEFT = 0,
+		RIGHT,
+		BUTTON_TYPE_MAX,
+	};
 
 
-		struct PLAYER_DATA
-		{
-			int	nSelectNum;			//選択中の番号
-			CCursor* pCursor;		// カーソ表示用のポインタ
-		};
+	struct PLAYER_DATA
+	{
+		int	nSelectNum;			//選択中の番号
+		CCursor* pCursor;		// カーソ表示用のポインタ
+	};
 
-		CStageSelect(void);			//コンストラクタ
-		~CStageSelect(void);			//デストラクタ
+	CStageSelect(void);			//コンストラクタ
+	~CStageSelect(void);			//デストラクタ
 
-		HRESULT Init(LPDIRECT3DDEVICE9 pDevice);//初期化
-		void Uninit(void);						//終了
-		void Update(void);						//更新
-		void Draw(void);						//描画
-		void SelectByButton(void);				//キーボードでの選択
-		void SelectByCursor(void);				//カール移動での選択
-		void UpdateFade(void);					//フェードの更新
-		void UpdateSelectObject(void);			//選択に使うオブジェクトの更新
+	HRESULT Init(LPDIRECT3DDEVICE9 pDevice);//初期化
+	void Uninit(void);						//終了
+	void Update(void);						//更新
+	void Draw(void);						//描画
+	void SelectByButton(void);				//キーボードでの選択
+	void SelectByCursor(void);				//カール移動での選択
+	void UpdateFade(void);					//フェードの更新
+	void UpdateSelectObject(void);			//選択に使うオブジェクトの更新
 
-		static void NomalizeSelectObject(int& nParamVal);//選択に使うオブジェクトの更新
-		
-		bool HitChkRect(const D3DXVECTOR3& paramPos1,
-			const D3DXVECTOR3& paramPos2,
-			const D3DXVECTOR3& paramLen1,
-			const D3DXVECTOR3& paramLen2);
+	static void NomalizeSelectObject(int& nParamVal);//選択に使うオブジェクトの更新
 
-	private:
-		Cform3D*			m_pBackGround;		//背景
-		CFade*				m_pFade;			//フェード
-		CMeshField*			m_pMeshField;		//メッシュフィールドのポインタ
-		CButton*			m_pLogo;;
-		DISP_PLAY_STAGE		m_Obj[MAX_STAGE];
-		Cform2D*			m_pStageName[MAX_STAGE];//ステージ名
-		Cform2D*			m_pLevelStar[MAX_LEVEL];//ステージ名
-		CDome*				m_pDome;
-		CDomeU*				m_pDome2;
-		bool				m_bVsSelectFlag;	//VSモード用
-		bool				m_bTitleBackFlag;	//タイトルに行きました
-		bool				m_bSendData;		//相手データが送られた
-		int					m_nCursorNum;		
-		float				m_fTime;
-		STATE				m_nState;
-		PLAYER_DATA			m_playerData[2];
+	bool HitChkRect(const D3DXVECTOR3& paramPos1,
+		const D3DXVECTOR3& paramPos2,
+		const D3DXVECTOR3& paramLen1,
+		const D3DXVECTOR3& paramLen2);
+
+private:
+	Cform3D*			m_pBackGround;		//背景
+	CFade*				m_pFade;			//フェード
+	CMeshField*			m_pMeshField;		//メッシュフィールドのポインタ
+	CButton*			m_pLogo;;
+	DISP_PLAY_STAGE		m_Obj[MAX_STAGE];
+	CCharPicture*		m_pStageName[MAX_STAGE];//ステージ名
+	CCharPicture*		m_pLevelStar[MAX_LEVEL];//ステージ名
+	CDome*				m_pDome;
+	CDomeU*				m_pDome2;
+	bool				m_bVsSelectFlag;	//VSモード用
+	bool				m_bTitleBackFlag;	//タイトルに行きました
+	bool				m_bSendData;		//相手データが送られた
+	int					m_nCursorNum;
+	float				m_fTime;
+	STATE				m_nState;
+	PLAYER_DATA			m_playerData[2];
 
 };
 

@@ -27,6 +27,7 @@
 
 #include "../../form/form3D.h"
 #include "../../form/formX.h"
+#include "../../module/robot/PlayerM.h"
 
 #include "../../administer/Debugproc.h"
 
@@ -46,7 +47,7 @@ const float CURSOR_HEIGHT(100.0f);
 
 const float CAMERA_POS_X(0.0f);
 const float CAMERA_POS_Y(0.0f);
-const float CAMERA_POS_Z(-500.0f);
+const float CAMERA_POS_Z(-200.0f);
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -54,7 +55,7 @@ const float CAMERA_POS_Z(-500.0f);
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CSelect :: CSelect(void):
+CSelect::CSelect(void) :
 m_nType(SELECT_TYPE::TYPE_BUTTON),
 m_bChangeFlag(false),
 m_bVsSelectFlag(false),
@@ -84,15 +85,15 @@ CSelect :: ~CSelect(void)
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
+HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 {
 	LPSTR pModName[CHARCTER_TYPE::TYPE_MAX]
 	{
 
 		"data/MODEL/stage1.x",
-		"data/MODEL/stage2.x",
-		"data/MODEL/stage3.x",
-		"data/MODEL/stage4.x",
+			"data/MODEL/stage2.x",
+			"data/MODEL/stage3.x",
+			"data/MODEL/stage4.x",
 
 
 	};
@@ -101,9 +102,9 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	{
 
 		"data/TEXTURE/CharcterName1.png",
-		"data/TEXTURE/CharcterName2.png",
-		"data/TEXTURE/CharcterName3.png",
-		"data/TEXTURE/CharcterName1.png",
+			"data/TEXTURE/CharcterName2.png",
+			"data/TEXTURE/CharcterName3.png",
+			"data/TEXTURE/CharcterName4.png",
 
 
 	};
@@ -126,14 +127,24 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	float fScreenWidthHalf((float)SCREEN_WIDTH / 2.0f);
 	float fScreenHeightHalf((float)SCREEN_HEIGHT / 2.0f);
-	float fCharPicWidthHalf(CHAR_BUTTON_WIDTH /2.0f);
-	float fCharPicHeightHalf(CHAR_BUTTON_HEIGHT /2.0f);
+	float fCharPicWidthHalf(CHAR_BUTTON_WIDTH / 2.0f);
+	float fCharPicHeightHalf(CHAR_BUTTON_HEIGHT / 2.0f);
 
 	// キャラ画像
 	m_pCharPicture[CHARCTER_TYPE::TYPE_1] = CButton::Create(pDevice, s_0, D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	m_pCharPicture[CHARCTER_TYPE::TYPE_2] = CButton::Create(pDevice, s_1, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	m_pCharPicture[CHARCTER_TYPE::TYPE_3] = CButton::Create(pDevice, s_2, D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	m_pCharPicture[CHARCTER_TYPE::TYPE_4] = CButton::Create(pDevice, s_3, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+
+	// 決定時に表示する画像
+	m_pSelectCfm[0] = Cform2D::Create(pDevice, "data/TEXTURE/SelectPlayer1.png", D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pSelectCfm[1] = Cform2D::Create(pDevice, "data/TEXTURE/SelectPlayer2.png", D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+
+	// キャラ画像
+	m_SelectCfmPos[CHARCTER_TYPE::TYPE_1] = D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f);
+	m_SelectCfmPos[CHARCTER_TYPE::TYPE_2] = D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f);
+	m_SelectCfmPos[CHARCTER_TYPE::TYPE_3] = D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f);
+	m_SelectCfmPos[CHARCTER_TYPE::TYPE_4] = D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f);
 
 	// 外枠フレーム
 	m_pCharFrame[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, "data/TEXTURE/CharFrame.png", D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
@@ -143,15 +154,15 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//m_pCharFrame[CHARCTER_TYPE::TYPE_1]->SetDiffuse(1.0f, 0.0f, 0.0f, 1.0f);
 
 	// 選択したキャラのモデル
-	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_1] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(-225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_2] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(-225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_3] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_3], D3DXVECTOR3(-225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_4] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_4], D3DXVECTOR3(-225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_1] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_2] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_3] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_3], D3DXVECTOR3(225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_4] = CformX::Create(pDevice, pModName[CHARCTER_TYPE::TYPE_4], D3DXVECTOR3(225.0f, 0.0f, -80.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	
+	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(-53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, -D3DX_PI / 8.0f, 0.0f));
+	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_2] = CPlayerM::Create(pDevice, 1, D3DXVECTOR3(-53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, -D3DX_PI / 8.0f, 0.0f));
+	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_3] = CPlayerM::Create(pDevice, 2, D3DXVECTOR3(-53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, -D3DX_PI / 8.0f, 0.0f));
+	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_4] = CPlayerM::Create(pDevice, 3, D3DXVECTOR3(-53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, -D3DX_PI / 8.0f, 0.0f));
+	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, D3DX_PI / 9.0f, 0.0f));
+	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_2] = CPlayerM::Create(pDevice, 1, D3DXVECTOR3(53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, D3DX_PI / 9.0f, 0.0f));
+	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_3] = CPlayerM::Create(pDevice, 2, D3DXVECTOR3(53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, D3DX_PI / 9.0f, 0.0f));
+	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_4] = CPlayerM::Create(pDevice, 3, D3DXVECTOR3(53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, D3DX_PI / 9.0f, 0.0f));
+
 	// 外枠フレーム
 	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(200.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
 	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(200.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
@@ -186,15 +197,15 @@ HRESULT CSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pCharPicture[m_Select[1].nSelect]->SetButtonState(BUTTON_STATE::SELECTED);
 
 	//フェードの作成
-	m_pFade=CFade::Create(pDevice,1);
-	m_pFade->StartFade(FADE_OUT, 50, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),CManager::GetSelectChar(0));
+	m_pFade = CFade::Create(pDevice, 1);
+	m_pFade->StartFade(FADE_OUT, 50, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), CManager::GetSelectChar(0));
 
 	return S_OK;
 }
 //=============================================================================
 // 終了
 //=============================================================================
-void CSelect :: Uninit(void)
+void CSelect::Uninit(void)
 {
 	//サウンド取得の作成
 	CSound *pSound;
@@ -209,11 +220,11 @@ void CSelect :: Uninit(void)
 //=============================================================================
 // 更新
 //=============================================================================
-void CSelect :: Update(void)
+void CSelect::Update(void)
 {
 	//サウンド取得の作成
 	CSound *pSound;
-	pSound = CManager::GetSound();	
+	pSound = CManager::GetSound();
 
 	// 一時的に保存
 	int tmpCursorOld[2];
@@ -223,6 +234,7 @@ void CSelect :: Update(void)
 
 		tmpCursorOld[i] = m_Select[i].nSelect;
 
+		CheckSelectAllCorsor(i);
 	}
 
 	UpdateFade();
@@ -256,7 +268,7 @@ void CSelect :: Update(void)
 		SelectByKeyboardPlayer2();
 		m_Select[1].pCursor->SyncCharPos(m_OnCursorPos[m_Select[1].nSelect]);
 
-		
+
 	}
 	// カーソル移動
 	else if (m_nType == SELECT_TYPE::TYPE_CURSOR)
@@ -279,12 +291,18 @@ void CSelect :: Update(void)
 		m_pCharPicture[m_Select[i].nSelect]->SetButtonState(BUTTON_STATE::SELECTED);
 
 	}
+	// キャラクター表示用モデル
+	m_pCharModPlayer1[m_Select[0].nSelect]->Update();
+	m_pCharModPlayer2[m_Select[1].nSelect]->Update();
+
 #ifdef _DEBUG
 
 	CDebugProc::Print("プレイヤー選択中のボタン:%d\n", m_Select[0].nSelect);
 	CDebugProc::Print("選択中のボタン:%d\n", m_Select[1].nSelect);
 	CDebugProc::Print("プレイヤー1はＷＡＳＤで移動でＥＮＴＥＲで決定\n");
 	CDebugProc::Print("プレイヤー2は↑←↓→で移動でＳＥＬＥＣＴで決定\n");
+	CDebugProc::Print("選択中のボタン:%f\n", m_pCharModPlayer1[0]->GetRot().y);
+	CDebugProc::Print("選択中のボタン:%f\n", m_pCharModPlayer2[0]->GetRot().y);
 
 #endif
 
@@ -293,7 +311,7 @@ void CSelect :: Update(void)
 //=============================================================================
 // 描画
 //=============================================================================
-void CSelect :: Draw(void)
+void CSelect::Draw(void)
 {
 
 	m_pDome->Draw();
@@ -302,7 +320,7 @@ void CSelect :: Draw(void)
 	// キャラクター表示用モデル
 	m_pCharModPlayer1[m_Select[0].nSelect]->Draw();
 	m_pCharModPlayer2[m_Select[1].nSelect]->Draw();
-	
+
 	// 背景
 	m_pBackGround->Draw();
 
@@ -315,11 +333,26 @@ void CSelect :: Draw(void)
 	for (int i = 0; i < CHARCTER_TYPE::TYPE_MAX; i++)
 	{
 		m_pCharPicture[i]->Draw();
-		m_pCharFrame[i]->Draw();
 
 	}
 
-	
+	// 選択用キャラ画像
+	for (int i = 0; i < MAX_PLAYER; i++)
+	{
+
+		if (m_Select[i].bDecisionFlg)
+		{
+			m_pSelectCfm[i]->Draw();
+		}
+
+	}
+
+	// 選択用キャラ画像
+	for (int i = 0; i < CHARCTER_TYPE::TYPE_MAX; i++)
+	{
+		m_pCharFrame[i]->Draw();
+
+	}
 	// カーソル
 	for (int i = 0; i < MAX_CURSOR; i++)
 	{
@@ -328,7 +361,7 @@ void CSelect :: Draw(void)
 
 	}
 
-	
+
 	// キャラ選択画面ロゴ
 	m_pLogo->Draw();
 
@@ -340,12 +373,13 @@ void CSelect :: Draw(void)
 //=============================================================================
 void CSelect::UpdateFade(void)
 {
-	//if (m_bChangeFlag == true)
-	//{
-	//	//pSound->Play(SOUND_LABEL_SE_SELECT002);
-	//	m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
-	//	m_bChangeFlag = false;
-	//}
+	if (m_bChangeFlag
+		&& m_pFade->GetFade() == FADE_NONE)
+	{
+		//pSound->Play(SOUND_LABEL_SE_SELECT002);
+		// 選択したキャラを保存
+		//m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), CManager::GetSelectChar(0));
+	}
 
 	//フェードインが終わったら
 	if (m_pFade->GetFade() == FADE_IN_END)
@@ -384,6 +418,8 @@ void CSelect::SelectByKeyboardPlayer2(void)
 
 		// エンターキーを押した場合
 		ChkSelectButton(1);
+		m_pSelectCfm[1]->SetPos(m_SelectCfmPos[m_Select[1].nSelect]);
+
 
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_UP) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
@@ -489,8 +525,24 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
-		// 
-		ChkSelectButton(0);
+		if (!m_Select[0].bDecisionFlg)
+		{
+
+			// 
+			ChkSelectButton(0);
+
+			m_pSelectCfm[0]->SetPos(m_SelectCfmPos[m_Select[0].nSelect]);
+
+		}
+		else
+		{
+
+		}
+
+	}
+	else if ((pInputKeyboard->GetKeyTrigger(DIK_BACKSPACE)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
+	{
+		m_Select[0].bDecisionFlg = false;
 
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_W) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
@@ -588,14 +640,13 @@ void CSelect::ChkSelectButton(int nParamSelectCursor)
 
 	// 矩形でのあたり判定
 	if (CCursor::HitChkRect(m_Select[nParamSelectCursor].pCursor->GetPos(),
-							m_pCharPicture[m_Select[nParamSelectCursor].nSelect]->GetPos(),
-							m_Select[nParamSelectCursor].pCursor->GetLen(),
-							m_pCharPicture[m_Select[nParamSelectCursor].nSelect]->GetLen()))
+		m_pCharPicture[m_Select[nParamSelectCursor].nSelect]->GetPos(),
+		m_Select[nParamSelectCursor].pCursor->GetLen(),
+		m_pCharPicture[m_Select[nParamSelectCursor].nSelect]->GetLen()))
 	{
 
-		// 
-		if ((m_Select[NomalizeSelectPlayer(nParamSelectCursor - 1)].bDecisionFlg && m_Select[1].nSelect != m_Select[0].nSelect)
-			|| !m_Select[NomalizeSelectPlayer(nParamSelectCursor - 1)].bDecisionFlg)
+		// 既に選択されていない場合
+		if (m_Select[1].nSelect != m_Select[0].nSelect)
 		{
 
 			// 
@@ -603,6 +654,8 @@ void CSelect::ChkSelectButton(int nParamSelectCursor)
 			CheckSelectAllCorsor(nParamSelectCursor);
 
 			//pSound->PlayVoice(m_Select[0].nSelect,VOICE_LABEL_SE_START);
+
+			m_Select[nParamSelectCursor].bDecisionFlg = true;
 
 		}
 
@@ -615,27 +668,24 @@ void CSelect::ChkSelectButton(int nParamSelectCursor)
 void CSelect::CheckSelectAllCorsor(int nParamDecisionCursor)
 {
 
+	if (m_bChangeFlag){ return; }
+
 	// 全てのプレイヤーが選択を完了したら
-	if (m_Select[0].bDecisionFlg
-		|| m_Select[1].bDecisionFlg)
+	if (m_Select[nParamDecisionCursor].bDecisionFlg
+		&& m_Select[nParamDecisionCursor - 1].bDecisionFlg)
 	{
 
 		// 遷移処理
 		m_bChangeFlag = true;
 
+		// 決定状態にする
+		m_Select[nParamDecisionCursor].bDecisionFlg = true;
+
 		// 各キャラクターの決定
 		CManager::SetSelectChar(0, m_Select[0].nSelect);
 		CManager::SetSelectChar(1, m_Select[1].nSelect);
 
-		// 選択したキャラを保存
-		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
-
-	}
-	else
-	{
-
-		// 決定フラグ
-		m_Select[nParamDecisionCursor].bDecisionFlg = true;
+		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), CManager::GetSelectChar(0));
 
 	}
 
@@ -646,81 +696,81 @@ void CSelect::CheckSelectAllCorsor(int nParamDecisionCursor)
 //=============================================================================
 void CSelect::SelectByCursor(void){
 
-//	// 変数定義
-//	D3DXVECTOR3 tmpCurPos[MAX_CURSOR];
-//	D3DXVECTOR3 tmpCharPos(0.0f, 0.0f, 0.0f);
-//	bool tmpOnFlg(false);
-//	D3DXVECTOR3 tmpCursorLen(0.0f, 0.0f, 0.0f);
-//
-//	tmpCurPos[0] = m_Select[0].pCursor->GetPos();
-//	tmpCurPos[1] = m_Select[1].pCursor->GetPos();
-//
-//	//キーボードインプットの受け取り
-//	CInputKeyboard *pInputKeyboard;
-//	pInputKeyboard = CManager::GetInputKeyboard();
-//
-//	//すべてのキャラ項目を対象に検索
-//	for (int i = 0; i < CHARCTER_TYPE::TYPE_MAX; i++)
-//	{
-//
-//		// 座標の取得
-//		tmpCharPos = m_pCharPicture[i]->GetPos();
-//
-//		// 矩形でのあたり判定
-//		if (CCursor::HitChkRect(tmpCurPos, tmpCharPos, m_pCursor->GetLen(), m_pCharPicture[i]->GetLen()))
-//		{
-//
-//			// 当たっていることを記録
-//			tmpOnFlg = true;
-//		
-//			// 選択中のカーソルの更新
-//			m_Select[0].nSelect = i;
-//
-//			break;
-//		}
-//		else{
-//
-//
-//		}
-//	}
-//	// 決定ボタンを押したら
-//	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-//	{
-//
-//		// どれかのキャラボタンに乗っかっていたら
-//		if (tmpOnFlg)
-//		{
-//			// 遷移処理
-//			m_bChangeFlag = true;
-//
-//			// 選択したキャラを保存
-//			CScene::SetFrame(m_Select[0].nSelect);
-//			//pSound->PlayVoice(m_Select[0].nSelect,VOICE_LABEL_SE_START);
-//
-//			if (m_bVsSelectFlag == false)
-//			{
-//				CScene::SetEnemy(rand() % 3);
-//				if (m_pFade->GetPlayFade() == false)
-//				{
-//					//pSound->Play(SOUND_LABEL_SE_SELECT001);
-//					m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
-//				}
-//			}
-//		}
-//
-//	}// if
-//	else if (m_bChangeFlag != true)
-//	{
-//		m_pCursor->MoveByKeybord();
-//	}
-//
-//
-//#ifdef _DEBUG
-//
-//	CDebugProc::Print("マウス座標X:%f\n", tmpCurPos.x);
-//	CDebugProc::Print("マウス座標Y:%f\n", tmpCurPos.y);
-//
-//#endif
+	//	// 変数定義
+	//	D3DXVECTOR3 tmpCurPos[MAX_CURSOR];
+	//	D3DXVECTOR3 tmpCharPos(0.0f, 0.0f, 0.0f);
+	//	bool tmpOnFlg(false);
+	//	D3DXVECTOR3 tmpCursorLen(0.0f, 0.0f, 0.0f);
+	//
+	//	tmpCurPos[0] = m_Select[0].pCursor->GetPos();
+	//	tmpCurPos[1] = m_Select[1].pCursor->GetPos();
+	//
+	//	//キーボードインプットの受け取り
+	//	CInputKeyboard *pInputKeyboard;
+	//	pInputKeyboard = CManager::GetInputKeyboard();
+	//
+	//	//すべてのキャラ項目を対象に検索
+	//	for (int i = 0; i < CHARCTER_TYPE::TYPE_MAX; i++)
+	//	{
+	//
+	//		// 座標の取得
+	//		tmpCharPos = m_pCharPicture[i]->GetPos();
+	//
+	//		// 矩形でのあたり判定
+	//		if (CCursor::HitChkRect(tmpCurPos, tmpCharPos, m_pCursor->GetLen(), m_pCharPicture[i]->GetLen()))
+	//		{
+	//
+	//			// 当たっていることを記録
+	//			tmpOnFlg = true;
+	//		
+	//			// 選択中のカーソルの更新
+	//			m_Select[0].nSelect = i;
+	//
+	//			break;
+	//		}
+	//		else{
+	//
+	//
+	//		}
+	//	}
+	//	// 決定ボタンを押したら
+	//	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	//	{
+	//
+	//		// どれかのキャラボタンに乗っかっていたら
+	//		if (tmpOnFlg)
+	//		{
+	//			// 遷移処理
+	//			m_bChangeFlag = true;
+	//
+	//			// 選択したキャラを保存
+	//			CScene::SetFrame(m_Select[0].nSelect);
+	//			//pSound->PlayVoice(m_Select[0].nSelect,VOICE_LABEL_SE_START);
+	//
+	//			if (m_bVsSelectFlag == false)
+	//			{
+	//				CScene::SetEnemy(rand() % 3);
+	//				if (m_pFade->GetPlayFade() == false)
+	//				{
+	//					//pSound->Play(SOUND_LABEL_SE_SELECT001);
+	//					m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
+	//				}
+	//			}
+	//		}
+	//
+	//	}// if
+	//	else if (m_bChangeFlag != true)
+	//	{
+	//		m_pCursor->MoveByKeybord();
+	//	}
+	//
+	//
+	//#ifdef _DEBUG
+	//
+	//	CDebugProc::Print("マウス座標X:%f\n", tmpCurPos.x);
+	//	CDebugProc::Print("マウス座標Y:%f\n", tmpCurPos.y);
+	//
+	//#endif
 
 }// SelectByCursor
 //=============================================================================
