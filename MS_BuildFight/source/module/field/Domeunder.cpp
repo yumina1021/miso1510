@@ -277,9 +277,6 @@ void CDomeU :: Draw(void)
 	D3DXVec3Normalize(&cameraVec, &cameraVec);
 	D3DXVec3Normalize(&lightVec, &lightVec);
 
-	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
 	// 頂点バッファをレンダリングパイプラインに設定
 	pDevice->SetStreamSource(0, m_pD3DVtxBuff, 0, sizeof(VERTEX_3D));
 
