@@ -177,3 +177,25 @@ void VS_GOAL_LING(in float3 inPos : POSITION0,
 
 	outColor = MatDiffuse;
 }
+////////////////////////////////////////
+//シャドウバッファ
+////////////////////////////////////////
+void VS_CHARCTER(in float3 inPos : POSITION0,
+	in float2 inUV : TEXCOORD0,
+	in float3 inNormal : NORMAL0,
+	out float4 outPos : POSITION,
+	out float2 outUV : TEXCOORD0,
+	out float4 outColor : COLOR0,
+	out float3 outNormal : TEXCOORD1,
+	out float3 outWorldPos : TEXCOORD2)
+{
+	outPos = mul(float4(inPos, 1.0f), gWvp);
+
+	outWorldPos = mul(float4(inPos, 1.0f), world);
+
+	outNormal = mul(float4(inNormal, 1.0f), world);
+
+	outColor = MatDiffuse;
+
+	outUV = inUV;
+}

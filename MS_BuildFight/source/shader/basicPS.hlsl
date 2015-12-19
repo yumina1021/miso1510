@@ -8,6 +8,7 @@ float3 LightDir;
 float4 MatDiffuse;
 float3 CameraVec;
 float2 ScreenResolution;
+float4 LightDiffuse;
 
 float4 gColor;
 float gValue;
@@ -168,7 +169,22 @@ float4 PS_GOAL_LING(float4 diffuse : COLOR0, float3 normal : TEXCOORD1, float3 w
 	return float4(color.xyz, 1.0f);
 
 }
+/////////////////////////////////////////////////////////
+// ゴールリング用
+/////////////////////////////////////////////////////////
+float4 PS_CHARCTER(float4 diffuse : COLOR0, float2 uv : TEXCOORD0, float3 worldNor : TEXCOORD1, float3 worldPos : TEXCOORD2) : COLOR0
+{
 
+	worldNor = normalize(worldNor);
+	float3 dir = normalize(LightDir - worldPos);
+
+	float l = dot(LightDir, worldNor) * 0.5f + 0.5f;
+	diffuse = LightDiffuse * MatDiffuse * l;
+	float4 texCol = tex2D(texSampler, uv);
+
+	return float4(diffuse.rgb * texCol.rgb, 1.0f);
+
+}
 //キューブマップ
 float4 cubeMap(sampler cubemap, float3 toEye, float3 normalW)
 {

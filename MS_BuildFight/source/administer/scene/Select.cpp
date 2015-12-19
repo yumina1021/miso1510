@@ -239,6 +239,17 @@ void CSelect::Update(void)
 
 	UpdateFade();
 
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	D3DXVECTOR3 rot1 = m_pCharModPlayer1[i]->GetRot();
+	//	D3DXVECTOR3 rot2 = m_pCharModPlayer2[i]->GetRot();
+	//	rot1.y += 0.1f;
+	//	rot2.y += 0.1f;
+	//	m_pCharModPlayer1[i]->SetRot(rot1);
+	//	m_pCharModPlayer2[i]->SetRot(rot2);
+
+	//}
+
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
