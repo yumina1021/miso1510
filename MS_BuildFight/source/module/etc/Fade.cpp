@@ -140,7 +140,7 @@ void CFade :: Draw(void)
 
 void CFade ::StartFade(FADEMODE fade,int nCount,D3DXCOLOR color, int type)
 {
-	Cform2D::SetTexture(m_apTextureName[type]);
+	Cform2D::SetTexture(m_apTextureName[rand()%3]);
 	m_fadeType=fade;
 	m_nCount=nCount;
 	m_color=color;

@@ -982,9 +982,9 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_nEnum = CManager::GetSelectChar(1);
 	ObjectInit(pDevice);
 
-	m_pPlayer[0] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[0] = CPlayerM::Create(pDevice, m_nPnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_pPlayer[1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 
 	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
