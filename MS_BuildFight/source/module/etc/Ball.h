@@ -48,6 +48,7 @@ class CBall  : public CformX
 		D3DXVECTOR3 GetVelocity(void){ return m_MovVelocity; }
 		void SetVelocity(D3DXVECTOR3 vel){ m_MovVelocity = vel; }
 		void SetAlpha(float alpha){ m_alpha = alpha; }
+		void SetCircle(D3DXVECTOR3 circle){ m_CircleVec = circle; }
 
 		void SetMoveFlag(bool mov){ m_bmove = mov; };
 	private:
@@ -65,6 +66,7 @@ class CBall  : public CformX
 		float m_RotResist;
 		D3DXVECTOR3 m_MovVelocity;
 		D3DXVECTOR3 m_RotVelocity;
+		D3DXVECTOR3 m_CircleVec;
 		float m_alpha;
 		bool m_bmove;
 };

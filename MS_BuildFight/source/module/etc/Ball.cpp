@@ -88,6 +88,8 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 
 	m_MovVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_RotVelocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_CircleVec = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	m_Mass = 1.0f;
 	m_MOI = 100.0f;
 	m_MovResist = 0.02f;
@@ -120,8 +122,11 @@ void CBall :: Update(void)
 		m_RotVelocity -= m_RotVelocity * m_RotResist;
 
 		D3DXVECTOR3 pos = CformX::GetPos();
+		D3DXVECTOR3 rot = CformX::GetRot();
+		rot -= D3DXVECTOR3(m_CircleVec.z + m_CircleVec.y, m_CircleVec.x, 0.0f) * (m_MovVelocity.x + m_MovVelocity.y + m_MovVelocity.z) * 15.0f;
 		pos += m_MovVelocity;
 		CformX::SetPos(pos);
+		CformX::SetRot(rot);
 		//エフェクトに座標設定
 		m_pLocusEffect->SetPosBuffer(CformX::GetPos());
 		m_pLocusEffect->SetPos(CformX::GetPos());

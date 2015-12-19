@@ -35,6 +35,7 @@ class CBall;
 class CGoal;
 class CScenario;
 class CformX;
+class CNumber;
 
 class CGimmick;
 
@@ -132,6 +133,8 @@ class CGame  : public CScene
 
 		CCount*			m_pCountPar;		//パーポインター
 		CCount*			m_pCountShot;		//打数ポインター
+		CNumber*		m_pDistance[3];		//打数ポインター
+		Cform2D*		m_pyard;
 
 		CBackGround*	m_pBackGround;
 		CFade*			m_pFade;
