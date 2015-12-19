@@ -10,6 +10,9 @@
 //*****************************************************************************
 #include "form3D.h"
 #include "../module/field/meshfielddata.h"
+#include "../module/etc/Camera.h"
+#include "../administer/Maneger.h"
+#include "../exten_common.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -146,6 +149,12 @@ HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 	// 頂点データをアンロックする
 	m_pD3DVtxBuff->Unlock();
 
+	//ピクセルシェーダー用に変換1
+	Create_PS("source/shader/basicPS.hlsl", "PS_TEXDIFFUSE", &m_shader.ps, &m_shader.psc, m_pDevice);
+
+	//バーテックスシェーダー用に変換1
+	Create_VS("source/shader/basicVS.hlsl", "VS", &m_shader.vs, &m_shader.vsc, m_pDevice);
+
 	return S_OK;
 }
 
@@ -233,6 +242,21 @@ HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX
 	// 頂点データをアンロックする
 	m_pD3DVtxBuff->Unlock();
 
+	//ピクセルシェーダー用に変換1
+	Create_PS("source/shader/basicPS.hlsl", "PS_TEXDIFFUSE", &m_shader.ps, &m_shader.psc, m_pDevice);
+
+	//バーテックスシェーダー用に変換1
+	Create_VS("source/shader/basicVS.hlsl", "VS", &m_shader.vs, &m_shader.vsc, m_pDevice);
+
+	m_pColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+	CCamera* pCamera = CManager::GetCamera();
+
+	//ビュー行列
+	eye = pCamera->GetPosP();
+	at = pCamera->GetPosR();
+	up = pCamera->GetVecUp();
+
 	return S_OK;
 }
 //=============================================================================
@@ -253,6 +277,11 @@ void Cform3D :: Uninit(void)
 		m_pD3DVtxBuff=NULL;
 	}
 
+	if (m_shader.ps != NULL)m_shader.ps->Release();
+	if (m_shader.psc != NULL)m_shader.psc->Release();
+	if (m_shader.vs != NULL)m_shader.vs->Release();
+	if (m_shader.vsc != NULL)m_shader.vsc->Release();
+
 	Cform::Release();
 }
 //=============================================================================
@@ -267,17 +296,33 @@ void Cform3D :: Update(void)
 void Cform3D :: Draw(void)
 {
 	D3DXMATRIX  mtxWorld;
-	D3DXMATRIX mtxScl,mtxRot,mtxTranslate;
+	D3DXMATRIX mtxScl, mtxRot, mtxTranslate, view, proj;
 
 	//マトリックスの設定
 	D3DXMatrixIdentity(&mtxWorld);
-	D3DXMatrixScaling(&mtxScl,m_Scl.x,m_Scl.y,m_Scl.z);
-	D3DXMatrixMultiply(&mtxWorld,&mtxWorld,&mtxScl);
+
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,m_Rot.y,m_Rot.x,m_Rot.z);
 	D3DXMatrixMultiply(&mtxWorld,&mtxWorld,&mtxRot);
+
 	D3DXMatrixTranslation(&mtxTranslate,m_Pos.x,m_Pos.y,m_Pos.z);
 	D3DXMatrixMultiply(&mtxWorld,&mtxWorld,&mtxTranslate);
-	m_pDevice->SetTransform(D3DTS_WORLD,&mtxWorld);
+
+	D3DXMatrixLookAtLH(&view, &eye, &at, &up);
+
+	D3DXMatrixPerspectiveFovLH(&proj, D3DXToRadian(45), 960.0f / 540.0f, 10.0f, 100000.0f);
+
+	D3DXMATRIX wvp = mtxWorld*view*proj;
+
+	m_shader.vsc->SetMatrix(m_pDevice, "world", &mtxWorld);
+	m_shader.vsc->SetMatrix(m_pDevice, "gWvp", &wvp);
+
+	unsigned int s0 = m_shader.psc->GetSamplerIndex("texSampler");
+	m_pDevice->SetTexture(s0, m_pD3DTex);
+
+	m_shader.vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&m_pColor);
+
+	m_pDevice->SetVertexShader(m_shader.vs);
+	m_pDevice->SetPixelShader(m_shader.ps);
 
 	//頂点バッファをデータストリームにバインド
 	m_pDevice->SetStreamSource(0,m_pD3DVtxBuff,0,sizeof(VERTEX_3D));
@@ -285,13 +330,12 @@ void Cform3D :: Draw(void)
 	//頂点フォーマットの設定
 	m_pDevice->SetFVF(FVF_VERTEX_3D);
 
-	//テクスチャの設定
-	m_pDevice->SetTexture(0,m_pD3DTex);
-
 	//ポリゴンの描画
 	m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, NUM_POLYGON);
 
+	m_pDevice->SetVertexShader(nullptr);
 
+	m_pDevice->SetPixelShader(nullptr);
 }
 //=============================================================================
 // カラー設定

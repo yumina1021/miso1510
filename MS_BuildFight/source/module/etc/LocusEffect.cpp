@@ -196,8 +196,6 @@ void CLocusEffect :: Draw(void)
 		D3DXMatrixTranslation(&mtxTranslate, 0.0f, 0.0f, 0.0f);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTranslate);
 
-		m_pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
-
 		D3DXMatrixLookAtLH(&view, &eye, &at, &up);
 
 		D3DXMatrixPerspectiveFovLH(&proj, D3DXToRadian(45), 960.0f / 540.0f, 10.0f, 100000.0f);
