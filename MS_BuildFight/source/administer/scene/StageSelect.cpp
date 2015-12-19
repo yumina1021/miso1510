@@ -32,6 +32,8 @@
 #include "../../form/form2D.h"
 #include "../../module/field/Field.h"
 
+#include "../../module/robot/PlayerM.h"
+
 #include "../../administer/Debugproc.h"
 
 #include "../wiicon/wiimote.h"
@@ -59,9 +61,9 @@ LPSTR pModName[MAX_STAGE]
 {
 
 	"data/MODEL/stage1.x",
-	"data/MODEL/stage2.x",
-	"data/MODEL/stage3.x",
-	"data/MODEL/stage4.x",
+		"data/MODEL/stage2.x",
+		"data/MODEL/stage3.x",
+		"data/MODEL/stage4.x",
 
 };
 
@@ -74,13 +76,13 @@ D3DXVECTOR3 tmpRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CStageSelect::CStageSelect(void):
+CStageSelect::CStageSelect(void) :
 m_fTime(0.0f),
 m_nState(STATE::NORMAL)
 {
 	m_pBackGround = NULL;
 	m_pFade = NULL;
-	
+
 	// カメラの取得
 	CCamera* pTmpCamera = CManager::GetCamera();
 
@@ -93,11 +95,12 @@ m_nState(STATE::NORMAL)
 CStageSelect :: ~CStageSelect(void)
 {
 }
+int selectStageOld = 0;
 
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
+HRESULT CStageSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 {
 	//サウンド取得の作成
 	CSound *pSound;
@@ -119,7 +122,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBackGround->SetDiffuse(1.0f, 1.0f, 1.0f, 0.6f);
 
 	//フェードの作成
-	m_pFade=CFade::Create(pDevice,1);
+	m_pFade = CFade::Create(pDevice, 1);
 
 	// カーソルの作成
 	m_playerData[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 128, 128);
@@ -128,10 +131,10 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_playerData[1].nSelectNum = 0;
 
 	// ステージ名
-	m_pStageName[0] = Cform2D::Create(pDevice, "data/TEXTURE/StageName1.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
-	m_pStageName[1] = Cform2D::Create(pDevice, "data/TEXTURE/StageName2.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
-	m_pStageName[2] = Cform2D::Create(pDevice, "data/TEXTURE/StageName3.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
-	m_pStageName[3] = Cform2D::Create(pDevice, "data/TEXTURE/StageName4.png", D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[0] = CCharPicture::Create(pDevice, sn1, D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[1] = CCharPicture::Create(pDevice, sn2, D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[2] = CCharPicture::Create(pDevice, sn3, D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), NAME_WIDTH, NAME_HEIGHT);
+	m_pStageName[3] = CCharPicture::Create(pDevice, sn4, D3DXVECTOR3(NAME_POS_X, NAME_POS_Y, 0.0f), NAME_WIDTH, NAME_HEIGHT);
 
 	// 変数定義
 	float fTmpRad((D3DX_PI * 2.0f) / MAX_STAGE);
@@ -145,7 +148,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 		// 生成
 		m_Obj[i].pDispObj = CformX::Create(pDevice, pModName[i], D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		
+
 		// 各値の設定
 		m_Obj[i].fLenCoff = fTmpRad * static_cast<float>(i);
 		m_Obj[i].fLenCoffDest = m_Obj[i].fLenCoff;
@@ -170,6 +173,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	int levelCnt(1);
 	float posX(0.0f);
+	D3DXCOLOR tmpCol;
 
 	// 難易度可視化用の★
 	for (int i = 0; i < MAX_LEVEL; i++)
@@ -178,24 +182,25 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 		posX = (NAME_POS_X - NAME_WIDTH * 0.25f) + STAR_WIDTH * i;
 
 		// 生成
-		m_pLevelStar[i] = Cform2D::Create(pDevice, "data/TEXTURE/LevelStar.png", D3DXVECTOR3(posX, STAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), STAR_WIDTH, STAR_HEIGHT);
+		m_pLevelStar[i] = CCharPicture::Create(pDevice, ls, D3DXVECTOR3(posX, STAR_POS_Y, 0.0f), STAR_WIDTH, STAR_HEIGHT);
 
 		// 色付け
 		// 中間
 		if (levelCnt > 3 && levelCnt < 8)
 		{
-			m_pLevelStar[i]->SetDiffuse(0.0f, 1.0f, 0.0f, 1.0f);
+			tmpCol = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
 		}
 		else if (levelCnt > 7)
 		{
-			m_pLevelStar[i]->SetDiffuse(1.0f, 0.0f, 0.0f, 1.0f);
-
+			tmpCol = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 		}
 		else
 		{
-			m_pLevelStar[i]->SetDiffuse(0.0f, 0.0f, 1.0f, 1.0f);
-
+			tmpCol = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
 		}
+
+		m_pLevelStar[i]->SetDiffuse(tmpCol.r, tmpCol.g, tmpCol.b, tmpCol.a);
+		m_pLevelStar[i]->SetDiff(tmpCol);
 
 		levelCnt++;
 
@@ -208,7 +213,7 @@ HRESULT CStageSelect :: Init(LPDIRECT3DDEVICE9 pDevice)
 //=============================================================================
 // 終了
 //=============================================================================
-void CStageSelect :: Uninit(void)
+void CStageSelect::Uninit(void)
 {
 	//サウンド取得の作成
 	CSound *pSound;
@@ -223,8 +228,9 @@ void CStageSelect :: Uninit(void)
 //=============================================================================
 // 更新
 //=============================================================================
-void CStageSelect :: Update(void)
+void CStageSelect::Update(void)
 {
+
 
 	//現在の状態によって分岐
 	switch (m_nState)
@@ -253,18 +259,30 @@ void CStageSelect :: Update(void)
 		break;
 	}
 
+	// 全てのステージ
+	for (int i = 0; i < MAX_STAGE; i++)
+	{
+		m_pStageName[i]->ChangeGuiState(m_pStageName[i]->GetGuiMode());;
 
-	
+		// 難易度可視化用の★
+		for (int j = 0; j < m_Obj[selectStageOld].nlevel; j++)
+		{
+
+			m_pLevelStar[j]->ChangeGuiState(m_pLevelStar[j]->GetGuiMode());
+
+		}
+	}
 #ifdef _DEBUG
 
 	CDebugProc::Print("選択中のボタン:%d\n", m_playerData[0].nSelectNum);
 
 #endif
 }
+
 //=============================================================================
 // 描画
 //=============================================================================
-void CStageSelect :: Draw(void)
+void CStageSelect::Draw(void)
 {
 
 	m_pDome->Draw();
@@ -293,7 +311,7 @@ void CStageSelect :: Draw(void)
 	}
 
 	// 難易度設定用の★
-	for (int i = 0; i < m_Obj[m_playerData[0].nSelectNum].nlevel; i++)
+	for (int i = 0; i < m_Obj[selectStageOld].nlevel; i++)
 	{
 		m_pLevelStar[i]->Draw();
 	}
@@ -302,12 +320,13 @@ void CStageSelect :: Draw(void)
 	m_pLogo->Draw();
 
 	// 現在選択中のステージ名
-	m_pStageName[m_playerData[0].nSelectNum]->Draw();
+	m_pStageName[selectStageOld]->Draw();
 
 	//フェード
 	m_pFade->Draw();
 
 }
+float tmpTime = 0.0f;
 //=============================================================================
 // 描画
 //=============================================================================
@@ -333,6 +352,14 @@ void CStageSelect::UpdateSelectObject()
 		// 座標を更新
 		m_Obj[i].pDispObj->SetPos(tmpObjPos);
 
+		// 
+		tmpTime = CCursor::EsasingNone(tmpTime, 1.0f, m_fTime);
+
+		// 全てのステージ
+		m_pStageName[i]->SetDiffuse(1.0f, 1.0f, 1.0f, 1.0f - tmpTime);
+		m_pStageName[i]->SetDiff(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f - tmpTime));
+		m_pStageName[i]->ChangeGuiState(GUI_MODE::GRADUALLY_DESELECT);
+
 #ifdef _DEBUG
 
 		//CDebugProc::Print("X座標:%f\n", tmpObjPos.x);
@@ -340,6 +367,19 @@ void CStageSelect::UpdateSelectObject()
 		CDebugProc::Print("衛星軌道用の係数:%f\n", m_Obj[i].fLenCoff);
 
 #endif
+
+	}
+
+	int levelCnt(1);
+	D3DXCOLOR tmpCol;
+	// 難易度可視化用の★
+	for (int j = 0; j < MAX_LEVEL; j++)
+	{
+
+		tmpCol = m_pLevelStar[j]->GetDiff();
+		m_pLevelStar[j]->SetDiffuse(tmpCol.r, tmpCol.g, tmpCol.b, 1.0f - tmpTime);
+		m_pLevelStar[j]->SetDiff(D3DXCOLOR(tmpCol.r, tmpCol.g, tmpCol.b, 1.0f - tmpTime));
+		m_pStageName[j]->ChangeGuiState(GUI_MODE::GRADUALLY_DESELECT);
 
 	}
 
@@ -353,7 +393,21 @@ void CStageSelect::UpdateSelectObject()
 		for (int i = 0; i < MAX_STAGE; i++)
 		{
 			m_Obj[i].fLenCoff = m_Obj[m_Obj[i].nDestCnt].fLenCoffDest;
+			m_pStageName[i]->ChangeGuiState(GUI_MODE::GRADUALLY_SELECT);
+			tmpTime = 0.0f;
 		}
+
+		// 難易度可視化用の★
+		for (int j = 0; j < MAX_LEVEL; j++)
+		{
+
+			m_pStageName[j]->ChangeGuiState(GUI_MODE::GRADUALLY_SELECT);
+
+		}
+
+		selectStageOld = m_playerData[0].nSelectNum;
+
+
 	}
 	else
 	{
@@ -405,7 +459,7 @@ void CStageSelect::SelectByButton(void)
 		// 選択したマップを保存
 		CManager::SetSelectMap(m_playerData[0].nSelectNum);
 
-		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
+		m_pFade->StartFade(FADE_IN, 100, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), CManager::GetSelectChar(0));
 		//pSound->PlayVoice(m_playerData[0].nSelectNum,VOICE_LABEL_SE_START);
 
 	}
@@ -413,6 +467,7 @@ void CStageSelect::SelectByButton(void)
 	{
 
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
+		selectStageOld = m_playerData[0].nSelectNum;
 
 		m_playerData[0].nSelectNum--;
 		NomalizeSelectObject(m_playerData[0].nSelectNum);
@@ -421,7 +476,7 @@ void CStageSelect::SelectByButton(void)
 		{
 			m_Obj[i].nDestCnt--;
 			NomalizeSelectObject(m_Obj[i].nDestCnt);
-			
+
 			if (m_Obj[i].fLenCoff <= 0.0f)
 			{
 				m_Obj[i].fLenCoff = tmpRot;
@@ -435,6 +490,7 @@ void CStageSelect::SelectByButton(void)
 	else if (pInputKeyboard->GetKeyTrigger(DIK_D) || pInputKeyboard->GetKeyTrigger(DIK_RIGHT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 	{
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
+		selectStageOld = m_playerData[0].nSelectNum;
 
 		m_playerData[0].nSelectNum++;
 		NomalizeSelectObject(m_playerData[0].nSelectNum);
@@ -456,15 +512,15 @@ void CStageSelect::SelectByButton(void)
 		m_nState = STATE::SATELLITE_ORBIT;
 
 	}
-	
+
 }
 //=============================================================================
 // カール移動での選択
 //=============================================================================
 bool CStageSelect::HitChkRect(const D3DXVECTOR3& paramPos1,
-							const D3DXVECTOR3& paramPos2,
-							const D3DXVECTOR3& paramLen1,
-							const D3DXVECTOR3& paramLen2){
+	const D3DXVECTOR3& paramPos2,
+	const D3DXVECTOR3& paramLen1,
+	const D3DXVECTOR3& paramLen2){
 
 	if (abs(paramPos1.x - paramPos2.x) < (paramLen1.x * 0.5f + paramLen2.x * 0.5f) //横の判定
 		&& abs(paramPos1.y - paramPos2.y) < (paramLen1.y * 0.5f + paramLen2.y * 0.5f)) //縦の判定

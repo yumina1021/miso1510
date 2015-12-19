@@ -12,7 +12,7 @@
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const LPSTR CCharPicture::m_apTextureName[]=
+const LPSTR CCharPicture::m_apTextureName[] =
 {
 	"data/TEXTURE/t_start.png",
 	"data/TEXTURE/t_vs.png",
@@ -31,6 +31,12 @@ const LPSTR CCharPicture::m_apTextureName[]=
 	"data/TEXTURE/n_b.png",
 	"data/TEXTURE/s_99.png",
 
+	"data/TEXTURE/LevelStar.png",
+	"data/TEXTURE/StageName1.png",
+	"data/TEXTURE/StageName2.png",
+	"data/TEXTURE/StageName3.png",
+	"data/TEXTURE/StageName4.png",
+
 	"data/TEXTURE/p_continue.png",
 	"data/TEXTURE/p_retry.png",
 	"data/TEXTURE/p_quit.png"
@@ -39,7 +45,7 @@ const LPSTR CCharPicture::m_apTextureName[]=
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CCharPicture :: CCharPicture():Cform2D(OBJTYPE_PAUSE,7),
+CCharPicture::CCharPicture() :Cform2D(OBJTYPE_PAUSE, 7),
 m_Len(0.0f, 0.0f, 0.0f),
 m_FadeCoff(0.02f),
 m_Mode(GUI_MODE::NORMAL),
@@ -56,30 +62,30 @@ CCharPicture :: ~CCharPicture(void)
 //=============================================================================
 // CCharPicture生成
 //=============================================================================
-CCharPicture *CCharPicture::Create(LPDIRECT3DDEVICE9 pDevice,PictureNum nType,D3DXVECTOR3 pos,float fwidth,float fheight)
+CCharPicture *CCharPicture::Create(LPDIRECT3DDEVICE9 pDevice, PictureNum nType, D3DXVECTOR3 pos, float fwidth, float fheight)
 {
 	CCharPicture *pform2D;
 
 	pform2D = new CCharPicture();
-	pform2D->Init(pDevice,nType,pos,fwidth,fheight);
+	pform2D->Init(pDevice, nType, pos, fwidth, fheight);
 
 	return pform2D;
 }
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CCharPicture :: Init(LPDIRECT3DDEVICE9 pDevice,PictureNum nType,D3DXVECTOR3 pos,float fwidth,float fheight)
+HRESULT CCharPicture::Init(LPDIRECT3DDEVICE9 pDevice, PictureNum nType, D3DXVECTOR3 pos, float fwidth, float fheight)
 {
 	m_pDevice = pDevice;
 	//フィールドの初期化
-	Cform2D::Init(m_pDevice,m_apTextureName[(int)nType],pos,D3DXVECTOR3(0.0f,0.0f,0.0f),fwidth,fheight);
+	Cform2D::Init(m_pDevice, m_apTextureName[(int)nType], pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), fwidth, fheight);
 	m_Len = D3DXVECTOR3(fwidth, fheight, 0.0f);
 	return S_OK;
 }
 //=============================================================================
 // 終了
 //=============================================================================
-void CCharPicture :: Uninit(void)
+void CCharPicture::Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 	Cform2D::Uninit();
@@ -87,14 +93,14 @@ void CCharPicture :: Uninit(void)
 //=============================================================================
 // 更新
 //=============================================================================
-void CCharPicture :: Update(void)
+void CCharPicture::Update(void)
 {
 	Cform2D::Update();
 }
 //=============================================================================
 // 描画
 //=============================================================================
-void CCharPicture :: Draw(void)
+void CCharPicture::Draw(void)
 {
 	Cform2D::Draw();
 }
@@ -168,6 +174,34 @@ void CCharPicture::ChangeGuiState(GUI_MODE paramMode){
 		// 分岐を抜ける
 		break;
 
+		// 表示させたくない状態
+	case GUI_MODE::GRADUALLY_DESELECT:
+
+
+
+		// 分岐を抜ける
+		break;
+		// 表示させたくない状態
+	case GUI_MODE::GRADUALLY_SELECT:
+
+		// ポリゴンを徐々に不透明にする
+		m_Diff.a += m_FadeCoff;
+
+		// もしα値が最大だったら
+		if (m_Diff.a >= 1.0f)
+		{
+			m_Diff.a = 1.0f;
+
+			// 通常状態に遷移
+			m_Mode = GUI_MODE::NORMAL;
+
+		}
+
+		// 頂点の色の変更
+		SetDiffuse(m_Diff.r, m_Diff.g, m_Diff.b, m_Diff.a);
+
+		// 分岐を抜ける
+		break;
 		// 上記以外の場合
 	default:
 
@@ -176,7 +210,7 @@ void CCharPicture::ChangeGuiState(GUI_MODE paramMode){
 
 	}// switch
 
-	
+
 }// ChangeGuiState
 //=============================================================================
 // FunctionName: Flash
