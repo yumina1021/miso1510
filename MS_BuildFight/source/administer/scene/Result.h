@@ -61,6 +61,11 @@ class CResult  : public CScene
 		void _UpdateFlag(void);
 		void _UpdateTimer(void);
 		void _UpdateWinningOrLosing(void);
+		void _UpdateLauncher(void);
+		void _UpdateWinLauncher(void);
+		void _UpdateLoseLauncher(void);
+		void _UpdateTieGameLauncher(void);
+
 
 		static LPDIRECT3DDEVICE9	m_pD3DDevice;			// pDeviceオブジェクト(描画に必要)
 
@@ -68,7 +73,7 @@ class CResult  : public CScene
 		CFade*		m_pFade;							//フェード
 		CReScore*	m_pRescore[4];						//スコア用
 		CBall*		m_pBall;							//フォーム
-		Cform3D*	m_pform3D[6];						//3D表示用
+		Cform3D*	m_pform3D[8];						//3D表示用
 		CScenario*	m_pScenerio;						//シナリオ
 		CManager*	m_pManager;							//マネージャー
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;			//頂点情報格納ワーク(動的)
@@ -78,7 +83,9 @@ class CResult  : public CScene
 		static const LPSTR	m_apTextureName[];			//紙吹雪のテクスチャ
 		int m_cnt;
 		float m_MaxSpeed;
-		float m_SlideSpeed;
+		float m_SlideSpeed;								//Win,Loseの画像の移動速度
+		float m_LauncherSpeed[2];							//クラッカー発射装置の速度
+
 		float m_Speed;									//画像の動く速度
 		bool m_CrackerFlag;								//紙噴射開始フラグ
 		bool m_BlizzardFlag;							//紙吹雪開始フラグ
