@@ -48,8 +48,8 @@ class Cform3D  : public Cform
 		void SetRot(D3DXVECTOR3 rot){m_Rot=rot;};
 		void SetRot(float fx,float fy,float fz){m_Rot.x=fx;m_Rot.y=fy;m_Rot.z=fz;};
 		D3DXVECTOR3 GetRot(void){return m_Rot;};
-		void SetMtxView (D3DXMATRIX changeMtx){m_MtxView=changeMtx;};
-		void SetRotCamera (D3DXVECTOR3 rotCamera){m_RotCamera=rotCamera;};
+		//void SetMtxView (D3DXMATRIX changeMtx){m_MtxView=changeMtx;};
+		//void SetRotCamera (D3DXVECTOR3 rotCamera){m_RotCamera=rotCamera;};
 		void SetTexture(LPDIRECT3DTEXTURE9 pTex){m_pD3DTex=pTex;};
 	
 		float GetHeight(D3DXVECTOR3 pos, D3DXVECTOR3 *pNormal);
@@ -71,7 +71,7 @@ class Cform3D  : public Cform
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;		//頂点情報格納ワーク(動的)
 		LPDIRECT3DDEVICE9		m_pDevice;			// pDeviceオブジェクト(描画に必要)
 
-		D3DXMATRIX				m_MtxView;			//ビューマトリクス
+		//D3DXMATRIX				m_MtxView;			//ビューマトリクス
 
 		D3DXVECTOR3				m_Pos;				//位置
 		D3DXVECTOR3				m_Rot;				//向き
@@ -79,7 +79,7 @@ class Cform3D  : public Cform
 		D3DXVECTOR3				m_Scl;				//大きさ
 		float m_fLength;						// ポリゴンの中心から頂点までの長さ
 		float m_fAngle;							// ポリゴンと頂点を結んだ直線の傾き
-		D3DXVECTOR3				m_RotCamera;
+		//D3DXVECTOR3				m_RotCamera;
 
 };
 

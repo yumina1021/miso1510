@@ -376,14 +376,12 @@ void CCamera::StartCamera(void)
 	CBall *pBall;
 	pBall = CGame::GetBall(CGame::GetPlayerCount());
 
-	m_posCameraP = posModel;
-	m_posCameraR = pBall->GetPos();
 
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
 	D3DXVECTOR3 ErotModel = D3DXVECTOR3(0, 0, 0);
 
-	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
+	//Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
 	m_posCameraP = posModel + D3DXVECTOR3(250.0f, 250.0f, 250.0f);
@@ -406,13 +404,11 @@ void CCamera :: ShotCamera(void)
 	D3DXVECTOR3 EposModel = pBall->GetPos();
 	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
 
-	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
+	//Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
-	//m_posPointView = pBall->GetPos();
 	m_posCameraP = posModel;
 	m_posCameraR = EposModel;
-	//m_posCameraP = posModel;
 }
 //=============================================================================
 // ボール動いてるなう
@@ -427,14 +423,11 @@ void CCamera::MoveCamera(void)
 	CBall *pBall;
 	pBall = CGame::GetBall(CGame::GetPlayerCount());
 
-	m_posCameraP = posModel;
-	m_posCameraR = pBall->GetPos();
-
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
 	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
 
-	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
+	//Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
 	m_posCameraP = EposModel + ErotModel * -200.0f;
@@ -454,14 +447,11 @@ void CCamera::JudgeCamera(void)
 	CBall *pBall;
 	pBall = CGame::GetBall(CGame::GetPlayerCount());
 
-	m_posCameraP = posModel;
-	m_posCameraR = pBall->GetPos();
-
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
 	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
 
-	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
+	//Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
 	m_posCameraP = posModel;
@@ -482,14 +472,11 @@ void CCamera::PowerCamera(void)
 	CBall *pBall;
 	pBall = CGame::GetBall(CGame::GetPlayerCount());
 
-	m_posCameraP = posModel;
-	m_posCameraR = pBall->GetPos();
-
 	//ボールの位置＆向き取得
 	D3DXVECTOR3 EposModel = pBall->GetPos();
 	D3DXVECTOR3 ErotModel = CGame::GetVectorShot();
 
-	Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
+	//Distance = (float)sqrt((double)(posModel.x - EposModel.x)*(double)(posModel.x - EposModel.x) + (double)(posModel.y - EposModel.y)*(double)(posModel.y - EposModel.y) + (double)(posModel.z - EposModel.z)*(double)(posModel.z - EposModel.z));
 
 	//注視点座標設定
 	m_posCameraP = m_posCameraR + ErotModel * -150.0f;

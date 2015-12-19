@@ -646,6 +646,10 @@ void CMeshField::Draw(LPDIRECT3DTEXTURE9 pTexture)
 	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
 
 	pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);					// Zバッファを使用する
+
+	pDevice->SetVertexShader(nullptr);
+
+	pDevice->SetPixelShader(nullptr);
 }
 
 //=============================================================================

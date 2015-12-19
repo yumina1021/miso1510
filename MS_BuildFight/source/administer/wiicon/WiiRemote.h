@@ -103,6 +103,7 @@ private:
 	bool m_Postureflag;
 	bool m_resetflag;
 	int m_count;
+	DWORD g_time;
 
 	speaker_freq m_speaker;
 	wiimote_sample m_sample;

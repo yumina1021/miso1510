@@ -269,19 +269,20 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 		m_pDevice->SetTexture(0, NULL);		//テクスチャは使わない
 	}
 
+	m_pDevice->SetVertexShader(shader->vs);
+	m_pDevice->SetPixelShader(shader->ps);
 	//マテリアルの個数分ループ
 	for (int nCntMat = 0; nCntMat<(int)m_nNumMatModel; nCntMat++)
 	{
 		shader->vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
 		shader->vsc->SetVector(m_pDevice, "MatAmbient", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Ambient);
-		m_pDevice->SetVertexShader(shader->vs);
-		m_pDevice->SetPixelShader(shader->ps);
 
 		m_pD3DXMeshModel->DrawSubset(nCntMat);			//モデルのパーツを描画
 	}
 
 	//マテリアルをもとに戻す！
 	m_pDevice->SetMaterial(&matDef);
+	m_pDevice->SetVertexShader(NULL);
 	m_pDevice->SetPixelShader(NULL);
 }
 //=============================================================================

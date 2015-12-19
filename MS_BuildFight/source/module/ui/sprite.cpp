@@ -154,7 +154,10 @@ void Sprite::Draw(const D3DXMATRIX& matrix,SHADER_SET shader_)
 
 	device_->SetStreamSource(0, vertex_buffer_, 0, sizeof(VERTEX_2D));
 
-	device_->DrawPrimitive(D3DPT_TRIANGLESTRIP,0,2);
+	device_->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+	device_->SetVertexShader(NULL);
+	device_->SetPixelShader(NULL);
 }
 
 //=============================================================================

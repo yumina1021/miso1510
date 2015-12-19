@@ -58,10 +58,10 @@ const LPSTR CResult::m_apTextureName[] =
 const LPSTR g_RewardTexture[][2] =
 {
 	{"data/TEXTURE/result/licht_win.jpg",
-	 "data/TEXTURE/result/aaa.jpg" },
+	 "data/TEXTURE/result/licht_win.jpg" },
 
 	{"data/TEXTURE/result/rosa_win.jpg",
-	 "data/TEXTURE/result/bbb.png", },
+	 "data/TEXTURE/result/rosa_win.jpg", },
 
 	 { "data/TEXTURE/result/ccc.png", 
 	  "data/TEXTURE/result/ddd.jpg" },
@@ -143,8 +143,8 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 	// カメラの取得
 	CCamera* pTmpCamera = CManager::GetCamera();
+	pTmpCamera->Init();
 	pTmpCamera->SetPosP(D3DXVECTOR3(CAMERA_POS_X, CAMERA_POS_Y, CAMERA_POS_Z));
-	pTmpCamera->SetPosR(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_pD3DDevice = m_pManager->GetDevice();
 
@@ -293,6 +293,14 @@ void CResult::Update(void)
 	_UpdateFade();				//フェードの更新
 	_UpdateWinningOrLosing();
 
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+	if ((pInputKeyboard->GetKeyTrigger(DIK_O)))
+	{
+		D3DXVECTOR3 rot = m_pform3D[0]->GetRot();
+		rot.x += D3DX_PI * 0.01f;
+		m_pform3D[0]->SetRot(rot);
+	}
 
 }
 //=============================================================================

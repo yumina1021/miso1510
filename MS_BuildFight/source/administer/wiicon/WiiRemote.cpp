@@ -12,7 +12,6 @@
 #define	PLUS_ZERO	(7990.0f)
 bool g_IR_connect;
 bool g_Connect = false;
-static DWORD g_time = timeGetTime();
 
 D3DXVECTOR3 test(0.f,0.f,0.f);
 void on_state_change(wiimote &remote,
@@ -115,8 +114,10 @@ bool WiiRemote::Init(BYTE light)
 	m_OffsetPosture = D3DXVECTOR3(5,9,18);
 	wiicont.ChangedCallback = on_state_change;
 	wiicont.CallbackTriggerFlags = (state_change_flags)(CONNECTED | CHANGED_ALL);
-	wiicont.Connect(wiimote::FIRST_AVAILABLE);
-	m_count = 0;
+	wiicont.Connect();
+	wiicont.MotionPlusConnected();
+	m_count = 0; 
+	g_time = timeGetTime();
 	
 	if (wiicont.IsConnected())wiicont.SetLEDs(light);
 	g_Connect = wiicont.IsConnected();
@@ -166,17 +167,13 @@ void WiiRemote::Update(void)
 		m_CurrentWii[cnt] = m_PressWii[cnt];
 	}
 #ifdef _DEBUG
-	if (wiicont.LED.Bits == 0x1)
-	{
 		CDebugProc::Print("ê‘äOê¸:: X:%f Y:%f\n", m_nowIRpos.x, m_nowIRpos.y);
 		CDebugProc::Print("R   P :: Roll:%f Pitch:%f\n", m_YawPitch.x, m_YawPitch.y);
 		CDebugProc::Print("åXÇ´  :: X:%f Y:%f Z:%f\n", m_Accel.x, m_Accel.y, m_Accel.z);
 		CDebugProc::Print("â¡ë¨ìx:: X:%f Y:%f Z:%f\n", m_Roatation.x, m_Roatation.y, m_Roatation.z);
 		CDebugProc::Print("PLUS  :: X:%f Y:%f Z:%f\n", m_MotionPlus.x, m_MotionPlus.y, m_MotionPlus.z);
 		CDebugProc::Print("RAW   :: X:%f Y:%f Z:%f\n", m_MotionRaw.x, m_MotionRaw.y, m_MotionRaw.z);
-		CDebugProc::Print("Plus  :: X:%f Y:%f Z:%f\n", m_PlusAngle.x, m_PlusAngle.y, m_PlusAngle.z);
-	}
-	
+		CDebugProc::Print("Plus  :: X:%f Y:%f Z:%f\n", m_PlusAngle.x, m_PlusAngle.y, m_PlusAngle.z);	
 #endif
 }
 //=============================================================================

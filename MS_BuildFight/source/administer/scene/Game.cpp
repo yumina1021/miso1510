@@ -48,6 +48,7 @@
 
 #include "../Debugproc.h"
 #include "../../exten_common.h"
+#include "../../module/etc/Camera.h"
 
 #define PLAYER_MAX	(2)	//プレイヤー数
 #define SHOT_RIMIT	(0.05f)
@@ -125,6 +126,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_bVsSelectFlag = CScene::GetVSFlag();
 	m_bReplayFlag = CScene::GetReplayFlag();
 
+	CCamera* pTmpCamera = CManager::GetCamera();
+	pTmpCamera->Init();
 	//地面の作成
 	m_pMeshField = CMeshField::Create(pDevice, 6, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100, 100, 50, 50);
 
@@ -152,8 +155,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pEffect[3] = CEffect::Create(pDevice, action, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[4] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[5] = CEffect::Create(pDevice, ready2, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[6] = CEffect::Create(pDevice, please_shot, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[7] = CEffect::Create(pDevice, shot_ball, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[6] = CEffect::Create(pDevice, (EffectNum)(please_shot_rosa + m_nPnum), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[7] = CEffect::Create(pDevice, (EffectNum)(shot_ball_rosa + m_nPnum), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_pEffect[8] = CEffect::Create(pDevice, (EffectNum)(please_shot_rosa + m_nEnum), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[9] = CEffect::Create(pDevice, (EffectNum)(shot_ball_rosa + m_nEnum), D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -463,7 +466,7 @@ void CGame :: Draw(void)
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
 
-		if ((m_nSwitchCount == POWER_PHASE) || (m_nSwitchCount == MOVE_PHASE))m_pPlayer[0]->Draw();
+		if ((m_nSwitchCount == POWER_PHASE) || (m_nSwitchCount == MOVE_PHASE) || (m_nSwitchCount == JUDGE_PHASE || (m_nSwitchCount == END_PHASE)))m_pPlayer[m_nPlayerNum]->Draw();
 
 		for (int i = 0; i < EFFECT_MAX; i++)
 		{
@@ -520,7 +523,7 @@ void CGame::TurnStart()
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
 
-	WiiRemote *wiicon = CManager::GetWii(0);
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	//プレイヤースタート表示
 	if (m_nGameStartCount == 0)
 	{
@@ -577,7 +580,7 @@ void CGame::GameScenario()
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
-	WiiRemote *wiicon = CManager::GetWii(0);
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 
 	static CScenario::GameAffair affair;
 
@@ -625,6 +628,7 @@ void CGame::GameScenario()
 			m_pEffect[2]->SetView(true);
 			m_pScore->SetViewFlag(true);
 			m_pCountPar->SetViewFlag(true);
+			g_movelimit = 0;
 			m_nSwitchCount = ANGLE_PHASE;
 			m_bcursolmove = 0.0f;
 		}
@@ -652,7 +656,7 @@ void CGame::AngleDecision()
 	}
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
-	WiiRemote *wiicon = CManager::GetWii(0);
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 
 	m_pEffect[0]->SetView(true);
 	m_pEffect[1]->SetView(true);
@@ -770,7 +774,7 @@ void CGame:: PowerDecision()
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
-	WiiRemote *wiicon = CManager::GetWii(0);
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	//弾のスピード調節
 	if (pInputKeyboard->GetKeyPress(DIK_Q))
 	{
@@ -813,7 +817,7 @@ void CGame:: PowerDecision()
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
 	}
 	//仮　打つ力を決めたから次
-	if (g_wiishot&&wiicon->GetWiiYaw() <-80.0f)
+	if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
 	{
 		float power = (abs(wiicon->GetWiiPlusSpeed().x))*0.01f;
 		if (m_nPlayerNum == 0)
@@ -855,13 +859,12 @@ void CGame::BallMove()
 		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
 		m_pBall[m_nPlayerNum]->SetMoveFlag(false);
-		g_movelimit = 0;
 	}
 }
 //結果判定
 void CGame::Judge()
 {
-	WiiRemote *wiicon = CManager::GetWii(0);
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	ObjHitCheck();
 	//もしゴールしたら終了
 	if ((m_pBall[0]->GetGoalFlag() && m_pBall[1]->GetGoalFlag()) && !m_bJudge)
@@ -914,7 +917,7 @@ void CGame::End()
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
-	WiiRemote *wiicon = CManager::GetWii(0);
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 
 	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))

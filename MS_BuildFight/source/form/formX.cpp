@@ -310,23 +310,25 @@ void CformX::Draw(void)
 	s0 = m_shader.psc->GetSamplerIndex("texSamplerCube");
 	m_pDevice->SetTexture(s0, m_pD3DTextureCube);
 
+	m_pDevice->SetVertexShader(m_shader.vs);
+	m_pDevice->SetPixelShader(m_shader.ps);
 	//マテリアルの個数分ループ
 	for (int nCntMat = 0; nCntMat<(int)m_nNumMatModel; nCntMat++)
 	{
 		m_shader.vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
 		m_shader.psc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
 		m_shader.vsc->SetVector(m_pDevice, "MatAmbient", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Ambient);
-		m_pDevice->SetVertexShader(m_shader.vs);
-		m_pDevice->SetPixelShader(m_shader.ps);
 
 		m_pD3DXMeshModel->DrawSubset(nCntMat);			//モデルのパーツを描画
+
 	}
 
+	m_pDevice->SetVertexShader(nullptr);
+
+	m_pDevice->SetPixelShader(nullptr);
 	//マテリアルをもとに戻す！
 	m_pDevice->SetMaterial(&matDef);
 
-	m_pDevice->SetVertexShader(NULL);
-	m_pDevice->SetPixelShader(NULL);
 
 }
 

@@ -91,7 +91,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//マネージャーの初期化
 	pManeger = new CManager;
-	pManeger->Init(hInstance,hwnd,TRUE);
+	BOOL Rerease = FALSE;
+#ifdef _DEBUG
+	Rerease = TRUE;
+#endif
+	pManeger->Init(hInstance, hwnd, Rerease);
 
 	//ウインドウの表示
 	ShowWindow(hwnd,nCmdShow);

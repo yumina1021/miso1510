@@ -110,7 +110,9 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 		if (!wiimote[i]->Init(0x1 * (i + 1)))
 		{
 			delete wiimote[i];
+#ifdef _DEBUG
 			MessageBox(hWnd, "wiicon not connet", "Error", MB_OK);
+#endif
 			wiimote[i] = NULL;
 		}
 	}
@@ -123,8 +125,8 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	m_pCamera->Init();
 
 	//フェーズの初期化
-	//m_pScene=new CTitle();
-	m_pScene=new CStageSelect();
+	m_pScene=new CTitle();
+	//m_pScene=new CStageSelect();
 	m_pScene->Init(m_pD3DDevice);
 
 #ifdef _DEBUG
@@ -451,18 +453,22 @@ void CManager :: Update(void)
 	}
 	if (m_pKeyboard->GetKeyTrigger(DIK_F5))
 	{
+		//m_pCamera->Init();
 		SetAfterScene(PHASETYPE_TITLE);
 	}
 	if (m_pKeyboard->GetKeyTrigger(DIK_F6))
 	{
+		//m_pCamera->Init();
 		SetAfterScene(PHASETYPE_SELECT);
 	}
 	if (m_pKeyboard->GetKeyTrigger(DIK_F7))
 	{
+		//m_pCamera->Init();
 		SetAfterScene(PHASETYPE_STAGE_SELECT);
 	}
 	if (m_pKeyboard->GetKeyTrigger(DIK_F8))
 	{
+		//m_pCamera->Init();
 		SetAfterScene(PHASETYPE_RESULT);
 	}
 }
