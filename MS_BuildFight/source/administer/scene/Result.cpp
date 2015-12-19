@@ -57,17 +57,17 @@ const LPSTR CResult::m_apTextureName[] =
 //ご褒美CG用
 const LPSTR g_RewardTexture[][2] =
 {
-	{"data/TEXTURE/result/licht_win.jpg",
+	{"data/TEXTURE/result/licht_win.jpg",			//リヒト
 	 "data/TEXTURE/result/licht_win.jpg" },
 
-	{"data/TEXTURE/result/rosa_win.jpg",
+	{"data/TEXTURE/result/rosa_win.jpg",			//ローザ
 	 "data/TEXTURE/result/rosa_win.jpg", },
 
-	 { "data/TEXTURE/result/ccc.png", 
+	 { "data/TEXTURE/result/ccc.png",				//リーラ
 	  "data/TEXTURE/result/ddd.jpg" },
 
-	 { "data/TEXTURE/result/eee.jpg",
-	 "data/TEXTURE/result/fff.jpg", },
+	 { "data/TEXTURE/result/jiityaaan.jpg",			//じいちゃん
+	 "data/TEXTURE/result/jiityaaan.jpg", },
 };
 
 //立ち絵表示用
@@ -125,6 +125,8 @@ CResult :: CResult(void)
 
 	m_Speed				= 1.0f;
 	m_SlideSpeed		= 30.0f;
+	m_LauncherSpeed[0] = 10.0f;
+	m_LauncherSpeed[1] = 10.0f;
 	m_Alpha[0]			= 0.0f;
 	m_Alpha[1]			= 0.0f;
 
@@ -292,15 +294,8 @@ void CResult::Update(void)
 	_UpdateFlag();				//描画フラグの更新
 	_UpdateFade();				//フェードの更新
 	_UpdateWinningOrLosing();
+	_UpdateLauncher();
 
-	CInputKeyboard *pInputKeyboard;
-	pInputKeyboard = CManager::GetInputKeyboard();
-	if ((pInputKeyboard->GetKeyTrigger(DIK_O)))
-	{
-		D3DXVECTOR3 rot = m_pform3D[0]->GetRot();
-		rot.x += D3DX_PI * 0.01f;
-		m_pform3D[0]->SetRot(rot);
-	}
 
 }
 //=============================================================================
@@ -312,7 +307,7 @@ void CResult :: Draw(void)
 
 	m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//キャラと背景描画
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (m_pform3D[i]){ m_pform3D[i]->Draw(); }
 	}
@@ -357,13 +352,17 @@ void CResult :: Draw(void)
 //<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::Win()
 {
-	PaperCracker(0.0f, 400.0f);
+	PaperCracker(0.0f, 600.0f);
 	PaperBlizzard(0.0f, 1700.0f);
 	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(2400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Win表示
 	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(-2600.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);						//Lose表示
 	//m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);						//スポットライト表示
 	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][3], D3DXVECTOR3(1400.0f, -400.0f, 0.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);	//敗者表示
 	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);	//勝者表示
+	m_pform3D[6] = Cform3D::Create(m_pManager->GetDevice(),"data/TEXTURE/cracker.png", D3DXVECTOR3(2500.0f, -1500.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 750,750);	//クラッカー表示
+	m_pform3D[7] = Cform3D::Create(m_pManager->GetDevice(),"data/TEXTURE/cracker.png", D3DXVECTOR3(-700.0f,  -1500.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, -D3DX_PI / 2.0f*3.0f), 750,750);			//クラッカー表示
+
+
 	m_ResultType = MAX_TYPE;
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
@@ -374,13 +373,15 @@ void CResult::Win()
 //<<<<<<<<<<<<<<<<<<<<<<<<<<
 void CResult::Lose()
 {
-	PaperCracker(-400.0f, 0.0f);
+	PaperCracker(-1000.0f, -700.0f);
 	PaperBlizzard(-1700.0f, 0.0f);
 	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(2400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Lose表示
-	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(-2800.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Win表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(-2500.0f, 1000.0f, 50.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 600, 1600);								//Win表示
 	//m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(-1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);								//スポットライト表示
 	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][1], D3DXVECTOR3(1400.0f,  -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);			//勝者表示
 	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][3], D3DXVECTOR3(-1400.0f, -400.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 2280, 2007);			//敗者表示
+	m_pform3D[6] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/cracker.png", D3DXVECTOR3(0.0f, -1500.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 750, 750);	//クラッカー表示
+	m_pform3D[7] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/cracker.png", D3DXVECTOR3(-2400.0f, -1500.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f, -D3DX_PI / 2.0f*3.0f), 750, 750);			//クラッカー表示
 	m_ResultType = MAX_TYPE;
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
@@ -610,7 +611,7 @@ void CResult::_UpdatePaperBlizzard(void)
 void CResult::_UpdateFlag(void)
 {
 	m_cnt++;
-	if (m_cnt > 100)
+	if (m_cnt >170)
 	{
 
 		m_BlizzardFlag = true;
@@ -625,7 +626,7 @@ void CResult::_UpdateFlag(void)
 void CResult::_UpdateTimer(void)
 {
 	m_Timer++;
-	if (m_Timer == 100)
+	if (m_Timer == 150)
 	{
 		m_pSound->Play(SOUND_LABEL_SE_TRUMPET);
 	}
@@ -676,5 +677,147 @@ void CResult::_UpdateWinningOrLosing(void)
 	}
 
 }
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//クラッカー発射装置画像の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+void CResult::_UpdateLauncher(void)
+{
+	switch (m_pManager->GetWin())
+	{
+		case PLAYER1_WIN:
+			_UpdateWinLauncher();
+			break;
+		case PLAYER2_WIN:
+			_UpdateLoseLauncher();
+			break;
+		case PLAYER_DRAW:
+			_UpdateTieGameLauncher();
+			break;
+	}
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//クラッカー発射装置勝利時の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+void CResult::_UpdateWinLauncher(void)
+{
+	if (m_pform3D[6])
+	{
+		D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		Pos = m_pform3D[6]->GetPos();
+		Pos.y += m_LauncherSpeed[0];
+		Pos.x -= m_LauncherSpeed[0];
+		if (Pos.x < 1800 && Pos.y > -800)
+		{
+			m_LauncherSpeed[0] = 0.0f;
+		}
+
+		if (m_CrackerFlag == true)
+		{
+			m_LauncherSpeed[0] = 10.0f;
+			Pos.y -= m_LauncherSpeed[0];
+			Pos.x += m_LauncherSpeed[0];
+			if (Pos.x < 2500 && Pos.y > -2700)
+			{
+				m_LauncherSpeed[0] = 0.0f;
+			}
+		}
+		m_pform3D[6]->SetPos(Pos.x, Pos.y, Pos.z);
+	}
+
+	if (m_pform3D[7])
+	{
+		D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		Pos = m_pform3D[7]->GetPos();
+
+		if (Pos.x > 0 && Pos.y > -800)
+		{
+			m_LauncherSpeed[1] = 0.0f;
+		}
+		if (m_CrackerFlag == true)
+		{
+			m_LauncherSpeed[1] = -10.0f;
+
+			if (Pos.x < -2500 && Pos.y < -2700)
+			{
+				m_LauncherSpeed[1] = 0.0f;
+			}
+		}
+		Pos.y += m_LauncherSpeed[1];
+		Pos.x += m_LauncherSpeed[1];
+		m_pform3D[7]->SetPos(Pos.x, Pos.y, Pos.z);
+	}
+
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//クラッカー発射装置敗北時の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+void CResult::_UpdateLoseLauncher(void)
+{
+	if (m_pform3D[6])
+	{
+		D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		Pos = m_pform3D[6]->GetPos();
+		Pos.y += m_LauncherSpeed[0];
+		Pos.x -= m_LauncherSpeed[0];
+		if (Pos.x < 1200 && Pos.y > -800)
+		{
+			m_LauncherSpeed[0] = 0.0f;
+		}
+
+		if (m_CrackerFlag == true)
+		{
+			m_LauncherSpeed[0] = 10.0f;
+			Pos.y -= m_LauncherSpeed[0];
+			Pos.x += m_LauncherSpeed[0];
+			if (Pos.x < 2700 && Pos.y > -2500)
+			{
+				m_LauncherSpeed[0] = 0.0f;
+			}
+		}
+		m_pform3D[6]->SetPos(Pos.x, Pos.y, Pos.z);
+	}
+
+	if (m_pform3D[7])
+	{
+		D3DXVECTOR3 Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		Pos = m_pform3D[7]->GetPos();
+
+		if (Pos.x > -2400 && Pos.y > -800)
+		{
+			m_LauncherSpeed[1] = 0.0f;
+		}
+		if (m_CrackerFlag == true)
+		{
+			m_LauncherSpeed[1] = -10.0f;
+
+			if (Pos.x < -2500 && Pos.y < -2700)
+			{
+				m_LauncherSpeed[1] = 0.0f;
+			}
+		}
+		Pos.y += m_LauncherSpeed[1];
+		Pos.x += m_LauncherSpeed[1];
+		m_pform3D[7]->SetPos(Pos.x, Pos.y, Pos.z);
+	}
+
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+//クラッカー発射装置引き分け時の更新
+//<<<<<<<<<<<<<<<<<<<<<<<<<<
+void CResult::_UpdateTieGameLauncher(void)
+{
+
+}
+
+
+
 
 /////////////EOF////////////
