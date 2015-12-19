@@ -35,7 +35,6 @@ class Cform3D  : public Cform
 		static Cform3D *Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot);
 		static Cform3D *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);
 
-
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName);//初期化
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX, float fTexSizeY);
 		void Uninit(void);//終了
@@ -61,16 +60,21 @@ class Cform3D  : public Cform
 		void SetLength(float length){ m_fLength = length; };
 		float GetLength(void){ return m_fLength; };
 		void SetDiffuse(float r, float g, float b, float a);
-
-
-
+		void SetShader(SHADER_SET shader)
+		{
+			if (m_shader.ps != NULL)m_shader.ps->Release();
+			if (m_shader.psc != NULL)m_shader.psc->Release();
+			if (m_shader.vs != NULL)m_shader.vs->Release();
+			if (m_shader.vsc != NULL)m_shader.vsc->Release();
+			m_shader = shader;
+		};
 
 
 	protected:
 		LPDIRECT3DTEXTURE9  	m_pD3DTex;			//テクスチャ表示用
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;		//頂点情報格納ワーク(動的)
 		LPDIRECT3DDEVICE9		m_pDevice;			// pDeviceオブジェクト(描画に必要)
-
+		D3DXCOLOR				m_pColor;
 		//D3DXMATRIX				m_MtxView;			//ビューマトリクス
 
 		D3DXVECTOR3				m_Pos;				//位置
@@ -80,6 +84,8 @@ class Cform3D  : public Cform
 		float m_fLength;						// ポリゴンの中心から頂点までの長さ
 		float m_fAngle;							// ポリゴンと頂点を結んだ直線の傾き
 		//D3DXVECTOR3				m_RotCamera;
+		SHADER_SET				m_shader;
+		D3DXVECTOR3				eye,at,up;
 
 };
 
