@@ -71,6 +71,8 @@ HRESULT CGoal::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, D3DXV
 	m_fChangerot = 0.0f;
 
 	m_fhit = 0.5f;
+
+	m_nsMagnet = S;
 	
 	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet[0].vs, &shaderSet[0].vsc, m_pDevice);
 	Create_PS("source/shader/basicPS.hlsl", "PS_GOAL", &shaderSet[0].ps, &shaderSet[0].psc, m_pDevice);
@@ -122,6 +124,9 @@ void CGoal :: Update(void)
 //=============================================================================
 void CGoal :: Draw(void)
 {
+	if (m_nsMagnet == N){ shaderSet[1].psc->SetVector(m_pDevice, "nsColor", (D3DXVECTOR4*)&D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f)); }
+	else{ shaderSet[1].psc->SetVector(m_pDevice, "nsColor", (D3DXVECTOR4*)&D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f)); }
+
 	if (m_bViewFlag)
 	{
 		m_pGoal->Draw();

@@ -51,6 +51,10 @@ class CBall  : public CformX
 		void SetCircle(D3DXVECTOR3 circle){ m_CircleVec = circle; }
 
 		void SetMoveFlag(bool mov){ m_bmove = mov; };
+
+		void SetMagnet(NS mag){ m_nsMagnet = mag; };
+		NS GetMagnet(void){ return  m_nsMagnet; };
+
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		static const LPSTR	m_ModelName[];			//Modelの名前配列
@@ -69,6 +73,7 @@ class CBall  : public CformX
 		D3DXVECTOR3 m_CircleVec;
 		float m_alpha;
 		bool m_bmove;
+		NS	m_nsMagnet;
 };
 
 #endif

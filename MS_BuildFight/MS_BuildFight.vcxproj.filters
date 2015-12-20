@@ -166,6 +166,9 @@
     <ClCompile Include="source\module\Gimmick\Gimmick.cpp">
       <Filter>source\module\Gimmick</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\Gimmick\Magnet.cpp">
+      <Filter>source\module\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -349,6 +352,9 @@
       <Filter>source\administer\wiicontrol</Filter>
     </ClInclude>
     <ClInclude Include="source\module\Gimmick\Gimmick.h">
+      <Filter>source\module\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\Gimmick\Magnet.h">
       <Filter>source\module\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>

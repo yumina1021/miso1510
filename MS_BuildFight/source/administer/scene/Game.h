@@ -122,6 +122,7 @@ class CGame  : public CScene
 		void End();				//終了
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
+		void Magnet();
 
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 

@@ -45,6 +45,7 @@
 #include "../../module/etc/LocusEffect.h"
 
 #include "../../module/Gimmick/Gimmick.h"
+#include "../../module/Gimmick/Magnet.h"
 
 #include "../Debugproc.h"
 #include "../../exten_common.h"
@@ -462,7 +463,7 @@ void CGame :: Draw(void)
 
 		if (m_bcursol)m_cursol->Draw();
 		m_pGoal->Draw();
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < m_GimmickMax; i++)
 		{
 			m_pGimmick[i]->Draw();
 		}
@@ -539,6 +540,8 @@ void CGame::TurnStart()
 		if (m_nPlayerNum == 0)
 		{
 			m_pScore->AddScore(1);
+			if (m_pGoal->GetMagnet() == N){ m_pGoal->SetMagnet(S); }
+			else{ m_pGoal->SetMagnet(N); }
 			m_nTurnCount++;
 		}
 
@@ -685,6 +688,22 @@ void CGame::AngleDecision()
 	if (len.y > POLYGON_HEIGHT){ len.y = 100.0f; }
 
 	m_pEffect[1]->SetLength(len.x, len.y);
+
+	//磁極切替
+	if (pInputKeyboard->GetKeyTrigger(DIK_SPACE))
+	{
+		if (m_pBall[m_nPlayerNum]->GetMagnet() == N){ m_pBall[m_nPlayerNum]->SetMagnet(S); }
+		else{ m_pBall[m_nPlayerNum]->SetMagnet(N); }
+	}
+
+	if (wiicon->GetKeyTrigger(WII_BUTTOM_PLUS))
+	{
+		m_pBall[m_nPlayerNum]->SetMagnet(S);
+	}
+	if (wiicon->GetKeyTrigger(WII_BUTTOM_MINUS))
+	{
+		m_pBall[m_nPlayerNum]->SetMagnet(N);
+	}
 
 	D3DXVECTOR3 work = m_pPlayer[m_nPlayerNum]->GetPos();
 	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
@@ -864,6 +883,7 @@ void CGame:: PowerDecision()
 void CGame::BallMove()
 {
 	D3DXVECTOR3 velocity = m_pBall[m_nPlayerNum]->GetVelocity();
+	Magnet();
 	ObjHitCheck();
 	if (abs(velocity.x) < SHOT_RIMIT && abs(velocity.y) < SHOT_RIMIT && abs(velocity.z) < SHOT_RIMIT)
 	{
@@ -1036,12 +1056,17 @@ void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
 {
 	// ファイル読みこみに後に変更
 	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 500.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGoal->SetMagnet(S);
+
 	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_STOP, D3DXVECTOR3(100.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGimmick[0]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 	m_pGimmick[1] = CGimmick::Create(pDevice, GIMMICK_TORNADO, MOVETYPE_STOP, D3DXVECTOR3(0.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGimmick[1]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+	m_pGimmick[2] = CGimmick::Create(pDevice, GIMMICK_UFO, MOVETYPE_SLIDE, D3DXVECTOR3(0.0f, 200.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGimmick[2]->SetSize(D3DXVECTOR3(30.0f, 30.0f, 30.0f));
+	m_pGimmick[2]->SetMagnet(N);
 	// とりあえずマックスはここで
-	m_GimmickMax = 2;
+	m_GimmickMax = 3;
 }
 // 当たり判定
 void CGame::ObjHitCheck()
@@ -1153,4 +1178,30 @@ bool CGame::ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot,
 	}
 	length = D3DXVec3Length(&Vec);   // 長さを出力
 	return length < sphire_length;
+}
+void CGame::Magnet(void)
+{
+	D3DXVECTOR3 ballpos = m_pBall[m_nPlayerNum]->GetPos();
+	NS ballns = m_pBall[m_nPlayerNum]->GetMagnet();
+
+	m_pBall[m_nPlayerNum]->AddForce(
+		MagnetMove(ballns, ballpos,
+		m_pGoal->GetMagnet(),
+		m_pGoal->GetPos()));
+
+	//if (m_nMoveCount < 100)
+	{
+		//ギミック数カウント
+		for (int i = 0; i < m_GimmickMax; i++)
+		{
+			//UFOならば
+			if (m_pGimmick[i]->GetGimmickType() == GIMMICK_UFO)
+			{
+				m_pBall[m_nPlayerNum]->AddForce(
+					MagnetMove(ballns, ballpos,
+					m_pGimmick[i]->GetMagnet(),
+					m_pGimmick[i]->GetPos()));
+			}
+		}
+	}
 }

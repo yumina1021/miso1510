@@ -41,6 +41,8 @@ class CGoal
 		D3DXVECTOR3 GetPos(void){ return m_pGoal->GetPos(); };
 		void Sethit(float num){ m_fhit = num; }
 
+		void SetMagnet(NS mag){ m_nsMagnet = mag; };
+		NS GetMagnet(void){ return  m_nsMagnet; };
 	private:
 		CformX*				m_pGoal;
 		CformX*				m_pGoalLing;
@@ -53,6 +55,7 @@ class CGoal
 		int					m_nRotChangeCount;
 		float				m_fChangerot;
 		float				m_fhit;
+		NS					m_nsMagnet;
 };
 
 #endif

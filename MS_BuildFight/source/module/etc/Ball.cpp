@@ -72,11 +72,11 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 	//ピクセルシェーダー用に変換1
 	switch (nType)
 	{
-	case 0:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_ROSA", &shaderSet.ps, &shaderSet.psc, m_pDevice);break;
-	case 1:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_LIRA", &shaderSet.ps, &shaderSet.psc, m_pDevice);break;
-	case 2:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_THEME", &shaderSet.ps, &shaderSet.psc, m_pDevice);break;
-	case 3:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_HAGE", &shaderSet.ps, &shaderSet.psc, m_pDevice); break;
-	default:Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc, m_pDevice); break;
+	case 0:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_ROSA", &shaderSet.ps, &shaderSet.psc, m_pDevice); m_nsMagnet = S; break;
+	case 1:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_LIRA", &shaderSet.ps, &shaderSet.psc, m_pDevice); m_nsMagnet = N; break;
+	case 2:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_THEME", &shaderSet.ps, &shaderSet.psc, m_pDevice); m_nsMagnet = S; break;
+	case 3:Create_PS("source/shader/basicPS.hlsl", "PS_BALL_HAGE", &shaderSet.ps, &shaderSet.psc, m_pDevice); m_nsMagnet = N; break;
+	default:Create_PS("source/shader/basicPS.hlsl", "PS_DIFFUSE", &shaderSet.ps, &shaderSet.psc, m_pDevice); m_nsMagnet = N; break;
 	}
 
 	//バーテックスシェーダー用に変換1
@@ -141,6 +141,10 @@ void CBall :: Update(void)
 void CBall :: Draw(void)
 {
 	shaderSet.psc->SetFloatArray(m_pDevice, "g_ballalpha", (float*)&m_alpha, 1);
+
+	if (m_nsMagnet == N){ shaderSet.psc->SetVector(m_pDevice, "nsColor", (D3DXVECTOR4*)&D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f)); }
+	else{ shaderSet.psc->SetVector(m_pDevice, "nsColor", (D3DXVECTOR4*)&D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f)); }
+
 	if (m_bViewFlag)
 	{
 		m_pLocusEffect->Draw();
