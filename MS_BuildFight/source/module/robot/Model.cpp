@@ -10,6 +10,10 @@
 // マクロ定義
 //*****************************************************************************
 #include "../etc/Camera.h"
+#include "../../administer/Input.h"
+#include "../../administer/Maneger.h"
+#include "../../administer/debugproc.h"
+
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -165,17 +169,26 @@ void CModel :: Uninit(void)
 	}
 
 }
+D3DXVECTOR3 lightVec(0.0f, -1.0f, 0.0f);
+
 //=============================================================================
 // 更新
 //=============================================================================
 void CModel :: Update(void)
 {
+
+
 }
+
 //=============================================================================
 // 描画
 //=============================================================================
 void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camera)
 {
+	//キーボードの取得
+	CInputKeyboard	*pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
 	D3DXMATERIAL *pD3DXMat;
 	D3DMATERIAL9 matDef;
 	D3DXMATRIX world, view, proj, rot, pos, mtxParent;
@@ -186,8 +199,7 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 	D3DXVECTOR3 at(0.0f, 20.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 
-	D3DXVECTOR3 lightVec(0.20f, 0.0f, 0.80f);
-	D3DXCOLOR   lightDiffuse(0.8f, 0.8f, 0.8f, 1.0f);
+	D3DXCOLOR   lightDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
 	D3DXCOLOR   lightDiffuse2(0.8f, 0.4f, 0.4f, 1.0f);
 	D3DXCOLOR   lightAmbient(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -215,12 +227,12 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 	D3DXMatrixTranslation(&pos, m_Pos.x + m_PosOrg.x, m_Pos.y + m_PosOrg.y, m_Pos.z + m_PosOrg.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &pos);
 
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxview);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxview);
 	// 親のマトリックスと算出したマトリックスを掛け合わせる
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
 
-	D3DXMatrixInverse(&invWorld, NULL, &m_mtxWorld);
-	D3DXVec3TransformCoord(&lightVec, &lightVec, &invWorld);
+	//D3DXMatrixInverse(&invWorld, NULL, &m_mtxWorld);
+	D3DXVec3TransformCoord(&lightVec, &lightVec, &m_mtxWorld);
 
 	D3DXMatrixLookAtLH(&view, &eye, &at, &up);
 
@@ -231,10 +243,28 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 
 	D3DXVec3Normalize(&cameraVec, &cameraVec);
 	D3DXVec3Normalize(&lightVec, &lightVec);
-
 	//デフォルトのマテリアル情報取得
 	m_pDevice->GetMaterial(&matDef);
 	pD3DXMat = (D3DXMATERIAL*)m_pD3DXBuffMatModel->GetBufferPointer();
+
+
+	if (pInputKeyboard->GetKeyPress(DIK_Y))
+	{
+		lightVec.y += 0.01;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_G))
+	{
+		lightVec.x -= 0.01;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_H))
+	{
+		lightVec.y -= 0.01;
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_J))
+	{
+		lightVec.x += 0.01;
+	}
+	CDebugProc::Print("ライト%f,%f,%f\n", lightVec.x, lightVec.y, lightVec.z);
 
 	shader->vsc->SetMatrix(m_pDevice, "world", &m_mtxWorld);
 	shader->vsc->SetMatrix(m_pDevice, "gWvp", &wvp);
@@ -243,8 +273,11 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 	shader->vsc->SetVector(m_pDevice, "LightDiffuse", (D3DXVECTOR4*)&lightDiffuse);
 	shader->vsc->SetVector(m_pDevice, "LightDiffuse2", (D3DXVECTOR4*)&lightDiffuse2);
 	shader->vsc->SetVector(m_pDevice, "LightAmbient", (D3DXVECTOR4*)&lightAmbient);
-	shader->vsc->SetFloatArray(m_pDevice, "CameraVec", (float*)&cameraVec, 3);
+	shader->psc->SetFloatArray(m_pDevice, "CameraVec", (float*)&cameraVec, 3);
 	shader->vsc->SetFloatArray(m_pDevice, "Pos", (float*)&eye, 3);
+
+	shader->psc->SetFloatArray(m_pDevice, "LightDir", (float*)&lightVec, 3);
+	shader->psc->SetVector(m_pDevice, "LightDiffuse", (D3DXVECTOR4*)&lightDiffuse);
 
 	if (pD3DTex != NULL)
 	{
@@ -263,6 +296,7 @@ void CModel::Draw(LPDIRECT3DTEXTURE9 pD3DTex, SHADER_SET* shader, CCamera* camer
 	{
 		shader->vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
 		shader->vsc->SetVector(m_pDevice, "MatAmbient", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Ambient);
+		shader->psc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&pD3DXMat[nCntMat].MatD3D.Diffuse);
 
 		m_pD3DXMeshModel->DrawSubset(nCntMat);			//モデルのパーツを描画
 	}

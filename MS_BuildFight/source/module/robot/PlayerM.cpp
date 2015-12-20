@@ -122,10 +122,10 @@ HRESULT CPlayerM :: Init(LPDIRECT3DDEVICE9 pDevice,int nTypeModel,D3DXVECTOR3 po
 	SetMotion(MOTIONTYPE_NEUTRAL);
 
 	//ピクセルシェーダー用に変換1
-	Create_PS("source/shader/basicPS.hlsl", "PS", &shaderSet.ps, &shaderSet.psc,m_pDevice);
+	Create_PS("source/shader/basicPS.hlsl", "PS_CHARCTER", &shaderSet.ps, &shaderSet.psc,m_pDevice);
 
 	//バーテックスシェーダー用に変換1
-	Create_VS("source/shader/basicVS.hlsl", "VS", &shaderSet.vs, &shaderSet.vsc, m_pDevice);
+	Create_VS("source/shader/basicVS.hlsl", "VS_CHARCTER", &shaderSet.vs, &shaderSet.vsc, m_pDevice);
 
 	//テクスチャ作る
 	D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/chara.png", &m_pD3DTex);
