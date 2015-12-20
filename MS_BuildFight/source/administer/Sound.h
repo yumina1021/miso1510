@@ -33,17 +33,8 @@ typedef enum
 
 typedef enum
 {
-	VOICE_LABEL_SE_START,		// 発進音
-	VOICE_LABEL_SE_SHOT,		// 弾発射音
-	VOICE_LABEL_SE_SHOT2,		// 弾発射音
-	VOICE_LABEL_SE_SHOT3,		// 弾発射音
-	VOICE_LABEL_SE_SLASH,		// 衝突音0
-	VOICE_LABEL_SE_SLASH2,		// 衝突音0
-	VOICE_LABEL_SE_DAMAGE,		// ダメージ
-	VOICE_LABEL_SE_DAMAGE2,		// ダメージ
-	VOICE_LABEL_SE_DAMAGE3,		// ダメージ
-	VOICE_LABEL_SE_SKILL,		// スキル
-	VOICE_LABEL_SE_SKILL2,		// スキル
+	VOICE_LABEL_SE_WIN=0,		// 
+
 	VOICE_LABEL_MAX
 } VOICE_LABEL;
 
