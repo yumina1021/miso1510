@@ -57,6 +57,7 @@ class CFade  : public Cform2D
 		FADEMODE			m_fadeType;				//フェードの状態
 		float				m_fAlpha;				//アルファ値
 		D3DXCOLOR			m_color;				//色
+		static int			m_tex_id;
 };
 
 #endif

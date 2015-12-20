@@ -19,6 +19,12 @@ const LPSTR CFade::m_apTextureName[]=
 	"data/TEXTURE/loading3.jpg",
 	"data/TEXTURE/loading3.jpg",
 };
+//
+//
+//
+
+int CFade::m_tex_id = 0;
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -141,7 +147,11 @@ void CFade :: Draw(void)
 
 void CFade ::StartFade(FADEMODE fade,int nCount,D3DXCOLOR color, int type)
 {
-	Cform2D::SetTexture(m_apTextureName[rand()%3]);
+	if (fade == FADE_IN)
+	{
+		m_tex_id = rand() % 3;
+	}
+	Cform2D::SetTexture(m_apTextureName[m_tex_id]);
 	m_fadeType=fade;
 	m_nCount=nCount;
 	m_color=color;
