@@ -107,7 +107,7 @@ HRESULT CStageSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	pSound = CManager::GetSound();
 
 	//ÉTÉEÉìÉhçƒê∂ÇÃçÏê¨
-	//pSound->Play(SOUND_LABEL_BGM004);
+	//pSound->Play(SOUND_LABEL_BGM001);
 
 	//ãÛÇÃçÏê¨
 	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));

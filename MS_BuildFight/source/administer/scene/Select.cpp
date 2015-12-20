@@ -119,7 +119,7 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	pSound = CManager::GetSound();
 
 	//サウンド再生の作成
-	//pSound->Play(SOUND_LABEL_BGM004);
+	pSound->Play(SOUND_LABEL_BGM001);
 
 	//背景の作成
 	m_pBackGround = Cform3D::Create(pDevice, "data/TEXTURE/Select.png", D3DXVECTOR3(0.0f, 0.0f, 406.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -212,7 +212,7 @@ void CSelect::Uninit(void)
 	pSound = CManager::GetSound();
 
 	//サウンド再生の作成
-	pSound->Stop();
+	//pSound->Stop();
 
 	//シーンを全て終了
 	Cform::ReleaseAll();

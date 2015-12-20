@@ -205,7 +205,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_nTurnCount = 0;
 
 	//ƒTƒEƒ“ƒhÄ¶‚Ìì¬
-	//pSound->Play(SOUND_LABEL_BGM001);
+	pSound->Play(SOUND_LABEL_BGM002);
 
 	CManager::SetgameEndFlag(true);
 

@@ -181,7 +181,7 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 
 	//ƒTƒEƒ“ƒhÄ¶‚Ìì¬
-	m_pSound->Play(SOUND_LABEL_BGM002);
+	m_pSound->Play(SOUND_LABEL_BGM003);
 
 	int time=CScene::GetTime();
 	int score=CScene::GetScore();

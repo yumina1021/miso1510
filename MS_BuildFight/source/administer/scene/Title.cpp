@@ -114,7 +114,7 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	pSound = CManager::GetSound();
 
 	//サウンド再生の作成
-	//pSound->Play(SOUND_LABEL_BGM000);
+	pSound->Play(SOUND_LABEL_BGM000);
 
 
 	//フェードの作成
