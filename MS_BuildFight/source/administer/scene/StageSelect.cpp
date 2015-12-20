@@ -454,6 +454,7 @@ void CStageSelect::SelectByButton(void)
 	{
 
 		// 遷移処理
+		pSound->Play(SOUND_LABEL_SE_SELECT002);
 		m_nState = STATE::CHANGE_SCENE;
 
 		// 選択したマップを保存

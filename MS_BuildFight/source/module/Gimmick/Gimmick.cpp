@@ -20,7 +20,7 @@ const LPSTR CGimmick::m_ModelName[] =
 	"data/MODEL/cube.x",
 	"data/MODEL/ufo.x",
 	"data/MODEL/cube.x",
-	"data/MODEL/cube.x",
+	"data/MODEL/tornado.x",
 };
 //=============================================================================
 // コンストラクタ

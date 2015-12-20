@@ -416,6 +416,9 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	// Wiiコンの取得
 	WiiRemote* pTmpPad = CManager::GetWii(1);
 
+	//サウンド取得の作成
+	CSound *pSound;
+	pSound = CManager::GetSound();
 	// 
 	if (m_bChangeFlag){ return; }
 
@@ -427,6 +430,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	if ((pInputKeyboard->GetKeyTrigger(DIK_SPACE)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
+		pSound->Play(SOUND_LABEL_SE_SELECT002);
 		// エンターキーを押した場合
 		ChkSelectButton(1);
 		m_pSelectCfm[1]->SetPos(m_SelectCfmPos[m_Select[1].nSelect]);
@@ -435,6 +439,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_UP) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[1].pCursor->SetTime(0.0f);
 
 		// 選択状態から解除
@@ -457,6 +462,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_DOWN) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[1].pCursor->SetTime(0.0f);
 
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -477,6 +483,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_LEFT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[1].pCursor->SetTime(0.0f);
 
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -498,6 +505,7 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_RIGHT) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[1].pCursor->SetTime(0.0f);
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
 
@@ -522,6 +530,8 @@ void CSelect::SelectByKeyboardPlayer2(void)
 void CSelect::SelectByKeyboardPlayer1(void)
 {
 
+	CSound *pSound;
+	pSound = CManager::GetSound();
 	// Wiiコンの取得
 	WiiRemote* pTmpPad = CManager::GetWii(0);
 
@@ -535,7 +545,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	//エンターキーが押された場合
 	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
-
+		pSound->Play(SOUND_LABEL_SE_SELECT002);
 		if (!m_Select[0].bDecisionFlg)
 		{
 
@@ -558,6 +568,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_W) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[0].pCursor->SetTime(0.0f);
 
 		// 選択状態から解除
@@ -580,6 +591,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[0].pCursor->SetTime(0.0f);
 
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -600,6 +612,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_A) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[0].pCursor->SetTime(0.0f);
 
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -621,6 +634,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	}
 	else if (pInputKeyboard->GetKeyTrigger(DIK_D) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
 	{
+		pSound->Play(SOUND_LABEL_SE_SELECT000);
 		m_Select[0].pCursor->SetTime(0.0f);
 		//pSound->Play(SOUND_LABEL_SE_SELECT000);
 

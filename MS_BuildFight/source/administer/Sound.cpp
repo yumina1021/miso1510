@@ -24,6 +24,8 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 	{ "data/SE/sceneswitch1.wav",	false },
 	{ "data/SE/shine1.wav",			false },
 	{ "data/SE/trumpet1.wav",		false },
+	{ "data/SE/shot.wav",			false },
+	{ "data/SE/select.wav",			false },
 };
 
 PARAM g_aParamVoice[CHARACTER_MAX][VOICE_LABEL_MAX] =

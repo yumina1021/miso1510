@@ -133,7 +133,7 @@ void CTitle :: Uninit(void)
 	pSound = CManager::GetSound();
 
 	//サウンド再生の作成
-	//pSound->Stop();
+	pSound->Stop();
 
 	//シーンを全て終了
 	Cform::ReleaseAll();
@@ -251,7 +251,6 @@ void CTitle::KeyCommand(void)
 	// Wiiコンの取得
 	WiiRemote* pTmpPad = CManager::GetWii(0);
 
-	//サウンド取得の作成
 	CSound *pSound;
 	pSound = CManager::GetSound();
 
@@ -263,6 +262,7 @@ void CTitle::KeyCommand(void)
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 
+		pSound->Play(SOUND_LABEL_SE_SELECT002);
 		ChangeState();
 
 	}

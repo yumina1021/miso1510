@@ -804,6 +804,9 @@ void CGame:: PowerDecision()
 	pInputKeyboard = CManager::GetInputKeyboard();
 	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
+	//サウンド取得の作成
+	CSound *pSound;
+	pSound = CManager::GetSound();
 	//弾のスピード調節
 	if (pInputKeyboard->GetKeyPress(DIK_Q))
 	{
@@ -841,6 +844,7 @@ void CGame:: PowerDecision()
 		{
 			m_pEffect[9]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		}
+		pSound->Play(SOUND_LABEL_SE_SHOT);
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->SetCircle(m_PowerShot);
 		m_pBall[m_nPlayerNum]->AddForce(m_MovePow.x*m_PowerShot);
@@ -858,6 +862,7 @@ void CGame:: PowerDecision()
 		{
 			m_pEffect[9]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		}
+		pSound->Play(SOUND_LABEL_SE_SHOT);
 		m_nSwitchCount = MOVE_PHASE;
 		m_pBall[m_nPlayerNum]->AddForce(power*m_PowerShot);
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
@@ -1095,11 +1100,11 @@ void CGame::ObjHitCheck()
 		size = m_pGimmick[i]->GetSize();
 		D3DXVECTOR3 vector = m_pBall[m_nPlayerNum]->GetVelocity();
 		D3DXVECTOR3 rot = m_pGimmick[i]->GetRot();
-		if (ColOBBs(obj, size, rot, ball, 5.0f))
+		switch (m_pGimmick[i]->GetGimmickType())
 		{
-			switch (m_pGimmick[i]->GetGimmickType())
+		case GIMMICK_CUBE:
+			if (ColOBBs(obj, size, rot, ball, 5.0f))
 			{
-			case GIMMICK_CUBE:
 				if (obj.y + size.y < ball.y || obj.y - size.y > ball.y)
 				{
 					vector.y = -vector.y;
@@ -1113,36 +1118,47 @@ void CGame::ObjHitCheck()
 					vector.z = -vector.z;
 				}
 				m_pBall[m_nPlayerNum]->SetVelocity(vector);
-				break;
-			case GIMMICK_CLOUD:
+			}
+			break;
+		case GIMMICK_CLOUD:
+			if (ColOBBs(obj, size, rot, ball, 5.0f))
+			{
 				vector.y = vector.y*0.3f;
 				vector.x = vector.x*0.3f;
 				vector.z = vector.z*0.3f;
 				m_pBall[m_nPlayerNum]->SetVelocity(vector);
-				break;
-			case GIMMICK_CROW:
+			}
+			break;
+		case GIMMICK_CROW:
+			if (ColOBBs(obj, size, rot, ball, 5.0f))
+			{
 				if (obj.y + size.y < ball.y || obj.y - size.y > ball.y)vector.y = -vector.y * 0.5f;
 				if (obj.x + size.x < ball.x || obj.x - size.x > ball.x)vector.x = -vector.x * 0.5f;
 				if (obj.z + size.z < ball.z || obj.z - size.z > ball.z)vector.z = -vector.z * 0.5f;
 				m_pBall[m_nPlayerNum]->SetVelocity(vector);
-				break;
-			case GIMMICK_UFO:
-				break;
-			case GIMMICK_WIND:
+			}
+			break;
+		case GIMMICK_UFO:
+			break;
+		case GIMMICK_WIND:
+			if (ColOBBs(obj, size, rot, ball, 5.0f))
+			{
 				vector.x = 1.0f * rot.x;
 				vector.y = 1.0f * rot.y;
 				vector.z = 1.0f * rot.z;
 				m_pBall[m_nPlayerNum]->AddForce(vector);
-				break;
-			case GIMMICK_TORNADO:
-				vector.x = mersenne_twister_f32(-1.0f, 1.0f);
-				vector.z = mersenne_twister_f32(-1.0f, 1.0f);
+			}
+			break;
+		case GIMMICK_TORNADO:
+			if (ColOBBs(obj, size, rot, ball, 5.0f))
+			{
+				vector.x = mersenne_twister_f32(-1.5f, 1.5f);
+				vector.z = mersenne_twister_f32(-1.5f, 1.5f);
 				vector.y = mersenne_twister_f32(0.0f, 2.0f);
 				m_pBall[m_nPlayerNum]->AddForce(vector);
-				break;
 			}
+			break;
 		}
-
 	}
 }
 //

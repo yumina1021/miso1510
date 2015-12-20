@@ -28,6 +28,8 @@ typedef enum
 	SOUND_LABEL_SE_SENI,		// シーン遷移音
 	SOUND_LABEL_SE_SHINE,		// シャランラ音
 	SOUND_LABEL_SE_TRUMPET,		// トランペット
+	SOUND_LABEL_SE_SHOT,		// ショット音
+	SOUND_LABEL_SE_SELECT002,	// 選択音候補
 	SOUND_LABEL_MAX
 } SOUND_LABEL;
 

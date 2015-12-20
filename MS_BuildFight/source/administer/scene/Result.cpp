@@ -57,39 +57,42 @@ const LPSTR CResult::m_apTextureName[] =
 //ご褒美CG用
 const LPSTR g_RewardTexture[][2] =
 {
+	{ "data/TEXTURE/result/ccc.png",				//リーラ
+	"data/TEXTURE/result/ddd.jpg" },
+
+	{ "data/TEXTURE/result/rosa_win.jpg",			//ローザ
+	"data/TEXTURE/result/rosa_win.jpg", },
+
+	{ "data/TEXTURE/result/jiityaaan.jpg",			//じいちゃん
+	"data/TEXTURE/result/jiityaaan.jpg", },
+
 	{"data/TEXTURE/result/licht_win.jpg",			//リヒト
 	 "data/TEXTURE/result/licht_win.jpg" },
-
-	{"data/TEXTURE/result/rosa_win.jpg",			//ローザ
-	 "data/TEXTURE/result/rosa_win.jpg", },
-
-	 { "data/TEXTURE/result/ccc.png",				//リーラ
-	  "data/TEXTURE/result/ddd.jpg" },
-
-	 { "data/TEXTURE/result/jiityaaan.jpg",			//じいちゃん
-	 "data/TEXTURE/result/jiityaaan.jpg", },
 };
 
 //立ち絵表示用
 const LPSTR g_StandTexture[][4] =
 {
-	{"data/TEXTURE/character/licht/wara.png",
+	{ "data/TEXTURE/character/lila/wara.png",
+	"data/TEXTURE/character/lila/naki.png",
+	"data/TEXTURE/character/lila/normal.png",
+	"data/TEXTURE/character/lila/do.png" },
+
+	{ "data/TEXTURE/character/rosa/wara.png",
+	"data/TEXTURE/character/rosa/naki.png",
+	"data/TEXTURE/character/rosa/normal.png",
+	"data/TEXTURE/character/rosa/do.png" },
+
+	{"data/TEXTURE/character/navi/wara.png",
+	 "data/TEXTURE/character/navi/normal.png",
+	 "data/TEXTURE/character/navi/wara.png",
+	 "data/TEXTURE/character/navi/normal.png" },
+
+	 { "data/TEXTURE/character/licht/wara.png",
 	 "data/TEXTURE/character/licht/naki.png",
 	 "data/TEXTURE/character/licht/normal.png",
 	 "data/TEXTURE/character/licht/do.png" },
 
-	{"data/TEXTURE/character/lila/wara.png",
-	 "data/TEXTURE/character/lila/naki.png",
-	 "data/TEXTURE/character/lila/normal.png",
-	 "data/TEXTURE/character/lila/do.png" },
-
-	{"data/TEXTURE/character/rosa/wara.png",
-	 "data/TEXTURE/character/rosa/naki.png",
-	 "data/TEXTURE/character/rosa/normal.png",
-	 "data/TEXTURE/character/rosa/do.png" },
-
-	{"data/TEXTURE/character/navi/wara.png",
-	 "data/TEXTURE/character/navi/normal.png" },
 };
 
 LPDIRECT3DDEVICE9 CResult::m_pD3DDevice = NULL;		// デバイスのポインタ
