@@ -16,6 +16,7 @@
 #include "../../administer/Input.h"
 
 #include "Scenario\GameScenario.h"
+#include "Scenario\ResultScenario.h"
 
 //*****************************************************************************
 // 静的変数
@@ -170,4 +171,38 @@ void CScenario::GameScenario(int count, GameAffair affair)
 		m_textbox->Print(data.font);
 	}
 }
+
+
+void CScenario::ResultScenario(int count)
+{
+	if (m_nCount <= count)
+	{
+		ResultScenarioData data;
+
+		m_nCount = count;
+
+			switch (m_charaType)
+			{
+			case 0:data = result_rosa[m_nCount]; break;
+			case 1:data = result_ojyo[m_nCount]; break;
+			case 2:data = result_lila[m_nCount]; break;
+			case 3:data = result_tutorial[m_nCount]; break;
+			}
+
+		if (data.lastflag == true)
+		{
+			m_bScenarioEndFlag = true;
+		}
+
+		//キーボードインプットの受け取り
+		m_CCharacter->SetViewFlag(false,0);
+
+		m_textbox->Clear();
+		m_textbox->__position(D3DXVECTOR2(data.x, data.y));
+		m_textbox->__show_speed(data.speed);
+		m_textbox->Print(data.font);
+	}
+
+}
+
 /////////////EOF////////////

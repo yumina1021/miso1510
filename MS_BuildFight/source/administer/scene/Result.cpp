@@ -100,7 +100,7 @@ LPDIRECT3DDEVICE9 CResult::m_pD3DDevice = NULL;		// デバイスのポインタ
 //=============================================================================
 CResult :: CResult(void)
 {
-	for (int i = 0; i < 6; i++){m_pform3D[i] = NULL;}
+	for (int i = 0; i < 8; i++){m_pform3D[i] = NULL;}
 	for (int i = 0; i < 2; i++){ m_pform2D[i] = NULL; }
 	for (int i = 0; i < CRACKER_MAX; i++) { m_pPaperCracker[i] = NULL; } 
 	for (int i = 0; i < BLIZZARD_MAX; i++){ m_pPaperBlizzard[i] = NULL; }
@@ -108,7 +108,8 @@ CResult :: CResult(void)
 	m_pBackGround		= NULL;
 	m_pFade				= NULL;
 	m_pBall				= NULL;
-	m_pScenerio			= NULL;
+	m_pScenerio[0]		= NULL;
+	m_pScenerio[1]		= NULL;
 	m_pManager			= NULL;
 	m_pSound			= NULL;
 
@@ -173,7 +174,9 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 
 	//シナリオ
-	//m_pScenerio = CScenario::Create(pDevice,true);
+	m_pScenerio[0] = CScenario::Create(pDevice, (CScenario::Character)m_pManager->GetSelectChar(0), false);
+	m_pScenerio[1] = CScenario::Create(pDevice, (CScenario::Character)m_pManager->GetSelectChar(1), false);
+
 
 
 
@@ -275,7 +278,12 @@ void CResult :: Uninit(void)
 
 	//m_pScenerio->Uninit();
 	//delete m_pScenerio;
-
+	for (int i = 0; i < 2; i++)
+	{
+		m_pScenerio[i]->Uninit();
+		delete m_pScenerio[i];
+		m_pScenerio[i] = NULL;
+	}
 
 	//サウンド再生の作成
 	pSound->Stop();
@@ -337,6 +345,12 @@ void CResult :: Draw(void)
 	for (int i = 0; i < 2; i++)
 	{
 		if (m_pform2D[i]){ m_pform2D[i]->Draw(); }
+	}
+
+	//
+	for (int i = 0; i < 2; i++)
+	{
+		if (m_pScenerio[i]){ m_pScenerio[i]->Draw(); }
 	}
 
 
@@ -494,17 +508,29 @@ void CResult::_UpdateFade(void)
 	{
 		m_ButtonCounter += 1;
 		m_pSound->Play(SOUND_LABEL_SE_SENI);
+		m_pScenerio[0]->SetScenarioEndFlag(false);
+		m_pScenerio[0]->SetViewFlag(true,0);
+		m_pScenerio[0]->ResultScenario(0);
+		//m_pScenerio[0]->SetViewFlag(true,0);
 
 	}
 	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 1)
 	{
 		m_ButtonCounter += 1;
+		m_pScenerio[0]->SetViewFlag(false, 0);
+
+		m_pScenerio[1]->SetScenarioEndFlag(false);
+		m_pScenerio[1]->SetViewFlag(true, 0);
+		m_pScenerio[1]->ResultScenario(0);
+
 		m_pSound->Play(SOUND_LABEL_SE_SENI);
 
 	}
 	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 2)
 	{
 		m_ButtonCounter += 1;
+		m_pScenerio[1]->SetViewFlag(false, 0);
+
 		m_pSound->Play(SOUND_LABEL_SE_SENI);
 
 	}

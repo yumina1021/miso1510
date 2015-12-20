@@ -59,6 +59,7 @@ class CScenario
 		void SetScenarioEndFlag(bool change){ m_bScenarioEndFlag = change; };
 		bool GetScenarioEndFlag(void){ return m_bScenarioEndFlag; };
 		void GameScenario(int count, GameAffair affair);
+		void ResultScenario(int count);
 
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
