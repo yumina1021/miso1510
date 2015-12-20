@@ -60,7 +60,7 @@ ResultScenarioData result_ojyo[3] =
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 ResultScenarioData result_tutorial[4] =
 {
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "さぁゲームスタートです！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "うぐっ。こ、腰が・・・。", false },
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "勝利の女神はどちらに微笑むか！？", false },
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "注目の一戦です！！", false },
 	LAST
