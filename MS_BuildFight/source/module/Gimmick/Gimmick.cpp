@@ -18,7 +18,7 @@ const LPSTR CGimmick::m_ModelName[] =
 	"data/MODEL/cube.x",
 	"data/MODEL/cube.x",
 	"data/MODEL/cube.x",
-	"data/MODEL/cube.x",
+	"data/MODEL/ufo.x",
 	"data/MODEL/cube.x",
 	"data/MODEL/cube.x",
 };
@@ -71,6 +71,8 @@ HRESULT CGimmick::Init(LPDIRECT3DDEVICE9 pDevice, int nType,MOVETYPE MoveType)
 	CformX::Init(m_pDevice, m_ModelName[nType], NULL);
 
 	m_bViewFlag = true;
+
+	m_nsMagnet = N;
 
 	SetGimmickType((GIMMICKTYPE)nType);
 	SetMoveType((MOVETYPE)MoveType);

@@ -11,6 +11,7 @@ float2 ScreenResolution;
 float4 LightDiffuse;
 
 float4 gColor;
+float4 nsColor;
 float gValue;
 float g_ballalpha;
 float g_goalhit;
@@ -116,6 +117,8 @@ float4 PS_EFFECT(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(1.0f, 0.0f, 1.0f, g_ballalpha);
+	color = (color*0.5f) + (nsColor*0.5f);
+	color.a = g_ballalpha;
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -124,6 +127,8 @@ float4 PS_BALL_ROSA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(0.2f, 0.6f, 1.0f, g_ballalpha);
+	color = (color*0.5f) + (nsColor*0.5f);
+	color.a = g_ballalpha;
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -132,6 +137,8 @@ float4 PS_BALL_LIRA(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(1.0f, 1.0f, 0.0f, g_ballalpha);
+	color = (color*0.5f) + (nsColor*0.5f);
+	color.a = g_ballalpha;
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -140,6 +147,8 @@ float4 PS_BALL_THEME(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 float4 PS_BALL_HAGE(float4 diffuse : COLOR0, float2 uv : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(1.0f, 1.0f, 1.0f, g_ballalpha);
+	color = (color*0.5f) + (nsColor*0.5f);
+	color.a = g_ballalpha;
 	return tex2D(texSampler, uv)*color;
 }
 /////////////////////////////////////////////////////////
@@ -164,7 +173,7 @@ float4 PS_GOAL_LING(float4 diffuse : COLOR0, float3 normal : TEXCOORD1, float3 w
 
 	float4 cubeColor = cubeMap(texSamplerCube, toEye, normal);
 
-	float4 color = cubeColor*0.4 + MatDiffuse*0.6;
+		float4 color = cubeColor*0.4 + MatDiffuse*0.6 + nsColor*0.5;
 
 	return float4(color.xyz, 1.0f);
 

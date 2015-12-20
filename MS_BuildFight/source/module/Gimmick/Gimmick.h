@@ -68,6 +68,8 @@ class CGimmick : public CformX
 		void SetMoveType(MOVETYPE MoveType){ m_MoveType = MoveType; };
 		MOVETYPE GetMoveType(void){ return m_MoveType; };
 
+		void SetMagnet(NS mag){ m_nsMagnet = mag; };
+		NS GetMagnet(void){ return  m_nsMagnet; };
 	private:
 		void _UpdateObject(void);
 		void _UpdateCube(void);
@@ -118,6 +120,7 @@ class CGimmick : public CformX
 		D3DXVECTOR3			m_Scl;
 		float				m_Speed;				//‘¬“x
 		D3DXVECTOR3			m_Work;
+		NS					m_nsMagnet;
 };
 
 #endif
