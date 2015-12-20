@@ -514,7 +514,7 @@ void CResult::_UpdateFade(void)
 	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 0)
 	{
 		m_ButtonCounter += 1;
-		m_pSound->Play(SOUND_LABEL_SE_SENI);
+		//m_pSound->Play(SOUND_LABEL_SE_SENI);
 		m_pSound->PlayVoice(0,VOICE_LABEL_SE_WIN);
 		m_pScenerio[0]->SetScenarioEndFlag(false);
 		m_pScenerio[0]->SetViewFlag(true,0);
@@ -530,7 +530,7 @@ void CResult::_UpdateFade(void)
 		m_pScenerio[1]->SetViewFlag(true, 0);
 		m_pScenerio[1]->ResultScenario(0);
 
-		m_pSound->Play(SOUND_LABEL_SE_SENI);
+		//m_pSound->Play(SOUND_LABEL_SE_SENI);
 
 	}
 	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 2)
@@ -538,7 +538,7 @@ void CResult::_UpdateFade(void)
 		m_ButtonCounter += 1;
 		m_pScenerio[1]->SetViewFlag(false, 0);
 
-		m_pSound->Play(SOUND_LABEL_SE_SENI);
+		//m_pSound->Play(SOUND_LABEL_SE_SENI);
 
 	}
 	else if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN) || pInputKeyboard->GetKeyTrigger(DIK_Z) || Player1->GetKeyTrigger(WII_BUTTOM_A)) && m_ButtonCounter == 3)
@@ -661,7 +661,7 @@ void CResult::_UpdateTimer(void)
 	m_Timer++;
 	if (m_Timer == 150)
 	{
-		m_pSound->Play(SOUND_LABEL_SE_TRUMPET);
+		//m_pSound->Play(SOUND_LABEL_SE_TRUMPET);
 	}
 
 }

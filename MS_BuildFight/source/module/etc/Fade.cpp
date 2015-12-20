@@ -17,6 +17,7 @@ const LPSTR CFade::m_apTextureName[]=
 	"data/TEXTURE/loading1.jpg",
 	"data/TEXTURE/loading2.jpg",
 	"data/TEXTURE/loading3.jpg",
+	"data/TEXTURE/loading3.jpg",
 };
 //=============================================================================
 // コンストラクタ
