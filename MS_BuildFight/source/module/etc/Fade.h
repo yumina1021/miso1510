@@ -52,7 +52,7 @@ class CFade  : public Cform2D
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		int					m_nCount;				//フェード時間
-		static const LPSTR	m_apTextureName[];		//テクスチャー
+		static const int	m_apTextureName[];		//テクスチャー
 		bool				m_bfade;				//フェードしているか
 		FADEMODE			m_fadeType;				//フェードの状態
 		float				m_fAlpha;				//アルファ値

@@ -46,7 +46,7 @@ class CNumber
 		void SetPos(float fx,float fy,float fz){m_Pos.x=fx;m_Pos.y=fy;m_Pos.z=fz;};
 		D3DXVECTOR3 GetPos(void){return m_Pos;};
 	private:
-		LPDIRECT3DTEXTURE9  	m_pD3DTex;		//テクスチャ表示用
+		//LPDIRECT3DTEXTURE9  	m_pD3DTex;		//テクスチャ表示用
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;	//頂点情報格納ワーク(動的)
 		LPDIRECT3DDEVICE9		m_pDevice;		// pDeviceオブジェクト(描画に必要)	
 
@@ -57,6 +57,7 @@ class CNumber
 		float					m_fAngle;		//ポリゴン対角線の角度
 
 		int m_nNumber;
+		int m_texid;
 };
 
 #endif

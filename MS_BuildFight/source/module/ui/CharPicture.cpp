@@ -9,37 +9,38 @@
 // マクロ定義
 //*****************************************************************************
 #include "CharPicture.h"
+#include "../../administer/Texture.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const LPSTR CCharPicture::m_apTextureName[] =
+const int CCharPicture::m_apTextureName[] =
 {
-	"data/TEXTURE/t_start.png",
-	"data/TEXTURE/t_vs.png",
-	"data/TEXTURE/t_tutorial.png",
-	"data/TEXTURE/t_end.png",
+	TEXTURE_T_START,
+	TEXTURE_T_END,
+	TEXTURE_T_END,
+	TEXTURE_T_END,
 
-	"data/TEXTURE/s_0.png",
-	"data/TEXTURE/s_1.png",
-	"data/TEXTURE/s_2.png",
-	"data/TEXTURE/s_3.png",
-	"data/TEXTURE/s_4.png",
-	"data/TEXTURE/s_5.png",
-	"data/TEXTURE/s_6.png",
-	"data/TEXTURE/s_7.png",
-	"data/TEXTURE/s_8.png",
-	"data/TEXTURE/n_b.png",
-	"data/TEXTURE/s_99.png",
+	TEXTURE_S_0,
+	TEXTURE_S_1,
+	TEXTURE_S_2,
+	TEXTURE_S_3,
+	TEXTURE_S_4,
+	TEXTURE_S_5,
+	TEXTURE_S_6,
+	TEXTURE_S_7,
+	TEXTURE_S_0,
+	TEXTURE_S_0,
+	TEXTURE_S_99,
 
-	"data/TEXTURE/LevelStar.png",
-	"data/TEXTURE/StageName1.png",
-	"data/TEXTURE/StageName2.png",
-	"data/TEXTURE/StageName3.png",
-	"data/TEXTURE/StageName4.png",
+	TEXTURE_LEVELSTAR,
+	TEXTURE_STAGENAME1,
+	TEXTURE_STAGENAME2,
+	TEXTURE_STAGENAME3,
+	TEXTURE_STAGENAME4,
 
-	"data/TEXTURE/p_continue.png",
-	"data/TEXTURE/p_retry.png",
-	"data/TEXTURE/p_quit.png"
+	TEXTURE_P_CONTINUE,
+	TEXTURE_P_RETRY,
+	TEXTURE_P_QUIT,
 
 };
 //=============================================================================

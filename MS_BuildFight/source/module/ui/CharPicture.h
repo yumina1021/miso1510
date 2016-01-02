@@ -98,7 +98,7 @@ public:
 private:
 	LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 	int					m_nCount;				// フェード時間
-	static const LPSTR	m_apTextureName[];		// テクスチャー
+	static const int	m_apTextureName[];		// テクスチャー
 	D3DXVECTOR3			m_Len;					// 長さ
 	D3DXCOLOR			m_Diff;					// 色
 	GUI_MODE			m_Mode;					// 状態遷移用のモード

@@ -9,22 +9,38 @@
 // マクロ定義
 //*****************************************************************************
 #include "Character.h"
+#include "../../administer/Texture.h"
 #include <string>
 
-#define CHARA_ROSA_TEXTURE		"data/TEXTURE/character/rosa/"
-#define CHARA_LILA_TEXTURE		"data/TEXTURE/character/lila/"
-#define CHARA_OJYO_TEXTURE		"data/TEXTURE/character/licht/"
-#define CHARA_TUORIAL_TEXTURE	"data/TEXTURE/character/navi/"
+#define CHARA_ROSA_TEXTURE		"data/TEXTURE/character/rosa/"	//0
+#define CHARA_LILA_TEXTURE		"data/TEXTURE/character/lila/"	//1
+#define CHARA_OJYO_TEXTURE		"data/TEXTURE/character/licht/"	//2
+#define CHARA_TUORIAL_TEXTURE	"data/TEXTURE/character/navi/"	//3
 
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const LPSTR CCharacter::m_apTextureName[] =
+const int CCharacter::m_apTextureName[][4] =
 {
-	"normal.png",
-	"wara.png",
-	"do.png",
-	"naki.png"
+	{ TEXTURE_C_ROSA_NORMAL,
+	  TEXTURE_C_ROSA_WARA,
+	  TEXTURE_C_ROSA_DO,
+	  TEXTURE_C_ROSA_NAKI },
+
+	{ TEXTURE_C_LILA_NORMAL,
+	  TEXTURE_C_LILA_WARA,
+	  TEXTURE_C_LILA_DO,
+	  TEXTURE_C_LILA_NAKI },
+
+	{ TEXTURE_C_LICHT_NORMAL,
+	  TEXTURE_C_LICHT_WARA,
+	  TEXTURE_C_LICHT_DO,
+	  TEXTURE_C_LICHT_NAKI },
+
+	{ TEXTURE_C_NAVI_NORMAL,
+	  TEXTURE_C_NAVI_WARA,
+	  TEXTURE_C_NAVI_DO,
+	  TEXTURE_C_NAVI_NAKI },
 };
 /*
 const LPSTR CCharacter::m_apTextureName[]=
@@ -81,31 +97,18 @@ HRESULT CCharacter::Init(LPDIRECT3DDEVICE9 pDevice, int nType, D3DXVECTOR3 pos, 
 	m_facialType = FACIAL_SMILE;
 	m_facialTypeOld = m_facialType;
 
-	switch (nType)
-	{
-		case 0:m_nCharaPas = CHARA_ROSA_TEXTURE; break;
-		case 1:m_nCharaPas = CHARA_LILA_TEXTURE; break;
-		case 2:m_nCharaPas = CHARA_OJYO_TEXTURE; break;
-		case 3:m_nCharaPas = CHARA_TUORIAL_TEXTURE; break;
-	}
+	m_charid = nType;
 
-	for (int i = 0; i < FACE_MAX; i++)
-	{
-		std::string str1 = m_nCharaPas;
-		std::string str2 = m_apTextureName[i];
-		str1 += str2;
-		D3DXCreateTextureFromFile(m_pDevice, (char *)str1.c_str(), &m_pTexture[i]);
-	}
 
 	if (nType == 0)
 	{
 		//フィールドの初期化
-		Cform2D::Init2(m_pDevice, m_pTexture[m_facialType], pos, rot, 625, 750);
+		Cform2D::Init(m_pDevice, m_apTextureName[m_charid][m_facialType], pos, rot, 625, 750);
 	}
 	else
 	{
 		//フィールドの初期化
-		Cform2D::Init2(m_pDevice, m_pTexture[m_facialType], pos, rot, 500, 750);
+		Cform2D::Init(m_pDevice, m_apTextureName[m_charid][m_facialType], pos, rot, 500, 750);
 	}
 	return S_OK;
 }
@@ -116,14 +119,14 @@ void CCharacter :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 	Cform2D::Uninit2();
-	for (int i = 0; i < FACE_MAX; i++)
-	{
-		if (m_pTexture[i] != NULL)
-		{
-			m_pTexture[i]->Release();
-			m_pTexture[i] = NULL;
-		}
-	}
+	//for (int i = 0; i < FACE_MAX; i++)
+	//{
+	//	if (m_pTexture[i] != NULL)
+	//	{
+	//		m_pTexture[i]->Release();
+	//		m_pTexture[i] = NULL;
+	//	}
+	//}
 }
 //=============================================================================
 // 更新
@@ -140,7 +143,7 @@ void CCharacter :: Update(void)
 		{
 			m_ViewFlag = true;
 
-			Cform2D::SetTexture(m_pTexture[m_facialType]);
+			Cform2D::SetTexture(m_apTextureName[m_charid][m_facialType]);
 		}
 		else
 		{

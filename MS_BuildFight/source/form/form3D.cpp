@@ -13,6 +13,7 @@
 #include "../module/etc/Camera.h"
 #include "../administer/Maneger.h"
 #include "../exten_common.h"
+#include "../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -28,7 +29,7 @@ Cform3D :: ~Cform3D(void)
 //=============================================================================
 // Cform3D生成
 //=============================================================================
-Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
+Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice,int pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 {
 	Cform3D *pform3D;
 
@@ -41,7 +42,7 @@ Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 po
 //=============================================================================
 // Cform3D生成
 //=============================================================================
-Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height)
+Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice, int pTexName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height)
 {
 	Cform3D *pform3D;
 
@@ -55,7 +56,7 @@ Cform3D *Cform3D::Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, D3DXVECTOR3 
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
+HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,int pTexName)
 {
 	m_pDevice=pDevice;
 
@@ -64,7 +65,8 @@ HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 
 
 	//テクスチャの設定
-	D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex);
+	m_texid = pTexName;
+	//D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex);
 
 	//フィールドの初期化
 	m_Pos = D3DXVECTOR3(0.0f,0.0f,0.0f);
@@ -162,7 +164,7 @@ HRESULT Cform3D :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX, float fTexSizeY)
+HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, int pTexName, float fTexSizeX, float fTexSizeY)
 {
 	m_pDevice = pDevice;
 
@@ -171,7 +173,8 @@ HRESULT Cform3D::Init(LPDIRECT3DDEVICE9 pDevice, LPSTR pTexName, float fTexSizeX
 
 
 	//テクスチャの設定
-	D3DXCreateTextureFromFile(m_pDevice, pTexName, &m_pD3DTex);
+	m_texid = pTexName;
+	//D3DXCreateTextureFromFile(m_pDevice, pTexName, &m_pD3DTex);
 
 	//フィールドの初期化
 	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -266,11 +269,11 @@ void Cform3D :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex=NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex=NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -317,7 +320,7 @@ void Cform3D :: Draw(void)
 	m_shader.vsc->SetMatrix(m_pDevice, "gWvp", &wvp);
 
 	unsigned int s0 = m_shader.psc->GetSamplerIndex("texSampler");
-	m_pDevice->SetTexture(s0, m_pD3DTex);
+	m_pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
 
 	m_shader.vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&m_pColor);
 

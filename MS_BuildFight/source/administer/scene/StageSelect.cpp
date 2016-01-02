@@ -15,7 +15,6 @@
 #include "../Sound.h"
 
 #include "../../module/etc/Fade.h"
-#include "../../module/ui/BackGround.h"
 #include "../../module/ui/CharPicture.h"
 #include "../../module/ui/Effect.h"
 #include "../../module/ui/Cursor.h"
@@ -38,6 +37,7 @@
 
 #include "../wiicon/wiimote.h"
 
+#include "../../administer/Texture.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -118,7 +118,7 @@ HRESULT CStageSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pLogo = CButton::Create(pDevice, s_6, D3DXVECTOR3(SCREEN_WIDTH / 2, 100.0f, 0.0f), 900, 100);
 
 	//背景の作成
-	m_pBackGround = Cform3D::Create(pDevice, "data/TEXTURE/Select.png", D3DXVECTOR3(0.0f, 0.0f, 350.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pBackGround = Cform3D::Create(pDevice, TEXTURE_SELECT, D3DXVECTOR3(0.0f, 0.0f, 350.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_pBackGround->SetDiffuse(1.0f, 1.0f, 1.0f, 0.6f);
 
 	//フェードの作成

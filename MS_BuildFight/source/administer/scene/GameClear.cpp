@@ -18,11 +18,10 @@
 
 #include "../../module/ui/CharPicture.h"
 #include "../../module/ui/Effect.h"
-#include "../../module/ui/BackGround.h"
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-CBackGround *CGameClear::m_pBackGround = NULL;
+//CBackGround *CGameClear::m_pBackGround = NULL;
 CFade *CGameClear::m_pFade=NULL;
 CEffect *CGameClear::m_pEffect[] = {};
 //=============================================================================
@@ -44,7 +43,7 @@ CGameClear :: ~CGameClear(void)
 HRESULT CGameClear :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 	//背景の作成
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_GAMECLEAR);
+	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_GAMECLEAR);
 
 	//文字の配置
 	m_pEffect[0] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));

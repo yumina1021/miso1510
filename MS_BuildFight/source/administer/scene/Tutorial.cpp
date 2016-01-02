@@ -16,7 +16,6 @@
 
 #include "../../module/etc/Fade.h"
 
-#include "../../module/ui/BackGround.h"
 #include "../../module/ui/CharPicture.h"
 #include "../../module/ui/Effect.h"
 //*****************************************************************************
@@ -27,7 +26,7 @@
 //=============================================================================
 CTutorial :: CTutorial(void)
 {
-	m_pBackGround = NULL;
+	//m_pBackGround = NULL;
 	m_pFade = NULL;
 	m_pEffect[7] = { };
 }
@@ -44,7 +43,7 @@ CTutorial :: ~CTutorial(void)
 HRESULT CTutorial :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 	//”wŒi‚Ìì¬
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TUTORIAL);
+	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TUTORIAL);
 
 	//•¶Žš‚Ì”z’u
 	m_pEffect[0] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -134,7 +133,7 @@ void CTutorial :: Update(void)
 //=============================================================================
 void CTutorial :: Draw(void)
 {
-	m_pBackGround->Draw();
+	//m_pBackGround->Draw();
 
 	m_pEffect[0]->Draw();
 	m_pEffect[1]->Draw();

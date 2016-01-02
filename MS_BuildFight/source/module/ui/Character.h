@@ -78,12 +78,13 @@ class CCharacter  : public Cform2D
 	private:
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)
 		int					m_nCount;
-		LPDIRECT3DTEXTURE9	m_pTexture[FACE_MAX];
-		static const LPSTR	m_apTextureName[];
+		//LPDIRECT3DTEXTURE9	m_pTexture[FACE_MAX];
+		static const int	m_apTextureName[][4];
 		bool				m_ViewFlag;
 		FasialType			m_facialType;
 		FasialType			m_facialTypeOld;
 		char*				m_nCharaPas;
+		int					m_charid;
 };
 
 #endif

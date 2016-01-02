@@ -21,6 +21,8 @@
 #include "../../administer/scene/Game.h"
 
 #include "../../exten_common.h"
+
+#include "../../administer/Texture.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -36,7 +38,7 @@ CPlayerM :: CPlayerM(OBJTYPE objtype,int nPriority) : Cform(objtype,nPriority)
 		m_apModel[nCntModel] = NULL;
 	}
 
-	m_pD3DTex=NULL;
+	//m_pD3DTex=NULL;
 }
 //=============================================================================
 // デストラクタ
@@ -128,7 +130,8 @@ HRESULT CPlayerM :: Init(LPDIRECT3DDEVICE9 pDevice,int nTypeModel,D3DXVECTOR3 po
 	Create_VS("source/shader/basicVS.hlsl", "VS_CHARCTER", &shaderSet.vs, &shaderSet.vsc, m_pDevice);
 
 	//テクスチャ作る
-	D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/chara.png", &m_pD3DTex);
+	m_texid = TEXTURE_CHARA;
+	//D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/chara.png", &m_pD3DTex);
 
 	return S_OK;
 }
@@ -155,8 +158,8 @@ void CPlayerM :: Uninit(void)
 		m_pKeyInfo = NULL;
 	}
 
-	m_pD3DTex->Release();
-	m_pD3DTex = NULL;
+	//m_pD3DTex->Release();
+	//m_pD3DTex = NULL;
 
 	if (shaderSet.ps != NULL)	shaderSet.ps->Release();
 	if (shaderSet.psc != NULL)	shaderSet.psc->Release();
@@ -302,7 +305,7 @@ void CPlayerM::Draw(void)
 	{
 		if (m_apModel[nCntModel])
 		{
-			m_apModel[nCntModel]->Draw(m_pD3DTex, &shaderSet, pCamera);
+			m_apModel[nCntModel]->Draw(CTexture::GetTex(m_texid), &shaderSet, pCamera);
 		}
 	}
 }

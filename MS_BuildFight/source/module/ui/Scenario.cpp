@@ -18,6 +18,8 @@
 #include "Scenario\GameScenario.h"
 #include "Scenario\ResultScenario.h"
 
+#include "../../administer/Texture.h"
+
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -67,7 +69,7 @@ HRESULT CScenario::Init(LPDIRECT3DDEVICE9 pDevice, Character chara, bool viewfla
 	//フィールドの初期化
 	m_CCharacter = CCharacter::Create(m_pDevice, chara, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_window = Cform2D::Create(m_pDevice, "data/TEXTURE/window.png", D3DXVECTOR3(SCREEN_WIDTH / 2, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1300, 200);
+	m_window = Cform2D::Create(m_pDevice, TEXTURE_WINDOW, D3DXVECTOR3(SCREEN_WIDTH / 2, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1300, 200);
 
 	//文字表示
 	m_textbox = new TextBox(m_pDevice, FontTexture::TYPE_MEIRYO, 60);

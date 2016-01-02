@@ -18,7 +18,6 @@
 #include "../../module/etc/Camera.h"
 
 #include "../../module/etc/Fade.h"
-#include "../../module/ui/BackGround.h"
 #include "../../module/ui/ResultScore.h"
 #include "../../module/field/Dome.h"
 
@@ -32,6 +31,7 @@
 #include "../../module/ui/Scenario.h"
 
 #include "../../exten_common.h"
+#include "../Texture.h"
 //*****************************************************************************
 // 定数
 //*****************************************************************************
@@ -45,54 +45,53 @@ const float CAMERA_POS_Z(-3500.0f);
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const LPSTR CResult::m_apTextureName[] =
+const int CResult::m_apTextureName[] =
 {
-	"data/TEXTURE/Red.png",
-	"data/TEXTURE/Blue.png",
-	"data/TEXTURE/Star.png",
-	"data/TEXTURE/Arrow.png"
+	TEXTURE_RED,
+	TEXTURE_BLUE,
+	TEXTURE_STAR,
+	TEXTURE_ARROW
 
 };
 
 //ご褒美CG用
-const LPSTR g_RewardTexture[][2] =
+const int g_RewardTexture[][2] =
 {
-	{ "data/TEXTURE/result/ccc.png",				//リーラ
-	"data/TEXTURE/result/ddd.jpg" },
+	{TEXTURE_R_LILA_WIN,				//リーラ
+	 TEXTURE_R_LILA_LOSE },
 
-	{ "data/TEXTURE/result/rosa_win.jpg",			//ローザ
-	"data/TEXTURE/result/rosa_win.jpg", },
+	{TEXTURE_R_ROSA_WIN,			//ローザ
+	 TEXTURE_R_ROSA_LOSE },
 
-	{ "data/TEXTURE/result/jiityaaan.jpg",			//じいちゃん
-	"data/TEXTURE/result/jiityaaan.jpg", },
+	{TEXTURE_R_LICHT_WIN,			//リヒト
+	 TEXTURE_R_LICHT_LOSE },
 
-	{"data/TEXTURE/result/licht_win.jpg",			//リヒト
-	 "data/TEXTURE/result/licht_win.jpg" },
+	{TEXTURE_R_JIJI_WIN,			//じいちゃん
+	 TEXTURE_R_JIJI_LOSE },
 };
 
 //立ち絵表示用
-const LPSTR g_StandTexture[][4] =
+const int g_StandTexture[][4] =
 {
-	{ "data/TEXTURE/character/lila/wara.png",
-	"data/TEXTURE/character/lila/naki.png",
-	"data/TEXTURE/character/lila/normal.png",
-	"data/TEXTURE/character/lila/do.png" },
+	{ TEXTURE_C_LILA_WARA,
+	  TEXTURE_C_LILA_NAKI,
+	  TEXTURE_C_LILA_NORMAL,
+	  TEXTURE_C_LILA_DO },
+	  
+	{ TEXTURE_C_ROSA_WARA,
+	  TEXTURE_C_ROSA_NAKI,
+	  TEXTURE_C_ROSA_NORMAL,
+	  TEXTURE_C_ROSA_DO },
 
-	{ "data/TEXTURE/character/rosa/wara.png",
-	"data/TEXTURE/character/rosa/naki.png",
-	"data/TEXTURE/character/rosa/normal.png",
-	"data/TEXTURE/character/rosa/do.png" },
+	{ TEXTURE_C_NAVI_WARA,
+	  TEXTURE_C_NAVI_NAKI,
+	  TEXTURE_C_NAVI_NORMAL,
+	  TEXTURE_C_NAVI_DO },
 
-	{"data/TEXTURE/character/navi/wara.png",
-	 "data/TEXTURE/character/navi/normal.png",
-	 "data/TEXTURE/character/navi/wara.png",
-	 "data/TEXTURE/character/navi/normal.png" },
-
-	 { "data/TEXTURE/character/licht/wara.png",
-	 "data/TEXTURE/character/licht/naki.png",
-	 "data/TEXTURE/character/licht/normal.png",
-	 "data/TEXTURE/character/licht/do.png" },
-
+	{ TEXTURE_C_LICHT_WARA,
+	  TEXTURE_C_LICHT_NAKI,
+	  TEXTURE_C_LICHT_NORMAL,
+	  TEXTURE_C_LICHT_DO },
 };
 
 LPDIRECT3DDEVICE9 CResult::m_pD3DDevice = NULL;		// デバイスのポインタ
@@ -173,7 +172,7 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	//背景の作成
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_RESULT);
+	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_RESULT);
 
 
 
@@ -249,7 +248,7 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	//背景生成
-	m_pform3D[0] = Cform3D::Create(m_pD3DDevice, "data/TEXTURE/sky004.jpg", D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
+	m_pform3D[0] = Cform3D::Create(m_pD3DDevice, TEXTURE_SKY004, D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
 
 	m_pform2D[0] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -375,13 +374,13 @@ void CResult::Win()
 	PaperCracker(0.0f, 600.0f);
 	PaperBlizzard(0.0f, 1700.0f);
 
-	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(2400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);							//Win表示
-	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(-2600.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);							//Lose表示
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_WINER, D3DXVECTOR3(2400.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);							//Win表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_LOSER, D3DXVECTOR3(-2600.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);							//Lose表示
 	//m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);			//スポットライト表示
 	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(1400.0f, -500.0f, 0.0f),  D3DXVECTOR3(D3DX_PI /2.0f*3.0f, 0.0f, 0.0f), 2280, 2007);	//敗者表示
 	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -500.0f, 0.0f), D3DXVECTOR3(D3DX_PI /2.0f*3.0f, 0.0f, 0.0f), 2280, 2007);	//勝者表示
-	m_pform3D[6] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/cracker.png", D3DXVECTOR3(2500.0f, -1500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 750, 750);							//クラッカー表示
-	m_pform3D[7] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/cracker.png", D3DXVECTOR3(-700.0f, -1500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, D3DX_PI*3.0f, 0.0f), 750, 750);					//クラッカー表示
+	m_pform3D[6] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_CRACKER, D3DXVECTOR3(2500.0f, -1500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 750, 750);							//クラッカー表示
+	m_pform3D[7] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_CRACKER, D3DXVECTOR3(-700.0f, -1500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, D3DX_PI*3.0f, 0.0f), 750, 750);					//クラッカー表示
 
 
 	m_ResultType = MAX_TYPE;
@@ -396,13 +395,13 @@ void CResult::Lose()
 {
 	PaperCracker(-1000.0f, -700.0f);
 	PaperBlizzard(-1700.0f, 0.0f);
-	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Loser.png", D3DXVECTOR3(2400.0f, 1000.0f, 50.0f),  D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);								//Lose表示
-	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Winer.png", D3DXVECTOR3(-2500.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);								//Win表示
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_LOSER, D3DXVECTOR3(2400.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);								//Lose表示
+	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_WINER, D3DXVECTOR3(-2500.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);								//Win表示
 	//m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Light.png", D3DXVECTOR3(-1300.0f, 0.0f, 0.0f),	 D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3000, 800);				//スポットライト表示
 	m_pform3D[4] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][1], D3DXVECTOR3(1400.0f, -500.0f, 0.0f),  D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 2280, 2007);		//勝者表示
 	m_pform3D[5] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][0], D3DXVECTOR3(-1400.0f, -500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 2280, 2007);		//敗者表示
-	m_pform3D[6] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/cracker.png", D3DXVECTOR3(0.0f, -1500.0f, 0.0f),     D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 750, 750);								//クラッカー表示
-	m_pform3D[7] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/cracker.png", D3DXVECTOR3(-2400.0f, -1500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, D3DX_PI*3.0f, 0.0f), 750, 750);						//クラッカー表示
+	m_pform3D[6] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_CRACKER, D3DXVECTOR3(0.0f, -1500.0f, 0.0f),     D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 750, 750);								//クラッカー表示
+	m_pform3D[7] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_CRACKER, D3DXVECTOR3(-2400.0f, -1500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, D3DX_PI*3.0f, 0.0f), 750, 750);						//クラッカー表示
 	m_ResultType = MAX_TYPE;
 	m_CrackerFlag = false;
 	m_BlizzardFlag = false;
@@ -414,7 +413,7 @@ void CResult::TieGame()
 {
 	//PaperCracker(-200.0f, 200.0f);
 	PaperBlizzard(-800.0f, 800.0f);
-	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), "data/TEXTURE/Draw.png", D3DXVECTOR3(0.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);															//ドロー表示
+	m_pform3D[1] = Cform3D::Create(m_pManager->GetDevice(), TEXTURE_DRAW, D3DXVECTOR3(0.0f, 1000.0f, 50.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 1600, 600);															//ドロー表示
 	m_pform3D[2] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(0)][1], D3DXVECTOR3(1400.0f, -500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 2280, 2007);		//顔表示
 	m_pform3D[3] = Cform3D::Create(m_pManager->GetDevice(), g_StandTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(-1400.0f, -500.0f, 0.0f), D3DXVECTOR3(D3DX_PI / 2.0f*3.0f, 0.0f, 0.0f), 2280, 2007);	//顔表示2
 	m_ResultType = MAX_TYPE;

@@ -9,6 +9,7 @@
 // マクロ定義
 //*****************************************************************************
 #include "Bar.h"
+#include "../../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -43,7 +44,8 @@ HRESULT CBar :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXCOLOR color,f
 	m_pDevice=pDevice;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/bar2.png",&m_pD3DTex);
+	m_texid = TEXTURE_BAR2;
+	//D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/bar2.png",&m_pD3DTex);
 
 	//頂点バッファの生成(メモリの確認)
 	if(FAILED(m_pDevice->CreateVertexBuffer(sizeof(VERTEX_2D)*POINT_MAX,
@@ -118,11 +120,11 @@ void CBar :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex=NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex=NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -149,7 +151,7 @@ void CBar :: Draw(void)
 		m_pDevice->SetStreamSource(0,m_pD3DVtxBuff,0,sizeof(VERTEX_2D));
 
 		//テクスチャの設定
-		m_pDevice->SetTexture(0,m_pD3DTex);
+		m_pDevice->SetTexture(0, CTexture::GetTex(m_texid));
 
 		//頂点フォーマットの描画
 		m_pDevice->SetFVF(FVF_VERTEX_2D);

@@ -45,7 +45,7 @@ class CDomeU  : public Cform3D
 		void SetRotCamera (D3DXVECTOR3 rotCamera){};
 
 	private:
-		LPDIRECT3DTEXTURE9		m_pD3DTex;			//テクスチャ表示用
+		//LPDIRECT3DTEXTURE9		m_pD3DTex;			//テクスチャ表示用
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;		//頂点情報格納ワーク(動的)
 		LPDIRECT3DDEVICE9		m_pDevice;			// pDeviceオブジェクト(描画に必要)
 		LPDIRECT3DINDEXBUFFER9  m_pD3DIndexBuff;	// インデックスバッファへのポインタ
@@ -64,7 +64,7 @@ class CDomeU  : public Cform3D
 		LPD3DXCONSTANTTABLE    _psc;		//ピクセルシェーダー用コンスタントテーブル
 		LPDIRECT3DVERTEXSHADER9 _vs;		//バーテックスシェーダー
 		LPD3DXCONSTANTTABLE    _vsc;		//バーテックスシェーダー用コンスタントテーブル
-
+		int m_texid;
 };
 
 #endif

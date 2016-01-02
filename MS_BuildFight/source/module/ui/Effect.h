@@ -129,7 +129,7 @@ class CEffect  : public Cform2D
 		int					m_nCount;
 		float				m_nCountFade;
 		float				m_nCountFadeMax;
-		static const LPSTR	m_apTextureName[];
+		static const int	m_apTextureName[];
 		EFFECT_PHASE		m_effectPhase;
 		EFFECT_FADE			m_FadeType;
 		D3DXVECTOR3			m_firstPos;

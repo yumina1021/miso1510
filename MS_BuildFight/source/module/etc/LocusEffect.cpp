@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "../../exten_common.h"
 #include "../../administer/Maneger.h"
+#include "../../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -27,7 +28,7 @@ CLocusEffect :: ~CLocusEffect(void)
 //=============================================================================
 // CLocusEffect生成
 //=============================================================================
-CLocusEffect *CLocusEffect::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
+CLocusEffect *CLocusEffect::Create(LPDIRECT3DDEVICE9 pDevice,int pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 {
 	CLocusEffect *pLocusEffect;
 
@@ -40,7 +41,7 @@ CLocusEffect *CLocusEffect::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DX
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
+HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,int pTexName)
 {
 	m_pDevice=pDevice;
 
@@ -48,7 +49,8 @@ HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName)
 	int nNumBlockZ=1;
 
 	//テクスチャの設定
-	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/toumei2.png",&m_pD3DTex);
+	m_texid = pTexName;
+	//D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/toumei2.png",&m_pD3DTex);
 
 	//フィールドの初期化
 	m_Pos = D3DXVECTOR3(0.0f,0.0f,0.0f);
@@ -108,11 +110,11 @@ void CLocusEffect :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex=NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex=NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -220,7 +222,7 @@ void CLocusEffect :: Draw(void)
 		m_pDevice->SetTexture(0, NULL);
 
 		//unsigned int s0 = shaderSet.psc->GetSamplerIndex("texSampler");
-		//m_pDevice->SetTexture(s0, m_pD3DTex);
+		//m_pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
 
 		//ポリゴンの描画
 		m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 120);

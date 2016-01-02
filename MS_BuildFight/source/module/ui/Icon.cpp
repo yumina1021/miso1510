@@ -9,6 +9,7 @@
 // マクロ定義
 //*****************************************************************************
 #include "Icon.h"
+#include "../../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -25,7 +26,7 @@ CIcon :: ~CIcon(void)
 //=============================================================================
 // CIcon生成
 //=============================================================================
-CIcon *CIcon::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
+CIcon *CIcon::Create(LPDIRECT3DDEVICE9 pDevice,int pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 {
 	CIcon *pIcon;
 
@@ -38,15 +39,16 @@ CIcon *CIcon::Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CIcon :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos)
+HRESULT CIcon :: Init(LPDIRECT3DDEVICE9 pDevice,int pTexName,D3DXVECTOR3 pos)
 {
 	m_pDevice=pDevice;
 
 	int nNumBlockX=1;
 	int nNumBlockZ=1;
 
+	m_texid = pTexName;
 	//テクスチャの設定
-	D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex);
+	//D3DXCreateTextureFromFile(m_pDevice,NULL,&m_pD3DTex);
 
 	//フィールドの初期化
 	m_Pos = D3DXVECTOR3(0.0f,0.0f,0.0f);
@@ -108,11 +110,11 @@ void CIcon :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex=NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex=NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -189,7 +191,7 @@ void CIcon :: Draw(void)
 	m_pDevice->SetFVF(FVF_VERTEX_2D);
 
 	//テクスチャの設定
-	m_pDevice->SetTexture(0,m_pD3DTex);
+	m_pDevice->SetTexture(0, CTexture::GetTex(m_texid));
 
 	//ポリゴンの描画
 	m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, NUM_POLYGON);

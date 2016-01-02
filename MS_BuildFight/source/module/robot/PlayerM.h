@@ -90,7 +90,7 @@ class CPlayerM  : public Cform
 		SHADER_SET		shaderSet;
 
 		CModel				*m_apModel[MODELPARTS_MAX];	// モデルへのポインタ
-		LPDIRECT3DTEXTURE9	m_pD3DTex;		//テクスチャ表示用
+		//LPDIRECT3DTEXTURE9	m_pD3DTex;		//テクスチャ表示用
 
 		D3DXMATRIX		m_mtxWorld;				// ワールドマトリックス
 
@@ -116,7 +116,7 @@ class CPlayerM  : public Cform
 
 		D3DXVECTOR3		m_Min;
 		D3DXVECTOR3		m_Max;
-
+		int m_texid;
 };
 
 #endif

@@ -40,9 +40,6 @@
     <ClCompile Include="source\administer\scene\Tutorial.cpp">
       <Filter>source\administer\scene</Filter>
     </ClCompile>
-    <ClCompile Include="source\administer\scene\Vsend.cpp">
-      <Filter>source\administer\scene</Filter>
-    </ClCompile>
     <ClCompile Include="source\administer\Debugproc.cpp">
       <Filter>source\administer</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     </ClCompile>
     <ClCompile Include="source\module\robot\PlayerM.cpp">
       <Filter>source\module\robot</Filter>
-    </ClCompile>
-    <ClCompile Include="source\module\ui\BackGround.cpp">
-      <Filter>source\module\ui</Filter>
     </ClCompile>
     <ClCompile Include="source\module\ui\Bar.cpp">
       <Filter>source\module\ui</Filter>
@@ -169,6 +163,9 @@
     <ClCompile Include="source\module\Gimmick\Magnet.cpp">
       <Filter>source\module\Gimmick</Filter>
     </ClCompile>
+    <ClCompile Include="source\administer\Texture.cpp">
+      <Filter>source\administer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -210,9 +207,6 @@
     <ClInclude Include="source\administer\scene\Tutorial.h">
       <Filter>source\administer\scene</Filter>
     </ClInclude>
-    <ClInclude Include="source\administer\scene\Vsend.h">
-      <Filter>source\administer\scene</Filter>
-    </ClInclude>
     <ClInclude Include="source\administer\data.h">
       <Filter>source\administer</Filter>
     </ClInclude>
@@ -251,9 +245,6 @@
     </ClInclude>
     <ClInclude Include="source\module\robot\robotmotiondata.h">
       <Filter>source\module\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="source\module\ui\BackGround.h">
-      <Filter>source\module\ui</Filter>
     </ClInclude>
     <ClInclude Include="source\module\ui\Bar.h">
       <Filter>source\module\ui</Filter>
@@ -356,6 +347,9 @@
     </ClInclude>
     <ClInclude Include="source\module\Gimmick\Magnet.h">
       <Filter>source\module\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\Texture.h">
+      <Filter>source\administer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -80,7 +80,7 @@ class CResult  : public CScene
 		D3DXVECTOR3 m_CrackerVector[CRACKER_MAX];		//紙吹雪の向き
 		Cform3D*	m_pPaperCracker[CRACKER_MAX];
 		RESULT_TYPE m_ResultType;						//勝敗
-		static const LPSTR	m_apTextureName[];			//紙吹雪のテクスチャ
+		static const int	m_apTextureName[];			//紙吹雪のテクスチャ
 		int m_cnt;
 		float m_MaxSpeed;
 		float m_SlideSpeed;								//Win,Loseの画像の移動速度

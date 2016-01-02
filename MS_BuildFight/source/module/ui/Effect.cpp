@@ -9,27 +9,28 @@
 // マクロ定義
 //*****************************************************************************
 #include "Effect.h"
+#include "../../administer/Texture.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const LPSTR CEffect::m_apTextureName[]=
+const int CEffect::m_apTextureName[]=
 {
-	"data/TEXTURE/circuit.png",
-	"data/TEXTURE/circuit_circle.png",
-	"data/TEXTURE/action.png",
-	"data/TEXTURE/please_rosa.png",
-	"data/TEXTURE/please_lila.png",
-	"data/TEXTURE/please_licht.png",
-	"data/TEXTURE/please_jiji.png",
-	"data/TEXTURE/shot_rosa.png",
-	"data/TEXTURE/shot_lila.png",
-	"data/TEXTURE/shot_licht.png",
-	"data/TEXTURE/shot_jiji.png",
-	"data/TEXTURE/timeout.png",
-	"data/TEXTURE/tutrial.jpg",
-	"data/TEXTURE/ready1.png",
-	"data/TEXTURE/ready2.png",
-	"data/TEXTURE/gage5.png",
+	TEXTURE_CIRCUIT,
+	TEXTURE_CIRCUIT_CIRCLE,
+	TEXTURE_ACTION,
+	TEXTURE_PLEASE_ROSA,
+	TEXTURE_PLEASE_LILA,
+	TEXTURE_PLEASE_LICHT,
+	TEXTURE_PLEASE_JIJI,
+	TEXTURE_SHOT_ROSA,
+	TEXTURE_SHOT_LILA,
+	TEXTURE_SHOT_LICHT,
+	TEXTURE_SHOT_JIJI,
+	TEXTURE_TIMEOUT,
+	TEXTURE_TIMEOUT,
+	TEXTURE_READY1,
+	TEXTURE_READY2,
+	TEXTURE_GAGE,
 
 	/*
 	"data/TEXTURE/Enemyeffect001.png",

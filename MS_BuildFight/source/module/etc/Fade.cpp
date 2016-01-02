@@ -9,15 +9,16 @@
 // マクロ定義
 //*****************************************************************************
 #include "Fade.h"
+#include "../../administer/Texture.h"
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const LPSTR CFade::m_apTextureName[]=
+const int CFade::m_apTextureName[]=
 {
-	"data/TEXTURE/loading1.jpg",
-	"data/TEXTURE/loading2.jpg",
-	"data/TEXTURE/loading3.jpg",
-	"data/TEXTURE/loading3.jpg",
+	TEXTURE_LOADING1,
+	TEXTURE_LOADING2,
+	TEXTURE_LOADING3,
+	TEXTURE_LOADING3,
 };
 //
 //

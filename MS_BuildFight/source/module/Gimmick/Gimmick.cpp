@@ -267,7 +267,9 @@ void CGimmick::_UpdateUFO(void)
 		UpdateUFOMoveSlide();	//‰¡ˆÚ“®
 		break;
 	}
+	m_Rot.y += 0.01f;
 	CformX::SetPos(m_Pos);
+	CformX::SetRot(m_Rot);
 }
 
 void CGimmick::UpdateUFOMoveStop(void)

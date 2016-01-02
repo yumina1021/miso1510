@@ -14,7 +14,7 @@
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CBackGround;	//前方宣言
+//class CBackGround;	//前方宣言
 class CFade;
 class CCharPicture;
 class CEffect;
@@ -30,7 +30,7 @@ class CGameClear  : public CScene
 		void Update(void);			//更新
 		void Draw(void);				//描画
 	private:
-		static CBackGround*		m_pBackGround;
+		//static CBackGround*		m_pBackGround;
 		static CFade*			m_pFade;
 		static CEffect*			m_pEffect[2];		//エフェクトのポインター
 		int						m_nCount;

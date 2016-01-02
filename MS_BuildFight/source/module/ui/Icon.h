@@ -32,9 +32,9 @@ class CIcon  : public Cform
 		CIcon(int nPriority = 7);//コンストラクタ
 		~CIcon(void);//デストラクタ
 
-		static CIcon *Create(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot);
+		static CIcon *Create(LPDIRECT3DDEVICE9 pDevice,int pTexName,D3DXVECTOR3 pos,D3DXVECTOR3 rot);
 
-		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pTexName,D3DXVECTOR3 pos);//初期化
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,int pTexName,D3DXVECTOR3 pos);//初期化
 		void Uninit(void);//終了
 		void Update(void);//更新
 		void Draw(void);//描画
@@ -47,10 +47,10 @@ class CIcon  : public Cform
 		D3DXVECTOR3 GetRot(void){return m_Rot;};
 		void SetMtxView (D3DXMATRIX changeMtx){m_MtxView=changeMtx;};
 		void SetRotCamera (D3DXVECTOR3 rotCamera){m_RotCamera=rotCamera;};
-		void SetTexture(LPDIRECT3DTEXTURE9 pTex){m_pD3DTex=pTex;};
+		void SetTexture(int pTex){ m_texid = pTex; };
 
 	protected:
-		LPDIRECT3DTEXTURE9  	m_pD3DTex;			//テクスチャ表示用
+		//LPDIRECT3DTEXTURE9  	m_pD3DTex;			//テクスチャ表示用
 		LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;		//頂点情報格納ワーク(動的)
 		LPDIRECT3DDEVICE9		m_pDevice;			// pDeviceオブジェクト(描画に必要)
 
@@ -64,7 +64,7 @@ class CIcon  : public Cform
 		float m_fLength;						// ポリゴンの中心から頂点までの長さ
 		float m_fAngle;							// ポリゴンと頂点を結んだ直線の傾き
 		D3DXVECTOR3				m_RotCamera;
-
+		int m_texid;
 };
 
 #endif

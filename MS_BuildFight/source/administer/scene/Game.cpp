@@ -33,7 +33,6 @@
 #include "../../module/ui/Lock.h"
 #include "../../module/ui/Count.h"
 #include "../../module/ui/Gauge.h"
-#include "../../module/ui/BackGround.h"
 #include "../../module/ui/CharPicture.h"
 #include "../../module/ui/Scenario.h"
 
@@ -51,6 +50,8 @@
 #include "../../exten_common.h"
 #include "../../module/etc/Camera.h"
 #include "../../module/ui/Number.h"
+
+#include "../Texture.h"
 
 #define PLAYER_MAX	(2)	//プレイヤー数
 #define SHOT_RIMIT	(0.05f)
@@ -173,7 +174,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	//Pause
 	//背景の作成
-	m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_GAME);
+	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_GAME);
 
 	//文字の配置
 	m_pCharPicture[0]=CCharPicture::Create(pDevice,p_continue,D3DXVECTOR3(1100.0f,450.0f,0.0f),400,100);
@@ -441,7 +442,7 @@ void CGame :: Draw(void)
 {
 	if (CManager::GetpauseFlag())
 	{
-		m_pBackGround->Draw();
+		//m_pBackGround->Draw();
 
 		//文字の配置
 		for (int i = 0; i < 3; i++)
@@ -1014,7 +1015,7 @@ void CGame::charachange()
 void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 {
 	m_nIFtype = rand() % 2;
-	m_pUI = Cform2D::Create(pDevice, "data/TEXTURE/gage5.png", D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f),1300,750);
+	m_pUI = Cform2D::Create(pDevice, TEXTURE_GAGE, D3DXVECTOR3(650, 375, 0.0f), D3DXVECTOR3(0, 0, 0.0f), 1300, 750);
 	//5番ゲージ
 	//スコアの作成
 	float pos = 500;
@@ -1028,7 +1029,7 @@ void CGame::InitUI(LPDIRECT3DDEVICE9 pDevice)
 	m_pDistance[2] = CNumber::Create(pDevice, D3DXVECTOR3(pos + length * scl * 2, 300.0f, 0.0f), D3DXCOLOR(0.0f, 0.0, 0.0f, 0.0f), length * scl, 65 * scl);
 	//m_pGauge = CGauge::Create(pDevice, D3DXVECTOR3(680.0f, 700.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),true);
 	m_nTimerCount = 0;
-	m_pyard = Cform2D::Create(pDevice, "data/TEXTURE/yard.png", D3DXVECTOR3(pos + length * scl * 3 +20.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f,0.0f,0.0f), 322, 200);
+	m_pyard = Cform2D::Create(pDevice, TEXTURE_YARD, D3DXVECTOR3(pos + length * scl * 3 + 20.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 322, 200);
 }
 //プレイヤーとボールのベクトルを算出
 D3DXVECTOR3 CGame::CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player)
@@ -1060,14 +1061,14 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
 {
 	// ファイル読みこみに後に変更
-	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 500.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 600.0f,600.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGoal->SetMagnet(S);
 
-	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_STOP, D3DXVECTOR3(100.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_STOP, D3DXVECTOR3(400.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGimmick[0]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-	m_pGimmick[1] = CGimmick::Create(pDevice, GIMMICK_TORNADO, MOVETYPE_STOP, D3DXVECTOR3(0.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGimmick[1] = CGimmick::Create(pDevice, GIMMICK_TORNADO, MOVETYPE_STOP, D3DXVECTOR3(-400.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGimmick[1]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-	m_pGimmick[2] = CGimmick::Create(pDevice, GIMMICK_UFO, MOVETYPE_SLIDE, D3DXVECTOR3(0.0f, 200.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGimmick[2] = CGimmick::Create(pDevice, GIMMICK_UFO, MOVETYPE_SLIDE, D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGimmick[2]->SetSize(D3DXVECTOR3(30.0f, 30.0f, 30.0f));
 	m_pGimmick[2]->SetMagnet(N);
 	// とりあえずマックスはここで
@@ -1081,7 +1082,7 @@ void CGame::ObjHitCheck()
 	D3DXVECTOR3 obj = m_pGoal->GetPos();
 	D3DXVECTOR3 size;
 	D3DXVECTOR3 rot;
-	if (SphireHit(ball, 15.0f, obj, 10.0f))
+	if (SphireHit(ball, 20.0f, obj, 10.0f))
 	{
 		m_pGoal->Sethit(1.0f);
 		if (m_nSwitchCount == JUDGE_PHASE)

@@ -12,6 +12,7 @@
 #include "LocusEffect.h"
 #include "../../exten_common.h"
 #include "../../administer/Debugproc.h"
+#include "../../administer/Texture.h"
 //*****************************************************************************
 // ê√ìIïœêî
 //*****************************************************************************
@@ -96,7 +97,7 @@ HRESULT CBall :: Init(LPDIRECT3DDEVICE9 pDevice,int nType)
 	m_RotResist = 0.02f;
 	m_alpha = 0.4f;
 
-	CformX::SetTexture("data/TEXTURE/tama.jpg", 0);
+	CformX::SetTexture(TEXTURE_TAMA, 0);
 
 	m_bmove = false;
 	return S_OK;

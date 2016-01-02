@@ -14,7 +14,6 @@
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CBackGround;	//前方宣言
 class CFade;
 class CCharPicture;
 class CEffect;
@@ -30,7 +29,7 @@ class CTutorial  : public CScene
 		void Update(void);						//更新
 		void Draw(void);						//描画
 	private:
-		CBackGround*	m_pBackGround;			//背景
+		//CBackGround*	m_pBackGround;			//背景
 		CFade*			m_pFade;				//フェード
 		CEffect*		m_pEffect[8];			//エフェクト
 		int				m_nCount;				//表示カウント

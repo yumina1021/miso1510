@@ -58,7 +58,7 @@ class CGame;
 class Cform;
 class CLight;
 class CEffect;
-
+class CTexture;
 #ifdef _DEBUG
 class CDebugProc;
 #endif
@@ -146,7 +146,7 @@ class CManager
 		static PHASETYPE		m_afterSceneType;	//次のフェーズタイプ
 		static HWND				m_hwnd;
 		static WiiRemote* wiimote[2];
-
+		CTexture* m_ptexture;
 #ifdef _DEBUG
 		static  CDebugProc *m_pDebugProc;			//デバッグ処理へのポインタ
 #endif

@@ -27,12 +27,13 @@
 #include "scene/Result.h"
 #include "scene/Tutorial.h"
 #include "scene/GameClear.h"
-#include "scene/Vsend.h"
 
 #include "../form/form.h"
 
 #include "../module/etc/Light.h"
 #include "../module/etc/Camera.h"
+
+#include "../administer/Texture.h"
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -123,6 +124,10 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 
 	m_pCamera = new CCamera;
 	m_pCamera->Init();
+
+	// テクスチャ初期化
+	m_ptexture = new CTexture;
+	m_ptexture->Init(m_pD3DDevice);
 
 	//フェーズの初期化
 	m_pScene=new CTitle();
@@ -354,6 +359,8 @@ void CManager :: Uninit(void)
 			delete wiimote[i];
 		}
 	}
+	m_ptexture->Uninit();
+	delete m_ptexture;
 	//m_pJoypad->Uninit();		//ジョイパッド
 
 	//if(m_pJoypad!=NULL)
@@ -469,6 +476,7 @@ void CManager :: Update(void)
 	if (m_pKeyboard->GetKeyTrigger(DIK_F8))
 	{
 		//m_pCamera->Init();
+		m_gamewin = PLAYER1_WIN;
 		SetAfterScene(PHASETYPE_RESULT);
 	}
 }
@@ -622,7 +630,7 @@ void CManager::ChangeScene(void)
 							m_pScene->Uninit();
 							delete m_pScene;
 							m_pScene=NULL;
-							m_pScene=new CVsend();
+							//m_pScene=new CVsend();
 
 							m_pScene->SetTime(time);
 							m_pScene->SetScore(score);

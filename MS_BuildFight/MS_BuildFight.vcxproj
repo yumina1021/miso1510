@@ -48,6 +48,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\shared;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,6 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\administer\scene\StageSelect.cpp" />
+    <ClCompile Include="source\administer\Texture.cpp" />
     <ClCompile Include="source\administer\wiicon\wiimote.cpp" />
     <ClCompile Include="source\administer\wiicon\WiiRemote.cpp" />
     <ClCompile Include="source\module\Gimmick\Gimmick.cpp" />
@@ -100,7 +102,6 @@
     <ClCompile Include="source\administer\scene\Select.cpp" />
     <ClCompile Include="source\administer\scene\Title.cpp" />
     <ClCompile Include="source\administer\scene\Tutorial.cpp" />
-    <ClCompile Include="source\administer\scene\Vsend.cpp" />
     <ClCompile Include="source\administer\Sound.cpp" />
     <ClCompile Include="source\exten_common.cpp" />
     <ClCompile Include="source\form\form.cpp" />
@@ -121,7 +122,6 @@
     <ClCompile Include="source\module\robot\Model.cpp" />
     <ClCompile Include="source\module\robot\PlayerBace.cpp" />
     <ClCompile Include="source\module\robot\PlayerM.cpp" />
-    <ClCompile Include="source\module\ui\BackGround.cpp" />
     <ClCompile Include="source\module\ui\Bar.cpp" />
     <ClCompile Include="source\module\ui\Character.cpp" />
     <ClCompile Include="source\module\ui\CharPicture.cpp" />
@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\scene\StageSelect.h" />
+    <ClInclude Include="source\administer\Texture.h" />
     <ClInclude Include="source\administer\wiicon\wiimote.h" />
     <ClInclude Include="source\administer\wiicon\wiimote_common.h" />
     <ClInclude Include="source\administer\wiicon\wiimote_state.h" />
@@ -162,7 +163,6 @@
     <ClInclude Include="source\administer\scene\Select.h" />
     <ClInclude Include="source\administer\scene\Title.h" />
     <ClInclude Include="source\administer\scene\Tutorial.h" />
-    <ClInclude Include="source\administer\scene\Vsend.h" />
     <ClInclude Include="source\administer\Sound.h" />
     <ClInclude Include="source\common.h" />
     <ClInclude Include="source\exten_common.h" />
@@ -185,7 +185,6 @@
     <ClInclude Include="source\module\robot\PlayerBace.h" />
     <ClInclude Include="source\module\robot\PlayerM.h" />
     <ClInclude Include="source\module\robot\robotmotiondata.h" />
-    <ClInclude Include="source\module\ui\BackGround.h" />
     <ClInclude Include="source\module\ui\Bar.h" />
     <ClInclude Include="source\module\ui\Character.h" />
     <ClInclude Include="source\module\ui\CharPicture.h" />

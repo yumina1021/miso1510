@@ -15,7 +15,6 @@
 #include "../Sound.h"
 
 #include "../../module/etc/Fade.h"
-#include "../../module/ui/BackGround.h"
 #include "../../module/ui/CharPicture.h"
 #include "../../module/ui/Effect.h"
 #include "../../module/ui/Button.h"
@@ -32,6 +31,7 @@
 #include "../../administer/Debugproc.h"
 
 #include "../wiicon/wiimote.h"
+#include "../Texture.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -87,26 +87,20 @@ CSelect :: ~CSelect(void)
 //=============================================================================
 HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 {
-	LPSTR pModName[CHARCTER_TYPE::TYPE_MAX]
+	int pModName[CHARCTER_TYPE::TYPE_MAX]
 	{
-
-		"data/MODEL/stage1.x",
-			"data/MODEL/stage2.x",
-			"data/MODEL/stage3.x",
-			"data/MODEL/stage4.x",
-
-
+		TEXTURE_STAGENAME1,
+		TEXTURE_STAGENAME2,
+		TEXTURE_STAGENAME3,
+		TEXTURE_STAGENAME4,
 	};
 
-	LPSTR pCharNameTex[CHARCTER_TYPE::TYPE_MAX]
+	int pCharNameTex[CHARCTER_TYPE::TYPE_MAX]
 	{
-
-		"data/TEXTURE/CharcterName1.png",
-			"data/TEXTURE/CharcterName2.png",
-			"data/TEXTURE/CharcterName3.png",
-			"data/TEXTURE/CharcterName4.png",
-
-
+		TEXTURE_CHARANAME1,
+		TEXTURE_CHARANAME2,
+		TEXTURE_CHARANAME3,
+		TEXTURE_CHARANAME4,
 	};
 
 	//空の作成
@@ -122,7 +116,7 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	pSound->Play(SOUND_LABEL_BGM001);
 
 	//背景の作成
-	m_pBackGround = Cform3D::Create(pDevice, "data/TEXTURE/Select.png", D3DXVECTOR3(0.0f, 0.0f, 406.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pBackGround = Cform3D::Create(pDevice, TEXTURE_SELECT, D3DXVECTOR3(0.0f, 0.0f, 406.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_pBackGround->SetDiffuse(1.0f, 1.0f, 1.0f, 0.6f);
 
 	float fScreenWidthHalf((float)SCREEN_WIDTH / 2.0f);
@@ -137,8 +131,8 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pCharPicture[CHARCTER_TYPE::TYPE_4] = CButton::Create(pDevice, s_3, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 
 	// 決定時に表示する画像
-	m_pSelectCfm[0] = Cform2D::Create(pDevice, "data/TEXTURE/SelectPlayer1.png", D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	m_pSelectCfm[1] = Cform2D::Create(pDevice, "data/TEXTURE/SelectPlayer2.png", D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pSelectCfm[0] = Cform2D::Create(pDevice, TEXTURE_SELECTPLAYER1, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pSelectCfm[1] = Cform2D::Create(pDevice, TEXTURE_SELECTPLAYER2, D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 
 	// キャラ画像
 	m_SelectCfmPos[CHARCTER_TYPE::TYPE_1] = D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f);
@@ -147,10 +141,10 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_SelectCfmPos[CHARCTER_TYPE::TYPE_4] = D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f);
 
 	// 外枠フレーム
-	m_pCharFrame[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, "data/TEXTURE/CharFrame.png", D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	m_pCharFrame[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, "data/TEXTURE/CharFrame.png", D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	m_pCharFrame[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, "data/TEXTURE/CharFrame.png", D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	m_pCharFrame[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, "data/TEXTURE/CharFrame.png", D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharFrame[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharFrame[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharFrame[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	m_pCharFrame[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	//m_pCharFrame[CHARCTER_TYPE::TYPE_1]->SetDiffuse(1.0f, 0.0f, 0.0f, 1.0f);
 
 	// 選択したキャラのモデル

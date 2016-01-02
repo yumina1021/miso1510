@@ -31,7 +31,7 @@ class CformX  : public Cform
 		static CformX *Create(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot,bool set,bool enemy);
 		static CformX *Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pModNameStr, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
-		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName);//初期化
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,int pTexName);//初期化
 		void Uninit(void);//終了
 		void Update(void);//更新
 		void Draw(void);//描画
@@ -50,7 +50,7 @@ class CformX  : public Cform
 		D3DXMATRIX GetMtxView (void){return m_MtxView;};
 		D3DXVECTOR3 GetRotCamera (void){return m_RotCamera;};
 		void SetRotCamera (D3DXVECTOR3 rotCamera){m_RotCamera=rotCamera;};
-		void SetTexture(LPSTR pTexName,int num);
+		void SetTexture(int pTexName,int num);
 		void SetTextureNum(int num){nTextureNum=num;};
 		void SetViewFlag(bool	change){m_bDeathFlag=change;};
 		void ResetCount(int nCount){m_nDeathCount=nCount;};
@@ -68,7 +68,7 @@ class CformX  : public Cform
 		LPD3DXMESH			m_pD3DXMeshModel;		//メッシュ情報へのポインタ
 	private:
 
-		LPDIRECT3DTEXTURE9	m_pD3DTex[TEXTURE_MAX];	//テクスチャ表示用
+		//LPDIRECT3DTEXTURE9	m_pD3DTex[TEXTURE_MAX];	//テクスチャ表示用
 		LPDIRECT3DCUBETEXTURE9 m_pD3DTextureCube;	// テクスチャ読み込み場所
 
 		LPDIRECT3DDEVICE9	m_pDevice;				// pDeviceオブジェクト(描画に必要)	
@@ -95,6 +95,7 @@ class CformX  : public Cform
 		bool				m_bEnemyFlag;
 
 		SHADER_SET			m_shader;
+		int					m_texid;
 
 };
 

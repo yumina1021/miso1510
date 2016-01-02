@@ -9,6 +9,7 @@
 // マクロ定義
 //*****************************************************************************
 #include "Number.h"
+#include "../../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -43,7 +44,8 @@ HRESULT CNumber :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXCOLOR colo
 	m_pDevice=pDevice;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/number001.png",&m_pD3DTex);
+	m_texid = TEXTURE_NUMBER001;
+	//D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/number001.png",&m_pD3DTex);
 
 	//頂点バッファの生成(メモリの確認)
 	if(FAILED(m_pDevice->CreateVertexBuffer(sizeof(VERTEX_2D)*POINT_MAX,
@@ -116,11 +118,11 @@ void CNumber :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex=NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex=NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -144,7 +146,7 @@ void CNumber :: Draw(void)
 	m_pDevice->SetStreamSource(0,m_pD3DVtxBuff,0,sizeof(VERTEX_2D));
 
 	//テクスチャの設定
-	m_pDevice->SetTexture(0,m_pD3DTex);
+	m_pDevice->SetTexture(0, CTexture::GetTex(m_texid));
 
 	//頂点フォーマットの描画
 	m_pDevice->SetFVF(FVF_VERTEX_2D);

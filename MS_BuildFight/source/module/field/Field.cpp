@@ -12,6 +12,7 @@
 #include "../../administer/Maneger.h"
 #include "../../administer/scene/Game.h"
 #include "../robot/PlayerM.h"
+#include "../../administer/Texture.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -20,15 +21,15 @@
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
-const char *CMeshField::m_apTextureName[]=
+const int m_apTexture[]=
 {
-	"data/TEXTURE/field000.jpg",
-	"data/TEXTURE/field001.jpg",
-	"data/TEXTURE/field002.jpg",
-	"data/TEXTURE/field003.jpg",
-	"data/TEXTURE/field004.jpg",
-	"data/TEXTURE/field005.jpg",
-	"data/TEXTURE/field006.jpg"
+	TEXTURE_R_JIJI_WIN,
+	TEXTURE_R_JIJI_WIN,
+	TEXTURE_R_JIJI_WIN,
+	TEXTURE_R_JIJI_WIN,
+	TEXTURE_R_JIJI_WIN,
+	TEXTURE_R_JIJI_WIN,
+	TEXTURE_R_JIJI_WIN
 };
 
 //=============================================================================
@@ -36,7 +37,7 @@ const char *CMeshField::m_apTextureName[]=
 //=============================================================================
 CMeshField::CMeshField(int nPriority) : Cform3D(nPriority)
 {
-	m_pD3DTex = NULL;
+	//m_pD3DTex = NULL;
 	m_pD3DVtxBuff = NULL;
 	m_pD3DIndexBuff = NULL;
 	m_bTransParent = false;
@@ -100,7 +101,8 @@ HRESULT CMeshField::Init(LPDIRECT3DDEVICE9 pDevice,int nType, D3DXVECTOR3 pos, D
 	m_fSizeBlockZ = fSizeBlockZ;
 
 	// テクスチャの読み込み
-	D3DXCreateTextureFromFile(m_pDevice,m_apTextureName[nType],&m_pD3DTex);
+	m_texid = m_apTexture[nType];
+	//D3DXCreateTextureFromFile(m_pDevice,m_apTextureName[nType],&m_pD3DTex);
 
 	//フィールドの初期化
 	m_Pos = pos;
@@ -406,11 +408,11 @@ void CMeshField::Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex = NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex = NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -446,7 +448,7 @@ void CMeshField::Update()
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CMeshField::Draw(LPDIRECT3DTEXTURE9 pTexture)
+void CMeshField::Draw(int pTexture)
 {
 	D3DXMATRIX  mtxWorld;
 	D3DXMATRIX mtxScl,mtxRot,mtxTranslate;
@@ -609,10 +611,10 @@ void CMeshField::Draw(LPDIRECT3DTEXTURE9 pTexture)
 		_vsc[1]->SetFloatArray(pDevice, "Pos", (float*)&eye, 3);
 
 		// テクスチャの設定
-		pDevice->SetTexture(0, m_pD3DTex);
+		pDevice->SetTexture(0, CTexture::GetTex(m_texid));
 
 		unsigned int s0 = _psc->GetSamplerIndex("texSampler");
-		pDevice->SetTexture(s0, m_pD3DTex);
+		pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
 		pDevice->SetVertexShader(_vs[1]);
 	}
 	else
@@ -629,10 +631,10 @@ void CMeshField::Draw(LPDIRECT3DTEXTURE9 pTexture)
 		_vsc[0]->SetFloatArray(pDevice, "Pos", (float*)&m_Pos, 3);
 
 		// テクスチャの設定
-		pDevice->SetTexture(0, pTexture);
+		pDevice->SetTexture(0, CTexture::GetTex(pTexture));
 
 		unsigned int s0 = _psc->GetSamplerIndex("shadowSampler");
-		pDevice->SetTexture(s0, pTexture);
+		pDevice->SetTexture(s0, CTexture::GetTex(pTexture));
 		pDevice->SetVertexShader(_vs[0]);
 	}
 	pDevice->SetPixelShader(_ps);

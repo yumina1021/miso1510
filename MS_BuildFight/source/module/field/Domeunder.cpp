@@ -11,6 +11,7 @@
 #include "Domeunder.h"
 #include "../etc/Camera.h"
 #include "../../administer/Maneger.h"
+#include "../../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -53,7 +54,8 @@ HRESULT CDomeU::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_nNumVertex = (nNumBlockX + 1)*(nNumBlockZ + 1);
 
 	//テクスチャの設定
-	D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/sky004.jpg", &m_pD3DTex);
+	m_texid = TEXTURE_SKY004;
+	//D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/sky004.jpg", &m_pD3DTex);
 
 	//フィールドの初期化
 
@@ -190,11 +192,11 @@ void CDomeU :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
 
-	if(m_pD3DTex!=NULL)
-	{
-		m_pD3DTex->Release();
-		m_pD3DTex=NULL;
-	}
+	//if(m_pD3DTex!=NULL)
+	//{
+	//	m_pD3DTex->Release();
+	//	m_pD3DTex=NULL;
+	//}
 	if(m_pD3DVtxBuff!=NULL)
 	{
 		m_pD3DVtxBuff->Release();
@@ -297,10 +299,10 @@ void CDomeU :: Draw(void)
 	_vsc->SetFloatArray(pDevice, "Pos", (float*)&eye, 3);
 
 	// テクスチャの設定
-	pDevice->SetTexture(0, m_pD3DTex);
+	pDevice->SetTexture(0, CTexture::GetTex(m_texid));
 
 	unsigned int s0 = _psc->GetSamplerIndex("texSampler");
-	pDevice->SetTexture(s0, m_pD3DTex);
+	pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
 	pDevice->SetVertexShader(_vs);
 
 	pDevice->SetPixelShader(_ps);

@@ -35,7 +35,7 @@ public:
 								int nNumBlockX, int nNumBlockZ, float fSizeBlockX, float fSizeBlockZ);
 	void Uninit(void);
 	void Update(void);
-	void Draw(LPDIRECT3DTEXTURE9 pTexture);
+	void Draw(int pTexture);
 
 	void SetPos(float x, float y, float z){ m_Pos.x = x; m_Pos.y = y; m_Pos.z = z; }
 	void SetPos(D3DXVECTOR3 pos){ m_Pos = pos; }
@@ -55,7 +55,7 @@ public:
 											D3DXVECTOR3 pos, D3DXVECTOR3 *pNormal = NULL);
 
 private:
-	LPDIRECT3DTEXTURE9		m_pD3DTex;		// テクスチャ読み込み場所
+	//LPDIRECT3DTEXTURE9		m_pD3DTex;		// テクスチャ読み込み場所
 	LPDIRECT3DVERTEXBUFFER9	m_pD3DVtxBuff;	// 頂点バッファインターフェースへのポインタ
 	LPDIRECT3DDEVICE9		m_pDevice;		// pDeviceオブジェクト(描画に必要)
 	LPDIRECT3DINDEXBUFFER9	m_pD3DIndexBuff;	// インデックスバッファインターフェースへのポインタ
@@ -81,7 +81,6 @@ private:
 	float m_fSizeBlockX;
 	float m_fSizeBlockZ;
 
-	static const char *m_apTextureName[];
 	static const float m_aHeightFiled[33][33];
 
 	LPDIRECT3DPIXELSHADER9 _ps;			//ピクセルシェーダー

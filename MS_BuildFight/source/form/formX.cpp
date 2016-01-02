@@ -14,7 +14,7 @@
 #include "../module/etc/Camera.h"
 #include "../administer/Maneger.h"
 #include "../exten_common.h"
-
+#include "../administer/Texture.h"
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -22,10 +22,10 @@ CformX :: CformX(OBJTYPE objType,int nPriority) : Cform(objType,nPriority)
 {
 	nTextureNum=0;
 
-	for(int i=0;i<TEXTURE_MAX;i++)
-	{
-		m_pD3DTex[i]=NULL;
-	}
+	//for(int i=0;i<TEXTURE_MAX;i++)
+	//{
+	//	m_pD3DTex[i]=NULL;
+	//}
 
 	m_bDeathFlag=false;
 	m_nDeathCount=0;
@@ -47,10 +47,10 @@ CformX *CformX::Create(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot
 	pformX = new CformX();
 	if(enemy==true)
 	{
-		pformX->Init(pDevice,"data/MODEL/ring.x","data/TEXTURE/toumei6.png");
+		//pformX->Init(pDevice,"data/MODEL/ring.x","data/TEXTURE/toumei6.png");
 	}else
 	{
-		pformX->Init(pDevice,"data/MODEL/ring.x",NULL);
+		pformX->Init(pDevice,"data/MODEL/ring.x",-1);
 	}
 	pformX->SetPos(pos);
 	pformX->SetRot(rot);
@@ -76,7 +76,7 @@ CformX *CformX::Create(LPDIRECT3DDEVICE9 pDevice, LPSTR pModNameStr, D3DXVECTOR3
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)
+HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,int pTexName)
 {
 	//デバイスの取得
 	m_pDevice=pDevice;
@@ -124,14 +124,9 @@ HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)
 	}
 
 	//テクスチャの設定
-	if(pTexName!=NULL)
-	{
-		D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex[0]);
-	}
-	else
-	{
-		m_pD3DTex[0]=NULL;
-	}
+	m_texid = pTexName;
+	//D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex[0]);
+	//m_pD3DTex[0]=NULL;
 
 	// キューブテクスチャの読み込み
 	D3DXCreateCubeTextureFromFile(pDevice,					// デバイスへのポインタ
@@ -153,14 +148,14 @@ HRESULT CformX :: Init(LPDIRECT3DDEVICE9 pDevice,LPSTR pFileName,LPSTR pTexName)
 void CformX :: Uninit(void)
 {
 	//様々なオブジェクトの終了（開放）処理
-	for(int i=0;i<TEXTURE_MAX;i++)
-	{
-		if(m_pD3DTex[i]!=NULL)
-		{
-			m_pD3DTex[i]->Release();
-			m_pD3DTex[i]=NULL;
-		}
-	}
+	//for(int i=0;i<TEXTURE_MAX;i++)
+	//{
+	//	if(m_pD3DTex[i]!=NULL)
+	//	{
+	//		m_pD3DTex[i]->Release();
+	//		m_pD3DTex[i]=NULL;
+	//	}
+	//}
 
 	if (m_pD3DTextureCube != NULL)
 	{// マテリアルの開放
@@ -296,10 +291,10 @@ void CformX::Draw(void)
 	m_shader.vsc->SetVector(m_pDevice, "LightAmbient", (D3DXVECTOR4*)&lightAmbient);
 	m_shader.vsc->SetFloatArray(m_pDevice, "Pos", (float*)&eye, 3);
 
-	if (m_pD3DTex[0] != NULL)
+	if (m_texid != -1)
 	{
 		unsigned int s0 = m_shader.psc->GetSamplerIndex("texSampler");
-		m_pDevice->SetTexture(s0, m_pD3DTex[0]);
+		m_pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
 	}
 	else
 	{
@@ -332,14 +327,15 @@ void CformX::Draw(void)
 
 }
 
-void CformX ::SetTexture(LPSTR pTexName,int num)
+void CformX ::SetTexture(int pTexName,int num)
 {
 	if(pTexName!=NULL)
 	{
-		D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex[num]);
+	//	D3DXCreateTextureFromFile(m_pDevice,pTexName,&m_pD3DTex[num]);
 	}else
 	{
-		m_pD3DTex[num]=NULL;
+	//	m_pD3DTex[num]=NULL;
 	}
+	m_texid = pTexName;
 }
 /////////////EOF////////////
