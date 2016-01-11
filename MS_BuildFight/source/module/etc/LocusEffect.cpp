@@ -74,7 +74,7 @@ HRESULT CLocusEffect :: Init(LPDIRECT3DDEVICE9 pDevice,int pTexName)
 	for(int i=0;i<BUFFER_MAX;i++)
 	{
 		PosBuff[i]=D3DXVECTOR3(0.0f,0.0f,0.0f);
-		ColorBuff[i]=D3DXCOLOR(0.0f,0.0f,0.0f,0.0f);
+		ColorBuff[i]=D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 	}
 
 	VERTEX_3D *pVtx;
@@ -221,8 +221,8 @@ void CLocusEffect :: Draw(void)
 		//テクスチャの設定
 		m_pDevice->SetTexture(0, NULL);
 
-		//unsigned int s0 = shaderSet.psc->GetSamplerIndex("texSampler");
-		//m_pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
+		unsigned int s0 = shaderSet.psc->GetSamplerIndex("texSampler");
+		m_pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
 
 		//ポリゴンの描画
 		m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 120);
@@ -254,29 +254,29 @@ void CLocusEffect :: SetPosBuffer(D3DXVECTOR3 pos)
 
 		if(ColorBuff[((i-1)*2)].a>0.0f)
 		{
-			ColorBuff[(i-1)*2].a -= 0.01f;
+			//ColorBuff[(i-1)*2].a -= 0.01f;
 		}else
 		{
-			ColorBuff[(i-1)*2].a = 0.0f;
+			//ColorBuff[(i-1)*2].a = 0.0f;
 		}
 		
 		if(ColorBuff[((i-1)*2)+1].a>0.0f)
 		{
-			ColorBuff[((i-1)*2)+1].a -= 0.03f;
+			//ColorBuff[((i-1)*2)+1].a -= 0.03f;
 		}else
 		{
-			ColorBuff[((i-1)*2)+1].a = 0.0f;
+			//ColorBuff[((i-1)*2)+1].a = 0.0f;
 		}
 
 		ColorBuff[i*2+1]=ColorBuff[((i-1)*2)+1];
 		ColorBuff[i*2]=ColorBuff[(i-1)*2];
 	}
 
-	PosBuff[0]=D3DXVECTOR3(posA.x,posA.y+3.0f,posA.z);
-	PosBuff[1]=D3DXVECTOR3(posA.x,posA.y+18.0f,posA.z);
+	PosBuff[0]=D3DXVECTOR3(posA.x-18.0f,posA.y,posA.z);
+	PosBuff[1]=D3DXVECTOR3(posA.x+18.0f,posA.y,posA.z);
 
-	ColorBuff[0]=D3DXCOLOR(1.0f,0.0f,0.0f,0.2f);
-	ColorBuff[1]=D3DXCOLOR(0.0f,0.0f,1.0f,0.8f);
+	ColorBuff[0]=D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+	ColorBuff[1]=D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 
 }
 /////////////EOF////////////

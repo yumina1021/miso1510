@@ -166,6 +166,12 @@
     <ClCompile Include="source\administer\Texture.cpp">
       <Filter>source\administer</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\etc\ShotEffect.cpp">
+      <Filter>source\module\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\BlowShot.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -350,6 +356,12 @@
     </ClInclude>
     <ClInclude Include="source\administer\Texture.h">
       <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\etc\ShotEffect.h">
+      <Filter>source\module\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\BlowShot.h">
+      <Filter>source\module\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

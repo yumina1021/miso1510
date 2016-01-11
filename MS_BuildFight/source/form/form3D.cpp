@@ -292,6 +292,10 @@ void Cform3D :: Uninit(void)
 //=============================================================================
 void Cform3D :: Update(void)
 {
+	CCamera* pCamera = CManager::GetCamera();
+	eye = pCamera->GetPosP();
+	at = pCamera->GetPosR();
+	up = pCamera->GetVecUp();
 }
 //=============================================================================
 // 描画
@@ -329,6 +333,53 @@ void Cform3D :: Draw(void)
 
 	//頂点バッファをデータストリームにバインド
 	m_pDevice->SetStreamSource(0,m_pD3DVtxBuff,0,sizeof(VERTEX_3D));
+
+	//頂点フォーマットの設定
+	m_pDevice->SetFVF(FVF_VERTEX_3D);
+
+	//ポリゴンの描画
+	m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, NUM_POLYGON);
+
+	m_pDevice->SetVertexShader(nullptr);
+
+	m_pDevice->SetPixelShader(nullptr);
+}
+//=============================================================================
+// 描画
+//=============================================================================
+void Cform3D::Draw2(void)
+{
+	D3DXMATRIX  mtxWorld;
+	D3DXMATRIX mtxScl, mtxRot, mtxTranslate, view, proj;
+
+	//マトリックスの設定
+	D3DXMatrixIdentity(&mtxWorld);
+
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Rot.y, m_Rot.x, m_Rot.z);
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
+
+	D3DXMatrixTranslation(&mtxTranslate, m_Pos.x, m_Pos.y, m_Pos.z);
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTranslate);
+
+	D3DXMatrixLookAtLH(&view, &eye, &at, &up);
+
+	D3DXMatrixPerspectiveFovLH(&proj, D3DX_PI / 4.0f, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 10.0f, 10000.0f);
+
+	D3DXMATRIX wvp = mtxWorld*view*proj;
+
+	m_shader.vsc->SetMatrix(m_pDevice, "world", &mtxWorld);
+	m_shader.vsc->SetMatrix(m_pDevice, "gWvp", &wvp);
+
+	unsigned int s0 = m_shader.psc->GetSamplerIndex("texSampler");
+	m_pDevice->SetTexture(s0, CTexture::GetTex(m_texid));
+
+	m_shader.vsc->SetVector(m_pDevice, "MatDiffuse", (D3DXVECTOR4*)&m_pColor);
+
+	m_pDevice->SetVertexShader(m_shader.vs);
+	m_pDevice->SetPixelShader(m_shader.ps);
+
+	//頂点バッファをデータストリームにバインド
+	m_pDevice->SetStreamSource(0, m_pD3DVtxBuff, 0, sizeof(VERTEX_3D));
 
 	//頂点フォーマットの設定
 	m_pDevice->SetFVF(FVF_VERTEX_3D);

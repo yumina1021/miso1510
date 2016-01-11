@@ -87,8 +87,10 @@
     <ClCompile Include="source\administer\Texture.cpp" />
     <ClCompile Include="source\administer\wiicon\wiimote.cpp" />
     <ClCompile Include="source\administer\wiicon\WiiRemote.cpp" />
+    <ClCompile Include="source\module\etc\ShotEffect.cpp" />
     <ClCompile Include="source\module\Gimmick\Gimmick.cpp" />
     <ClCompile Include="source\module\Gimmick\Magnet.cpp" />
+    <ClCompile Include="source\module\ui\BlowShot.cpp" />
     <ClCompile Include="source\module\ui\Button.cpp" />
     <ClCompile Include="source\module\ui\Cursor.cpp" />
     <ClCompile Include="source\administer\Debugproc.cpp" />
@@ -146,8 +148,10 @@
     <ClInclude Include="source\administer\wiicon\wiimote_common.h" />
     <ClInclude Include="source\administer\wiicon\wiimote_state.h" />
     <ClInclude Include="source\administer\wiicon\WiiRemote.h" />
+    <ClInclude Include="source\module\etc\ShotEffect.h" />
     <ClInclude Include="source\module\Gimmick\Gimmick.h" />
     <ClInclude Include="source\module\Gimmick\Magnet.h" />
+    <ClInclude Include="source\module\ui\BlowShot.h" />
     <ClInclude Include="source\module\ui\Button.h" />
     <ClInclude Include="source\module\ui\Cursor.h" />
     <ClInclude Include="source\administer\data.h" />
