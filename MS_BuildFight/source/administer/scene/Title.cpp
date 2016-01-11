@@ -27,6 +27,11 @@
 
 #include "../wiicon/wiimote.h"
 
+#include "../../Live2D/Live2DManager.h"
+
+#include "../entityFactory.hpp"
+#include "../finalize.hpp"
+
 #include "../../administer/Debugproc.h"
 
 //*****************************************************************************
@@ -48,6 +53,8 @@ const float CHAR_HEIGHT(600.0f);
 
 const int LOGO_WIDTH(800.0f);			//メニューの横サイズ
 const int LOGO_HEIGHT(250.0f);			//メニューの縦サイズ
+
+Live2DManager* l2dManager;
 
 //=============================================================================
 // コンストラクタ
@@ -84,6 +91,9 @@ CTitle :: ~CTitle(void)
 HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 
+	dxDevice = pDevice;
+
+
 	//背景の作成
 	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
@@ -116,6 +126,8 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//サウンド再生の作成
 	pSound->Play(SOUND_LABEL_BGM000);
 
+	l2dManager = Factory::Create<Live2DManager>();
+	l2dManager->Init(pDevice);
 
 	//フェードの作成
 	m_pFade = CFade::Create(pDevice, 1);
@@ -134,6 +146,8 @@ void CTitle :: Uninit(void)
 
 	//サウンド再生の作成
 	pSound->Stop();
+
+	SafeDelete(l2dManager);
 
 	//シーンを全て終了
 	Cform::ReleaseAll();
@@ -201,6 +215,8 @@ void CTitle :: Update(void)
 
 	}
 
+	l2dManager->Update();
+
 #ifdef _DEBUG
 
 	CDebugProc::Print("選択中のボタン:%d\n", m_nCursor);
@@ -213,8 +229,6 @@ void CTitle :: Update(void)
 //=============================================================================
 void CTitle :: Draw(void)
 {
-	//m_pBackGround->Draw();
-
 	m_pDome->Draw();
 	m_pDome2->Draw();
 
@@ -238,8 +252,11 @@ void CTitle :: Draw(void)
 
 	}
 
+
 	//フェード
 	m_pFade->Draw();
+
+	//l2dManager->Draw(dxDevice);
 
 }
 //=============================================================================
