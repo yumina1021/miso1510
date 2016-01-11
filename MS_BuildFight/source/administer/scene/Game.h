@@ -37,7 +37,9 @@ class CScenario;
 class CformX;
 class CNumber;
 
+class CShotEffect;
 class CGimmick;
+class CBlowShot;
 
 enum GAME_PHASE
 {
@@ -47,6 +49,7 @@ enum GAME_PHASE
 	POWER_PHASE,
 	MOVE_PHASE,
 	JUDGE_PHASE,
+	CUPIN_PHASE,
 	END_PHASE,
 	CHANGE_PHASE,
 	MAX_PHASE,
@@ -68,6 +71,7 @@ public:
 	void SetPos_W(D3DXVECTOR3 pos){ m_Pos = pos; };				// 位置を取得
 };
 
+#define SHOT_EFFECT	(16)
 class CGame  : public CScene
 {
 	public:
@@ -108,6 +112,35 @@ class CGame  : public CScene
 		static bool ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length);
 		static D3DXVECTOR3 GetVectorShot(void){ return m_PowerShot; }
 		static D3DXVECTOR3 GetPlayerCamera(void){ return m_playercamera; }
+		static bool calcRaySphere(
+			D3DXVECTOR3 l,
+			D3DXVECTOR3 v,
+			D3DXVECTOR3 p,
+			float r) {
+			p.x = p.x - l.x;
+			p.y = p.y - l.y;
+			p.z = p.z - l.z;
+
+			float A = v.x * v.x + v.y * v.y + v.z * v.z;
+			float B = v.x * p.x + v.y * p.y + v.z * p.z;
+			float C = p.x * p.x + p.y * p.y + p.z * p.z - r * r;
+
+			if (A == 0.0f)
+				return false; // レイの長さが0
+
+			float s = B * B - A * C;
+			if (s < 0.0f)
+				return false; // 衝突していない
+
+			s = sqrtf(s);
+			float a1 = (B - s) / A;
+			float a2 = (B + s) / A;
+
+			if (a1 < 0.0f || a2 < 0.0f)
+			return false; // レイの反対で衝突
+
+			return true;
+		}
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -117,6 +150,7 @@ class CGame  : public CScene
 		void PowerDecision();	//打つ力の決定
 		void BallMove();		//弾移動
 		void Judge();			//結果判定
+		void CupIn();			//結果判定
 		void End();				//終了
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
@@ -145,6 +179,9 @@ class CGame  : public CScene
 		CGauge*			m_pGauge;
 		CScenario*		m_pScenario[2];
 		CformX*			m_cursol;
+		Cform2D*		m_pgoalnavi[4];
+		CShotEffect*	m_pShotEffect[SHOT_EFFECT];
+		CBlowShot*		m_pBlowEffect;
 
 		CGimmick*		m_pGimmick[10];
 
@@ -175,6 +212,8 @@ class CGame  : public CScene
 		bool			m_bcursol;
 		float			m_bcursolmove;
 		static D3DXVECTOR3		m_playercamera;
+
+		bool			m_bnaviFlag[4];
 };
 
 #endif
