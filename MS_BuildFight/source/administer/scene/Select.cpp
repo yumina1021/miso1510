@@ -39,8 +39,8 @@
 const float CHAR_BUTTON_WIDTH(300.0f);
 const float CHAR_BUTTON_HEIGHT(162.0f);
 
-const float CHAR_NAME_WIDTH(325.0f);
-const float CHAR_NAME_HEIGHT(187.5f);
+const float CHAR_NAME_WIDTH(400.0f);
+const float CHAR_NAME_HEIGHT(200.5f);
 
 const float CURSOR_WIDTH(100.0f);
 const float CURSOR_HEIGHT(100.0f);
@@ -116,7 +116,7 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	pSound->Play(SOUND_LABEL_BGM001);
 
 	//背景の作成
-	m_pBackGround = Cform3D::Create(pDevice, TEXTURE_SELECT, D3DXVECTOR3(0.0f, 0.0f, 406.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pBackGround = Cform3D::Create(pDevice, TEXTURE_SELECT, D3DXVECTOR3(0.0f, 0.0f, 406.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH-390, SCREEN_HEIGHT-220);
 	m_pBackGround->SetDiffuse(1.0f, 1.0f, 1.0f, 0.6f);
 
 	float fScreenWidthHalf((float)SCREEN_WIDTH / 2.0f);
@@ -145,7 +145,6 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pCharFrame[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf - fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	m_pCharFrame[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf - fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	m_pCharFrame[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, TEXTURE_CHARAFRAME, D3DXVECTOR3(fScreenWidthHalf + fCharPicWidthHalf, fScreenHeightHalf + fCharPicHeightHalf, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	//m_pCharFrame[CHARCTER_TYPE::TYPE_1]->SetDiffuse(1.0f, 0.0f, 0.0f, 1.0f);
 
 	// 選択したキャラのモデル
 	m_pCharModPlayer1[CHARCTER_TYPE::TYPE_1] = CPlayerM::Create(pDevice, 0, D3DXVECTOR3(-53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, -D3DX_PI / 8.0f, 0.0f));
@@ -158,17 +157,17 @@ HRESULT CSelect::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pCharModPlayer2[CHARCTER_TYPE::TYPE_4] = CPlayerM::Create(pDevice, 3, D3DXVECTOR3(53.0f, 0.0f, -100.0f), D3DXVECTOR3(0.0f, D3DX_PI / 9.0f, 0.0f));
 
 	// 外枠フレーム
-	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(200.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(200.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_3], D3DXVECTOR3(200.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_4], D3DXVECTOR3(200.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(1100.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(1100.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_3], D3DXVECTOR3(1100.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
-	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_4], D3DXVECTOR3(1100.0f, 650.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(300.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(300.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_3], D3DXVECTOR3(300.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer1[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_4], D3DXVECTOR3(300.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_1] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_1], D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_2] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_2], D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_3] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_3], D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
+	m_pCharNamePlayer2[CHARCTER_TYPE::TYPE_4] = Cform2D::Create(pDevice, pCharNameTex[CHARCTER_TYPE::TYPE_4], D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_NAME_WIDTH, CHAR_NAME_HEIGHT);
 
 	// キャラ選択用ロゴ
-	m_pLogo = CButton::Create(pDevice, s_6, D3DXVECTOR3(SCREEN_WIDTH / 2, 100.0f, 0.0f), 500, 100);
+	m_pLogo = CButton::Create(pDevice, s_8, D3DXVECTOR3(SCREEN_WIDTH / 2, 100.0f, 0.0f), 500, 100);
 
 	// カーソル
 	m_Select[0].pCursor = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), CURSOR_WIDTH, CURSOR_HEIGHT);

@@ -28,20 +28,15 @@ const int CCharPicture::m_apTextureName[] =
 	TEXTURE_S_5,
 	TEXTURE_S_6,
 	TEXTURE_S_7,
+	TEXTURE_S_8,
 	TEXTURE_S_0,
 	TEXTURE_S_0,
-	TEXTURE_S_99,
 
 	TEXTURE_LEVELSTAR,
 	TEXTURE_STAGENAME1,
 	TEXTURE_STAGENAME2,
 	TEXTURE_STAGENAME3,
 	TEXTURE_STAGENAME4,
-
-	TEXTURE_P_CONTINUE,
-	TEXTURE_P_RETRY,
-	TEXTURE_P_QUIT,
-
 };
 //=============================================================================
 // コンストラクタ

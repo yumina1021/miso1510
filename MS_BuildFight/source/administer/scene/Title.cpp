@@ -35,10 +35,11 @@
 const float CAMERA_POS_X(0.0f);
 const float CAMERA_POS_Y(0.0f);
 const float CAMERA_POS_Z(-5000.0f);
+
 const float MENU_WIDTH(400.0f);			//メニューの横サイズ
-const float MENU_HEIGHT(100.0f);			//メニューの縦サイズ
-const float MENU_X((float)SCREEN_WIDTH / 2.0f - MENU_WIDTH / 2.0f);	//メニューのX位置
-const float MENU_Y(675.0f);			//メニューのY位置
+const float MENU_HEIGHT(80.0f);			//メニューの縦サイズ
+const float MENU_X((float)SCREEN_WIDTH / 2.0f);	//メニューのX位置
+const float MENU_Y(500.0f);			//メニューのY位置
 
 const float CHAR_POS_X((float)SCREEN_WIDTH / 2.0f);
 const float CHAR_POS_Y(300.0f);
@@ -86,8 +87,7 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//背景の作成
 	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
-	m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, 500.0f, 0.0f), LOGO_WIDTH, LOGO_HEIGHT);
-	m_pLogo->SetDiffuse(0.0f, 0.0f, 1.0f, 1.0f);
+	m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT/2, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//空の作成
 	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -95,8 +95,9 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pDome2 = CDomeU::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	//文字の配置
-	m_pMenueButton[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X - 10.0f, MENU_Y, 0.0f), MENU_WIDTH, MENU_HEIGHT);
-	m_pMenueButton[GAME_END] = CButton::Create(pDevice, t_end, D3DXVECTOR3(MENU_X + MENU_WIDTH + 10.0f, MENU_Y, 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pMenueButton[GAME_START] = CButton::Create(pDevice, t_stert, D3DXVECTOR3(MENU_X, MENU_Y, 0.0f), MENU_WIDTH, MENU_HEIGHT);
+	m_pMenueButton[GAME_END] = CButton::Create(pDevice, t_end, D3DXVECTOR3(MENU_X, MENU_Y + MENU_HEIGHT + 10.0f, 0.0f), MENU_WIDTH, MENU_HEIGHT);
+
 	m_pCursor[0] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(1000.0f, 600.0f, 0.0f), 64, 64);
 	m_pCursor[1] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 64, 64);
 
@@ -217,6 +218,8 @@ void CTitle :: Draw(void)
 	m_pDome->Draw();
 	m_pDome2->Draw();
 
+	m_pLogo->Draw();
+
 	m_pMenueButton[GAME_START]->Draw();
 	m_pMenueButton[GAME_END]->Draw();
 
@@ -234,8 +237,6 @@ void CTitle :: Draw(void)
 		//m_pCharcterPic[i]->Draw();
 
 	}
-
-	m_pLogo->Draw();
 
 	//フェード
 	m_pFade->Draw();
@@ -268,7 +269,7 @@ void CTitle::KeyCommand(void)
 	else if (m_bChangeFlag != true)
 	{
 
-		if (pInputKeyboard->GetKeyTrigger(DIK_D) || pTmpPad->GetKeyTrigger(WII_BUTTOM_RIGHT))
+		if (pInputKeyboard->GetKeyTrigger(DIK_W) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 		{
 			m_nCursor--;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -278,7 +279,7 @@ void CTitle::KeyCommand(void)
 			}
 
 		}
-		else if (pInputKeyboard->GetKeyTrigger(DIK_A) || pTmpPad->GetKeyTrigger(WII_BUTTOM_LEFT))
+		else if (pInputKeyboard->GetKeyTrigger(DIK_S) || pTmpPad->GetKeyTrigger(WII_BUTTOM_DOWN))
 		{
 			m_nCursor++;
 			//pSound->Play(SOUND_LABEL_SE_SELECT000);

@@ -36,9 +36,8 @@ class CGoal;
 class CScenario;
 class CformX;
 class CNumber;
-class CShotEffect;
+
 class CGimmick;
-class CBlowShot;
 
 enum GAME_PHASE
 {
@@ -52,7 +51,7 @@ enum GAME_PHASE
 	CHANGE_PHASE,
 	MAX_PHASE,
 };
-#define SHOT_EFFECT	(16)
+
 class OBB
 {
 protected:
@@ -96,8 +95,6 @@ class CGame  : public CScene
 		Cform3D *Getform3D(void){ return m_pform3D; };
 		CEffect *GetEffect(int id){ return m_pEffect[id]; };
 		CScore *GetScore(void){ return m_pScore; };
-		CCount *GetCountPar(void){ return m_pCountPar; };
-		CCount *GetCountShot(void){ return m_pCountShot; };
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
@@ -111,36 +108,6 @@ class CGame  : public CScene
 		static bool ColOBBs(D3DXVECTOR3 objpos, D3DXVECTOR3 objsize, D3DXVECTOR3 objrot, D3DXVECTOR3 sphire_pos, float sphire_length);
 		static D3DXVECTOR3 GetVectorShot(void){ return m_PowerShot; }
 		static D3DXVECTOR3 GetPlayerCamera(void){ return m_playercamera; }
-		bool calcRaySphere(
-			D3DXVECTOR3 l,
-			D3DXVECTOR3 v,
-			D3DXVECTOR3 p,
-			float r) {
-			p.x = p.x - l.x;
-			p.y = p.y - l.y;
-			p.z = p.z - l.z;
-
-			float A = v.x * v.x + v.y * v.y + v.z * v.z;
-			float B = v.x * p.x + v.y * p.y + v.z * p.z;
-			float C = p.x * p.x + p.y * p.y + p.z * p.z - r * r;
-
-			if (A == 0.0f)
-				return false; // レイの長さが0
-
-			float s = B * B - A * C;
-			if (s < 0.0f)
-				return false; // 衝突していない
-
-			s = sqrtf(s);
-			float a1 = (B - s) / A;
-			float a2 = (B + s) / A;
-
-			if (a1 < 0.0f || a2 < 0.0f)
-				m_bnaviFlag[2] = true;
-				return false; // レイの反対で衝突
-
-			return true;
-		}
 	private:
 		void ModelInit(LPDIRECT3DDEVICE9 pDevice);
 		void ObjectInit(LPDIRECT3DDEVICE9 pDevice);
@@ -160,13 +127,9 @@ class CGame  : public CScene
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
 		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
-		CEffect*		m_pEffect[11];		//エフェクトのポインター
+		CEffect*		m_pEffect[13];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
-
-		CCount*			m_pCountPar;		//パーポインター
-		CCount*			m_pCountShot;		//打数ポインター
-		CNumber*		m_pDistance[3];		//打数ポインター
-		Cform2D*		m_pyard;
+		CCount*			m_pCountDistance[2];//距離ポインター
 
 		CBackGround*	m_pBackGround;
 		CFade*			m_pFade;
@@ -177,24 +140,20 @@ class CGame  : public CScene
 		CDome*			m_pDome;
 		CDomeU*			m_pDome2;
 		Cform2D*		m_pUI;
-		Cform2D*		m_pgoalnavi[4];
 		static CBall*	m_pBall[2];
 		CGoal*			m_pGoal;
 		CGauge*			m_pGauge;
 		CScenario*		m_pScenario[2];
-		CformX*		m_cursol;
-		CShotEffect*	m_pShotEffect[SHOT_EFFECT];
+		CformX*			m_cursol;
 
 		CGimmick*		m_pGimmick[10];
-
-		CBlowShot*		m_pBlowEffect;
 
 		int				m_nCount;
 		int				m_nClearType;
 		int				m_nCursor;
 		bool			m_bChangeFlag;
-		bool			m_bnaviFlag[4];
 		float			m_fDiffuse;
+		float			m_fCupDistance[2];
 		int				m_nTimerCount;
 		static int		m_nGameStartCount;
 		static bool		m_bVsSelectFlag;
