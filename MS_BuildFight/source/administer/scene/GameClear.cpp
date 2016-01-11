@@ -47,10 +47,10 @@ HRESULT CGameClear :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	//文字の配置
 	m_pEffect[0] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[1] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[2] = CEffect::Create(pDevice, ready1, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_pEffect[0]->SetView(true);
-	m_pEffect[1]->SetView(true);
+	m_pEffect[2]->SetView(true);
 
 	//フェードの作成
 	m_pFade=CFade::Create(pDevice,1);

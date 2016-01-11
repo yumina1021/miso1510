@@ -47,9 +47,9 @@ HRESULT CTutorial :: Init(LPDIRECT3DDEVICE9 pDevice)
 
 	//•¶Žš‚Ì”z’u
 	m_pEffect[0] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pEffect[1] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[2] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[3] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pEffect[1] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[4] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[5] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pEffect[6] = CEffect::Create(pDevice, Tutoriale, D3DXVECTOR3(650.0f, 375.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -136,9 +136,9 @@ void CTutorial :: Draw(void)
 	//m_pBackGround->Draw();
 
 	m_pEffect[0]->Draw();
-	m_pEffect[1]->Draw();
 	m_pEffect[2]->Draw();
 	m_pEffect[3]->Draw();
+	m_pEffect[1]->Draw();
 	m_pEffect[4]->Draw();
 	m_pEffect[5]->Draw();
 	m_pEffect[6]->Draw();

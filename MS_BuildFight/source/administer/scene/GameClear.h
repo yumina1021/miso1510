@@ -32,7 +32,7 @@ class CGameClear  : public CScene
 	private:
 		//static CBackGround*		m_pBackGround;
 		static CFade*			m_pFade;
-		static CEffect*			m_pEffect[2];		//エフェクトのポインター
+		static CEffect*			m_pEffect[3];		//エフェクトのポインター
 		int						m_nCount;
 };
 

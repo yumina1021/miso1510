@@ -18,8 +18,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define COUNT_FIGURE_MAX			(2)
-#define SCORE_MAX			(99)
+#define COUNT_FIGURE_MAX			(3)
+#define SCORE_MAX			(999)
 
 class CNumber;
 //*****************************************************************************
@@ -31,9 +31,9 @@ class CCount  : public Cform
 		CCount(int nPriority = 7);//コンストラクタ
 		~CCount(void);//デストラクタ
 
-		static CCount *Create(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot,int initCnt);
+		static CCount *Create(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int initCnt, int width, int height);
 
-		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXVECTOR3 rot,int initCnt);//初期化
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int initCnt, int width, int height);//初期化
 		void Uninit(void);//終了
 		void Update(void);//更新
 		void Draw(void);//描画

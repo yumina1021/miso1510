@@ -21,8 +21,8 @@
 typedef enum
 {
 	circuit_wall = 0,
+	circuit_wall2,
 	circuit_circle,
-	action,
 	please_shot_rosa,
 	please_shot_lila,
 	please_shot_licht,
@@ -36,6 +36,10 @@ typedef enum
 	ready1,
 	ready2,
 	gage,
+	game_rosa,
+	game_lila,
+	game_licht,
+	game_jiji,
 	/*
 	Eeffect002,
 	Eeffect003,
@@ -98,7 +102,7 @@ class CEffect  : public Cform2D
 		CEffect();//コンストラクタ
 		~CEffect(void);//デストラクタ
 
-		static CEffect *Create(LPDIRECT3DDEVICE9 pDevice, EffectNum nType, D3DXVECTOR3 movePos, D3DXVECTOR3 moveRot, float width=1300, float height=750);
+		static CEffect *Create(LPDIRECT3DDEVICE9 pDevice, EffectNum nType, D3DXVECTOR3 movePos, D3DXVECTOR3 moveRot, float width=SCREEN_WIDTH, float height=SCREEN_HEIGHT);
 
 		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, EffectNum nType, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);//初期化
 		void Uninit(void);//終了

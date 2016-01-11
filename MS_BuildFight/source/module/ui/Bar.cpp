@@ -44,7 +44,7 @@ HRESULT CBar :: Init(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 pos,D3DXCOLOR color,f
 	m_pDevice=pDevice;
 
 	//テクスチャの読み込み
-	m_texid = TEXTURE_BAR2;
+	m_texid = TEXTURE_BLUE;
 	//D3DXCreateTextureFromFile(m_pDevice,"data/TEXTURE/bar2.png",&m_pD3DTex);
 
 	//頂点バッファの生成(メモリの確認)

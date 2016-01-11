@@ -95,8 +95,6 @@ class CGame  : public CScene
 		Cform3D *Getform3D(void){ return m_pform3D; };
 		CEffect *GetEffect(int id){ return m_pEffect[id]; };
 		CScore *GetScore(void){ return m_pScore; };
-		CCount *GetCountPar(void){ return m_pCountPar; };
-		CCount *GetCountShot(void){ return m_pCountShot; };
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
 		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
@@ -129,13 +127,9 @@ class CGame  : public CScene
 		CMeshField*		m_pMeshField;		//メッシュフィールドのポインタ
 		Cform3D*		m_pform3D;			//メッシュフィールドのポインタ
 		static CPlayerM* m_pPlayer[2];			//プレイヤーのポインタ
-		CEffect*		m_pEffect[11];		//エフェクトのポインター
+		CEffect*		m_pEffect[13];		//エフェクトのポインター
 		CScore*			m_pScore;			//スコアのポインター
-
-		CCount*			m_pCountPar;		//パーポインター
-		CCount*			m_pCountShot;		//打数ポインター
-		CNumber*		m_pDistance[3];		//打数ポインター
-		Cform2D*		m_pyard;
+		CCount*			m_pCountDistance[2];//距離ポインター
 
 		CBackGround*	m_pBackGround;
 		CFade*			m_pFade;
@@ -150,7 +144,7 @@ class CGame  : public CScene
 		CGoal*			m_pGoal;
 		CGauge*			m_pGauge;
 		CScenario*		m_pScenario[2];
-		CformX*		m_cursol;
+		CformX*			m_cursol;
 
 		CGimmick*		m_pGimmick[10];
 
@@ -159,6 +153,7 @@ class CGame  : public CScene
 		int				m_nCursor;
 		bool			m_bChangeFlag;
 		float			m_fDiffuse;
+		float			m_fCupDistance[2];
 		int				m_nTimerCount;
 		static int		m_nGameStartCount;
 		static bool		m_bVsSelectFlag;
