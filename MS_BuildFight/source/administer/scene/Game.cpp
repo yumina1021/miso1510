@@ -77,7 +77,6 @@ D3DXVECTOR3		CGame::m_playercamera;
 
 bool g_wiishot;
 int g_movelimit;
-float g_cupdistance;
 key2Con K2CList[8]={
 	{DIK_Z, COMMAND_SHOT},
 	{DIK_X, COMMAND_ATTACK},
@@ -613,7 +612,6 @@ void CGame::TurnStart()
 		{
 			m_nGameStartCount = 0;
 			m_pBall[m_nPlayerNum]->SetAlpha(0.3f);
-			g_cupdistance = abs(D3DXVec3Length(&(m_pBall[m_nPlayerNum]->GetPos() - m_pGoal->GetPos())));
 			D3DXVECTOR3 vec;
 			for (int i = 0; i < SHOT_EFFECT; i++)
 			{
@@ -850,6 +848,10 @@ void CGame::AngleDecision()
 	m_pPlayer[m_nPlayerNum]->SetPos(work_p);
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
+		for (int i = 0; i < 4; i++)
+		{
+			m_bnaviFlag[i] = false;
+		}
 		m_pBall[m_nPlayerNum]->SetAlpha(1.0f);
 		//ベクトルの関数呼ぶ場所
 		m_pEffect[0]->SetView(false);
@@ -882,7 +884,7 @@ void CGame::AngleDecision()
 	else if (goal_vec.y - m_PowerShot.y < -0.2f){ m_bnaviFlag[0] = false; m_bnaviFlag[3] = true; }
 	else{ m_bnaviFlag[0] = false; m_bnaviFlag[3] = false; }
 
-	if (calcRaySphere(ball, m_PowerShot, m_pGoal->GetPos(), g_cupdistance * 0.5f))
+	if (calcRaySphere(ball, m_PowerShot, m_pGoal->GetPos(), m_fCupDistance[m_nPlayerNum]) * 5.0f)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -943,6 +945,7 @@ void CGame:: PowerDecision()
 	//仮　打つ力を決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
+		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(true);
@@ -966,6 +969,7 @@ void CGame:: PowerDecision()
 	//仮　打つ力を決めたから次
 	if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
 	{
+		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(true);
@@ -1009,17 +1013,15 @@ void CGame::BallMove()
 	D3DXVECTOR3 velocity = m_pBall[m_nPlayerNum]->GetVelocity();
 	Magnet();
 	ObjHitCheck();
+	D3DXVECTOR3 bpos = m_pBall[m_nPlayerNum]->GetPos();
+	D3DXVECTOR3 gpos = m_pGoal->GetPos();
+	m_fCupDistance[m_nPlayerNum] = abs(D3DXVec3Length(&(bpos - gpos))) / 10;
+	m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
 	if (abs(velocity.x) < SHOT_RIMIT && abs(velocity.y) < SHOT_RIMIT && abs(velocity.z) < SHOT_RIMIT)
 	{
 		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
-		if (m_pBall[m_nPlayerNum]->GetGoalFlag())m_nSwitchCount = JUDGE_PHASE;
 		m_pBall[m_nPlayerNum]->SetMoveFlag(false);
-		D3DXVECTOR3 bpos = m_pBall[m_nPlayerNum]->GetPos();
-		D3DXVECTOR3 gpos = m_pGoal->GetPos();
-		m_fCupDistance[m_nPlayerNum] = abs(D3DXVec3Length(&(bpos - gpos))) / 10;
-		m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
-		g_cupdistance = abs(D3DXVec3Length(&(m_pBall[m_nPlayerNum]->GetPos() - m_pGoal->GetPos())));
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(false);
@@ -1038,15 +1040,71 @@ void CGame::Judge()
 	{
 		m_bJudge = true;
 	}
+	
+	m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
 
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	//仮　入らなかった交代
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
+	{
+		m_nSwitchCount = END_PHASE;		
+		if (m_pBall[m_nPlayerNum]->GetGoalFlag())
+		{
+			m_nSwitchCount = CUPIN_PHASE;
+			m_fCupDistance[m_nPlayerNum] = 0.0f;
+			m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
+			m_pScenario[m_nPlayerNum]->SetScenarioEndFlag(false);
+			m_pScenario[m_nPlayerNum]->SetViewFlag(true, 0);
+			m_pScenario[m_nPlayerNum]->GameScenario(m_nGameStartCount, CScenario::AFFAIR_WIN);
+		}
+	}
+}
+void CGame::CupIn()
+{
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+	m_pEffect[10]->SetView(true);
+
+	//シナリオが終了したら
+	if (m_pScenario[m_nPlayerNum]->GetScenarioEndFlag())
+	{
+		//エンター押して終了
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
+		{
+			m_nGameStartCount = 0;
+			m_pScenario[m_nPlayerNum]->SetViewFlag(false, 0);
+			m_pGoal->Sethit(0.0f);
+			m_nSwitchCount = END_PHASE;
+			m_pEffect[10]->SetView(false);
+		}
+	}
+	else
+	{
+		//エンター押して次のシナリオ
+		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
+		{
+			m_nGameStartCount++;
+			m_pScenario[m_nPlayerNum]->GameScenario(m_nGameStartCount, CScenario::AFFAIR_WIN);
+		}
+	}
+}
+void CGame::End()
+{
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
+	bool endflag = false;
 	//終了判定  ターン数：時間経過：ゴール入った
 	if ((m_nTurnCount>5) || (m_bJudge) && !(m_bChangeFlag))
 	{
 		m_pEffect[10]->SetView(true);
-		CManager::SetgameEndFlag(true);
 
 		m_nClearType = 2;
-
 		//ＶＳモードなら
 		if (m_bVsSelectFlag == true)
 		{
@@ -1064,46 +1122,22 @@ void CGame::Judge()
 		{
 			CManager::SetWin(PLAYER_DRAW);
 		}
-		m_pFade->StartFade(FADE_IN, 500, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f),CManager::GetSelectChar(0));
 		m_nCount = 0;
-		m_bChangeFlag = true;
+		endflag = true;
 	}
-
-	m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
-
-	//キーボードインプットの受け取り
-	CInputKeyboard *pInputKeyboard;
-	pInputKeyboard = CManager::GetInputKeyboard();
 
 	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
-		m_nSwitchCount = END_PHASE;
-	}
-}
-void CGame::CupIn()
-{
-	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
-	CInputKeyboard *pInputKeyboard;
-	pInputKeyboard = CManager::GetInputKeyboard();
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
-	{
-		m_nSwitchCount = JUDGE_PHASE;
-	}
-
-}
-void CGame::End()
-{
-	//キーボードインプットの受け取り
-	CInputKeyboard *pInputKeyboard;
-	pInputKeyboard = CManager::GetInputKeyboard();
-	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
-
-	//仮　入らなかった交代
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
-	{
+		if (endflag)
+		{
+			m_bChangeFlag = true;
+			CManager::SetgameEndFlag(true);
+			m_pFade->StartFade(FADE_IN, 500, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f), CManager::GetSelectChar(0));
+		} else{
 		m_pGoal->Sethit(0.0f);
 		m_nSwitchCount = CHANGE_PHASE;
+		}
 	}
 
 }
@@ -1240,22 +1274,10 @@ void CGame::ObjHitCheck()
 		switch (m_pGimmick[i]->GetGimmickType())
 		{
 		case GIMMICK_CUBE:
-			if (ColOBBs(obj, size, rot, ball, 5.0f))
-			{
-				if (obj.y + size.y < ball.y || obj.y - size.y > ball.y)
-				{
-					vector.y = -vector.y;
-				}
-				if (obj.x + size.x < ball.x || obj.x - size.x > ball.x)
-				{
-					vector.x = -vector.x;
-				}
-				if (obj.z + size.z < ball.z || obj.z - size.z > ball.z)
-				{
-					vector.z = -vector.z;
-				}
-				m_pBall[m_nPlayerNum]->SetVelocity(vector);
-			}
+			m_pBall[m_nPlayerNum]->AddForce(
+				MagnetMove(N, ball,
+				N,
+				obj));
 			break;
 		case GIMMICK_CLOUD:
 			if (ColOBBs(obj, size, rot, ball, 5.0f))

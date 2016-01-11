@@ -71,7 +71,7 @@ class CCamera
 		float		m_fVectCamera2;
 
 		float		Distance;
-
+		int		m_shottime;
 		D3DXVECTOR3	m_posCameraPDest;//目的の視点
 		D3DXVECTOR3	m_posCameraRDest;//目的の注視点
 
