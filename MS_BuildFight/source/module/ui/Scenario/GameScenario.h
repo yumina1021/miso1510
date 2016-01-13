@@ -51,6 +51,12 @@ GameScenarioData scenario_rosa_harf[3] =
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "まぁまだ本気出してないし…", false },
 	LAST
 };
+GameScenarioData scenario_rosa_cupin[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "入った～", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "気持ちいいプレイだったわ！", false },
+	LAST
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //リーラ（青）
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +83,12 @@ GameScenarioData scenario_lila_harf[3] =
 {
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "同じくらい", false },
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "圧倒的な力の差を見せてあげる", false },
+	LAST
+};
+GameScenarioData scenario_lila_cupin[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "ナイスプレー", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "次も期待するよ…", false },
 	LAST
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +118,12 @@ GameScenarioData scenario_ojyo_harf[3] =
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "その不敬、万死に値する！！", false },
 	LAST
 };
+GameScenarioData scenario_ojyo_cupin[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "ナイスインですわ！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "褒美を与えますわ！", false },
+	LAST
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //tutorial(チュートリアル子)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,5 +150,11 @@ GameScenarioData scenario_tutorial_harf[3] =
 {
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "現在同じくらいの距離です。", false },
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "まだまだ勝敗はわかりません！", false },
+	LAST
+};
+GameScenarioData scenario_tutorial_cupin[3] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "お見事！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "ナイスゲームですよ！", false },
 	LAST
 };

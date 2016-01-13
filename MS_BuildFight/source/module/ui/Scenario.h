@@ -42,6 +42,7 @@ class CScenario
 			AFFAIR_WIN,
 			AFFAIR_LOSE,
 			AFFAIR_HALF,
+			AFFAIR_CUPIN,
 			AFFAIR_ALL
 		};
 

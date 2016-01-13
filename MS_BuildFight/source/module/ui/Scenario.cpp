@@ -157,6 +157,15 @@ void CScenario::GameScenario(int count, GameAffair affair)
 				case 3:data = scenario_tutorial_harf[m_nCount]; break;
 				}
 			break;
+			case AFFAIR_CUPIN:
+				switch (m_charaType)
+				{
+				case 0:data = scenario_rosa_cupin[m_nCount]; break;
+				case 1:data = scenario_lila_cupin[m_nCount]; break;
+				case 2:data = scenario_ojyo_cupin[m_nCount]; break;
+				case 3:data = scenario_tutorial_cupin[m_nCount]; break;
+				}
+			break;
 		}
 
 		if (data.lastflag == true)

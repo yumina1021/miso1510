@@ -40,6 +40,7 @@ class CNumber;
 class CShotEffect;
 class CGimmick;
 class CBlowShot;
+class CCupin;
 
 enum GAME_PHASE
 {
@@ -182,6 +183,7 @@ class CGame  : public CScene
 		Cform2D*		m_pgoalnavi[4];
 		CShotEffect*	m_pShotEffect[SHOT_EFFECT];
 		CBlowShot*		m_pBlowEffect;
+		CCupin*			m_pCupin;
 
 		CGimmick*		m_pGimmick[10];
 
@@ -213,7 +215,9 @@ class CGame  : public CScene
 		float			m_bcursolmove;
 		static D3DXVECTOR3		m_playercamera;
 
+		float			m_fnavimove;
 		bool			m_bnaviFlag[4];
+		bool			m_bBlowShot;
 };
 
 #endif

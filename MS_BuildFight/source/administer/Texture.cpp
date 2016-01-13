@@ -105,6 +105,12 @@ char* g_aParam[TEXTURE_LABEL_MAX] =
 	{ "data/TEXTURE/result/lila_lose.jpg" },
 	{ "data/TEXTURE/result/jiji_win.jpg" },
 	{ "data/TEXTURE/result/jiji_lose.jpg" },
+	{ "data/TEXTURE/goal_navi.png" },
+	{ "data/TEXTURE/cupin_c.png" },
+	{ "data/TEXTURE/cupin_u.png" },
+	{ "data/TEXTURE/cupin_p.png" },
+	{ "data/TEXTURE/cupin_i.png" },
+	{ "data/TEXTURE/cupin_n.png" },
 };
 //=============================================================================
 // コンストラクタ

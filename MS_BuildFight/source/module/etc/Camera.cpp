@@ -432,7 +432,7 @@ void CCamera::MoveCamera(void)
 
 	//’Ž‹“_À•WÝ’è
 	m_posCameraP = posModel;
-	if (m_shottime > 120)m_posCameraP = EposModel + ErotModel * -200.0f;
+	if (m_shottime > 90)m_posCameraP = EposModel + ErotModel * -200.0f;
 	m_posCameraR = EposModel;
 	//m_posPointView = pBall->GetPos();
 }
