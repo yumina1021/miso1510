@@ -57,6 +57,7 @@
 #include "../../module/ui/BlowShot.h"
 
 #include "../../module/ui/Cupin.h"
+#include "../../module/ui/Map.h"
 
 #define PLAYER_MAX	(2)	//プレイヤー数
 #define SHOT_RIMIT	(0.05f)
@@ -197,6 +198,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBlowEffect = CBlowShot::Create(pDevice, m_nPnum, m_nEnum);
 
 	m_pCupin = CCupin::Create(pDevice);
+
+	m_pMap = CMap::Create(pDevice,m_pBall,m_pGoal);
 	float length_n = 100.0f;
 	//m_pgoalnavi[0] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH / 2, length_n, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), length_n, length_n);
 	//m_pgoalnavi[1] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(length_n, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI / 2), length_n, length_n);
@@ -295,6 +298,8 @@ void CGame :: Uninit(void)
 	delete m_pBlowEffect;
 	m_pCupin->Uninit();
 	delete m_pCupin;
+	m_pMap->Uninit();
+	delete m_pMap;
 	//シーンを全て終了
 	Cform::ReleaseAll();
 }
@@ -483,6 +488,7 @@ void CGame :: Update(void)
 			CManager::SetAfterScene(PHASETYPE_VSEND);
 		}
 	}
+	m_pMap->Update();
 }
 //=============================================================================
 // 描画
@@ -529,6 +535,7 @@ void CGame :: Draw(void)
 				m_pShotEffect[i]->Draw();
 			}
 		}
+		m_pMap->Draw();
 		m_pCupin->Draw();
 		for (int i = 0; i < EFFECT_MAX; i++)
 		{
@@ -1264,8 +1271,8 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 
-	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 300.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(400.0f, -300.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_cursol = CformX::Create(pDevice, "data/MODEL/cursol.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
@@ -1273,7 +1280,7 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
 {
 	// ファイル読みこみに後に変更
-	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 600.0f,600.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 600.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGoal->SetMagnet(S);
 
 	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_STOP, D3DXVECTOR3(400.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));

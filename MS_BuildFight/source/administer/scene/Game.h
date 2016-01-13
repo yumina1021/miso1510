@@ -41,6 +41,7 @@ class CShotEffect;
 class CGimmick;
 class CBlowShot;
 class CCupin;
+class CMap;
 
 enum GAME_PHASE
 {
@@ -184,6 +185,7 @@ class CGame  : public CScene
 		CShotEffect*	m_pShotEffect[SHOT_EFFECT];
 		CBlowShot*		m_pBlowEffect;
 		CCupin*			m_pCupin;
+		CMap*			m_pMap;
 
 		CGimmick*		m_pGimmick[10];
 
