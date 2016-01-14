@@ -72,7 +72,11 @@ public:
 	void SetLen_W(int elem, float length){ m_fLength[elem] = length; };			// 指定軸方向の長さを取得
 	void SetPos_W(D3DXVECTOR3 pos){ m_Pos = pos; };				// 位置を取得
 };
-
+typedef struct
+{
+	D3DXVECTOR3 pos;	// 各モデルのキー要素
+	float size;	// 各モデルのキー要素
+} STAGE_INFO;
 #define SHOT_EFFECT	(16)
 class CGame  : public CScene
 {
@@ -157,6 +161,7 @@ class CGame  : public CScene
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
 		void Magnet();
+		void LoadGiimick(LPDIRECT3DDEVICE9 pDevice);
 
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
@@ -188,6 +193,7 @@ class CGame  : public CScene
 		CMap*			m_pMap;
 
 		CGimmick*		m_pGimmick[10];
+		CGimmick**		m_pGimmick_stage;
 
 		int				m_nCount;
 		int				m_nClearType;
@@ -211,6 +217,7 @@ class CGame  : public CScene
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
 		D3DXVECTOR3		m_vecrot;
+		D3DXVECTOR3		m_startpos[2];
 		float		m_playerrot_x;
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
@@ -220,6 +227,8 @@ class CGame  : public CScene
 		float			m_fnavimove;
 		bool			m_bnaviFlag[4];
 		bool			m_bBlowShot;
+		int				m_nStagenum;
+		STAGE_INFO*		m_nStageinfo;
 };
 
 #endif

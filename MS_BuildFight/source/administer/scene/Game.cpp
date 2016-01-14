@@ -1009,7 +1009,8 @@ void CGame:: PowerDecision()
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
 	}
 	//‰¼@‘Å‚Â—Í‚ðŒˆ‚ß‚½‚©‚çŽŸ
-	if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
+	//if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
+	if (g_wiishot&&abs(wiicon->GetWiiYaw()) > 40.0f)
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		for (int i = 0; i < SHOT_EFFECT; i++)
@@ -1061,9 +1062,11 @@ void CGame::BallMove()
 	m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
 	if (abs(velocity.x) < SHOT_RIMIT && abs(velocity.y) < SHOT_RIMIT && abs(velocity.z) < SHOT_RIMIT)
 	{
-		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pBall[0]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pBall[1]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
-		m_pBall[m_nPlayerNum]->SetMoveFlag(false);
+		m_pBall[0]->SetMoveFlag(false);
+		m_pBall[1]->SetMoveFlag(false);
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(false);
@@ -1265,14 +1268,16 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_nPnum = CManager::GetSelectChar(0);
 	m_nEnum = CManager::GetSelectChar(1);
 	ObjectInit(pDevice);
+	m_startpos[0] = D3DXVECTOR3(0.0f, 300.0f, 400.0f);
+	m_startpos[1] = D3DXVECTOR3(400.0f, -300.0f, 0.0f);
 
 	m_pPlayer[0] = CPlayerM::Create(pDevice, m_nPnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 
-	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 300.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(400.0f, -300.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[0] = CBall::Create(pDevice, m_nPnum, m_startpos[0], D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, m_nEnum, m_startpos[1], D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	m_cursol = CformX::Create(pDevice, "data/MODEL/cursol.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
@@ -1326,12 +1331,14 @@ void CGame::ObjHitCheck()
 			if (m_nPlayerNum == 0)
 			{
 				m_pBall[1]->AddForce(vecball * 0.5f + vec);
+				m_pBall[1]->SetMoveFlag(true);
 				m_pBall[0]->SetVelocity(vecball * 0.5f - vec);
 			}
 			else
 			{
-				m_pBall[0]->AddForce(vecball * 0.5f + vec);
-				m_pBall[1]->SetVelocity(vecball * 0.5f - vec);
+				m_pBall[0]->AddForce(vecball * 0.5f - vec);
+				m_pBall[0]->SetMoveFlag(true);
+				m_pBall[1]->SetVelocity(vecball * 0.5f + vec);
 			}
 		}
 	}
@@ -1458,4 +1465,67 @@ void CGame::Magnet(void)
 			}
 		}
 	}
+}
+void CGame::LoadGiimick(LPDIRECT3DDEVICE9 pDevice)
+{
+
+	char defDif[MAX_PATH] = { NULL };
+	FILE *fp;
+	fp = fopen(defDif, "rb");
+	int loadnum;
+	fscanf(fp, "%d\n", &loadnum);
+	fseek(fp, 0, SEEK_SET);
+	fseek(fp, sizeof(int), SEEK_SET);
+
+	m_nStageinfo = new STAGE_INFO[loadnum];
+
+	for (int n = 0; n < loadnum; n++)
+	{
+		int type = 0;
+		float special = 0;
+		D3DXVECTOR3 pos;
+		D3DXVECTOR3 size;
+		D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		fscanf(fp, "%f,%f,%f\n", &pos.x, &pos.y, &pos.z);
+		fscanf(fp, "%f,%f,%f\n", &size.x, &size.y, &size.z);
+		m_nStageinfo[n].pos = pos;
+		m_nStageinfo[n].size = size.x;
+	}
+	fclose(fp);
+	fp = fopen(defDif, "rb");
+	fscanf(fp, "%d\n", &loadnum);
+	fseek(fp, 0, SEEK_SET);
+	fseek(fp, sizeof(int), SEEK_SET);
+	m_pGimmick_stage = new CGimmick*[loadnum - 2];
+	for (int n = 0; n < loadnum; n++)
+	{
+		char name[256];
+		char fname[256];
+		int type;
+		float special;
+		D3DXVECTOR3 pos;
+		D3DXVECTOR3 size;
+		D3DXVECTOR3 rot;
+		D3DXVECTOR3 scale;
+		fscanf(fp, "%s\n", &name);
+		fscanf(fp, "%d\n", &type);
+		fscanf(fp, "%f,%f,%f\n", &pos.x, &pos.y, &pos.z);
+		fscanf(fp, "%f,%f,%f\n", &size.x, &size.y, &size.z);
+		fscanf(fp, "%f,%f,%f\n", &rot.x, &rot.y, &rot.z);
+		fscanf(fp, "%f\n", &scale.x);
+		fscanf(fp, "%f\n", &special);
+		sprintf(fname, "%s", strstr(name, "object"));
+		scale.y = scale.z = scale.x;
+		if (type < GIMMICK_MAX)
+		{
+			m_pGimmick[n] = CGimmick::Create(pDevice, (GIMMICKTYPE)type, (MOVETYPE)((int)special), pos, size);
+		}
+		else
+		{
+			if (n == GIMMICK_MAX){ m_startpos[0] = pos; }
+			else{ m_startpos[1] = pos; }
+
+		}
+	}
+	fclose(fp);
 }
