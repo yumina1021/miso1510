@@ -248,7 +248,8 @@ HRESULT CResult :: Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	//”wŒi¶¬
-	m_pform3D[0] = Cform3D::Create(m_pD3DDevice, TEXTURE_SKY004, D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI / 2.0f*3.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
+	//m_pform3D[0] = Cform3D::Create(m_pD3DDevice, TEXTURE_S_7, D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, -D3DX_PI / 2.0f, -D3DX_PI / 2.0f*3.0f), 3250, 5900);
+	m_pform3D[0] = Cform3D::Create(m_pD3DDevice, TEXTURE_BACKGTROUND, D3DXVECTOR3(SCREEN_WIDTH / 2 - 630, SCREEN_HEIGHT / 2 - 350, 100.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, -D3DX_PI / 2.0f, -D3DX_PI / 2.0f*3.0f), 5500, 3000);
 
 	m_pform2D[0] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(0)][0], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_pform2D[1] = Cform2D::Create(m_pManager->GetDevice(), g_RewardTexture[m_pManager->GetSelectChar(1)][1], D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);

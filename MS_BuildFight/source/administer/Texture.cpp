@@ -105,6 +105,7 @@ char* g_aParam[TEXTURE_LABEL_MAX] =
 	{ "data/TEXTURE/result/lila_lose.jpg" },
 	{ "data/TEXTURE/result/jiji_win.jpg" },
 	{ "data/TEXTURE/result/jiji_lose.jpg" },
+	{ "data/TEXTURE/background.jpg" },
 };
 //=============================================================================
 // コンストラクタ

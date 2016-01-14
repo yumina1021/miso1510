@@ -36,7 +36,6 @@ typedef enum
 typedef enum
 {
 	VOICE_LABEL_SE_WIN=0,		// 
-
 	VOICE_LABEL_MAX
 } VOICE_LABEL;
 
