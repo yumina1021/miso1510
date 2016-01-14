@@ -16,7 +16,7 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 	{ "data/BGM/BGM_TITLE.wav",		true },
 	{ "data/BGM/BGM_SELECT.wav",	true },
 	{ "data/BGM/BGM_GAME.wav",		true },
-	{ "data/BGM/BGM_RESULT.wav",	true },
+	{ "data/BGM/BGM_RESULT2.wav",	true },
 	{ "data/BGM/INFINITE_SKY.wav",	true },
 	{ "data/SE/cursor.wav",			false },
 	{ "data/SE/button.wav",			false },
@@ -30,13 +30,13 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 
 PARAM g_aParamVoice[CHARACTER_MAX][VOICE_LABEL_MAX] =
 {
-	{ { "data/SE/VOICE/rosa_result.wav", false } },
+	{ { "data/SE/VOICE/lila/SpecialTrick_lila.wav", false }, },
 
-	{ { "data/SE/VOICE/rosa_result.wav", false } },
+	{ { "data/SE/VOICE/rosa/rosa_result.wav", false } },
 
-	{ { "data/SE/VOICE/rosa_result.wav", false } },
+	{ { "data/SE/VOICE/rosa/rosa_result.wav", false } },
 
-	{ { "data/SE/VOICE/rosa_result.wav", false } },
+	{ { "data/SE/VOICE/rosa/rosa_result.wav", false } }
 
 };
 //=============================================================================
