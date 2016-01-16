@@ -17,9 +17,16 @@
 #include "L2DExpressionMotion.h"
 #include "L2DMotionManager.h"
 #include "include\motion\Live2DMotion.h"
+#include "../common.h"
 
 //*****************************************************************************
 // Macro
+//*****************************************************************************
+static const int MAX_LOAD_EX(20);
+static const int MAX_LOAD_MOTION(20);
+
+//*****************************************************************************
+// Enum
 //*****************************************************************************
 
 //*****************************************************************************
@@ -34,6 +41,13 @@ using namespace live2d::framework;
 class Live2DModel
 {
 public:
+	enum MODEL_TYPE
+	{
+		ROSA = 0,
+		LILA,
+		LICHT,
+		NAVI,
+	};
 	//=============================================================================
 	// FunctionName: Constructor
 	// Param: void
@@ -54,7 +68,7 @@ public:
 	// ParamValue: DirectXデバイス
 	// Content: 初期化
 	//=============================================================================
-	bool Init(LPDIRECT3DDEVICE9 paramDevice);
+	bool Init(MODEL_TYPE paramType, LPDIRECT3DDEVICE9 paramDevice);
 
 	//=============================================================================
 	// FunctionName: Update
@@ -71,6 +85,35 @@ public:
 	// Content: 描画
 	//=============================================================================
 	void Draw(LPDIRECT3DDEVICE9 paramDevice);
+
+	//=============================================================================
+	// FunctionName: TalkStart
+	// Param: void
+	// ReturnValue: void
+	// Content: 口パクの更新
+	//=============================================================================
+	void TalkStart(){ talkStartFlg = true; };
+
+	//=============================================================================
+	// FunctionName: TalkStart
+	// Param: void
+	// ReturnValue: void
+	// Content: 口パクの更新
+	//=============================================================================
+	void TalkEnd();
+
+
+	//=============================================================================
+	// Setter
+	//=============================================================================
+	void SetPos(D3DXVECTOR3 paramPos){ pos = paramPos; };
+	void SetScl(D3DXVECTOR3 paramScl){ scl = paramScl; };
+
+	//=============================================================================
+	// Getter
+	//=============================================================================
+	D3DXVECTOR3 GetPos(){ return pos; };
+	D3DXVECTOR3 GetScl(){ return scl; };
 
 private:
 	//=============================================================================
@@ -120,7 +163,7 @@ private:
 	// ReturnValue: モーションのポインタ
 	// Content: Live2Dのモーションの生成
 	//=============================================================================
-	AMotion* CreateMotion(const char* paramFilePath);
+	AMotion* CreateMotion(const char* paramFilePath, const int paramCnt);
 
 	//=============================================================================
 	// FunctionName: CreateExMotion
@@ -128,26 +171,82 @@ private:
 	// ReturnValue: ポインタ
 	// Content: Live2Dの表情モーションの生成
 	//=============================================================================
-	L2DExpressionMotion* CreateExMotion(const char* paramFilePath);
+	L2DExpressionMotion* CreateExMotion(const char* paramFilePath, const int paramCnt);
 
 	//=============================================================================
 	// FunctionName: LoadTexture
 	// Param: 読み込むテクスチャのパス
+	// Param: DirectXデバイス
+	// Param: テクスチャのインデックス
 	// ReturnValue: 読み込み結果
 	// Content: テクスチャの読み込み
 	//=============================================================================
 	bool LoadTexture(const LPCWSTR paramFilePath, LPDIRECT3DDEVICE9 paramDevice, int paramTexNum);
 
+	//=============================================================================
+	// FunctionName: LoadCharcterTexture
+	// Param: モデル用のテクスチャのインデックス
+	// Param: DirectXデバイス
+	// ReturnValue: 読み込み結果
+	// Content: テクスチャの読み込み
+	//=============================================================================
+	bool LoadCharcterTexture(MODEL_TYPE paramtype, LPDIRECT3DDEVICE9 paramDevice);
+
+	//=============================================================================
+	// FunctionName: CreateCharcterExMotion
+	// Param: 表情モーション用のインデックス
+	// ReturnValue: 読み込み結果
+	// Content: キャラ別の表情モーションの生成
+	//=============================================================================
+	bool CreateCharcterExMotion(MODEL_TYPE paramtype);
+
+	//=============================================================================
+	// FunctionName: CreateCharctexMotion
+	// Param: モーション用のインデックス
+	// ReturnValue: 読み込み結果
+	// Content: キャラ別のモーションの生成
+	//=============================================================================
+	bool CreateCharcterMotion(MODEL_TYPE paramtype);
+
+	//=============================================================================
+	// FunctionName: UpdateTalk
+	// Param: void
+	// ReturnValue: void
+	// Content: 口パクの更新
+	//=============================================================================
+	void UpdateTalk();
+
+	//=============================================================================
+	// FunctionName: EsasingNone
+	// Param: 最小値
+	// Param: 最大値
+	// Param: 係数用の時間
+	// ReturnValue: 補間結果の数値
+	// Content: イージング
+	//=============================================================================
+	float EsasingNone(float paramMin, float paramMax, float paramTime);
+
+	LPDIRECT3DTEXTURE9 tex[3];
+
 	l2d_int64 startTimeMSec;
-	Live2DModelD3D* live2DModel;
-	L2DEyeBlink* eyeBlink;
-	L2DPose* pose;
-	L2DPhysics*	physics;
-	L2DExpressionMotion* exMotion1;
-	L2DExpressionMotion* exMotion2;
-	L2DMotionManager* motionMgr;
-	AMotion* motion1;
-	AMotion* motion2;
+	Live2DModelD3D* live2DModelPtr;
+	L2DEyeBlink* eyeBlinkPtr;
+	L2DPose* posePtr;
+	L2DPhysics*	physicsPtr;
+	L2DExpressionMotion* exMotionPtr[MAX_LOAD_EX];
+	AMotion* motionPtr[MAX_LOAD_MOTION];
+	L2DMotionManager motionMgr;
+	MODEL_TYPE type;
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 scl;
+	int createMotionCnt;
+	int createExMotionCnt;
+	bool talkStartFlg;
+	float mouthCoff;
+
+	SHADER_SET				shader;
+
+
 };
 
 #endif// _LIVE2D_MODEL_H_

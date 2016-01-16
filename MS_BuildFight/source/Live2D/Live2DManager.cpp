@@ -10,6 +10,8 @@
 #include "Live2DModel.h"
 #include "../administer/finalize.hpp"
 #include "../administer/entityFactory.hpp"
+#include "../administer/Input.h"
+#include "../administer/Maneger.h"
 
 #include <stdio.h>
 
@@ -45,7 +47,7 @@ Live2DManager::Live2DManager(){
 Live2DManager::~Live2DManager(){
 
 	SafeDelete(mod);
-
+	Live2D::dispose();
 }// ~Live2DManager
 //=============================================================================
 // Init
@@ -59,7 +61,9 @@ bool Live2DManager::Init(LPDIRECT3DDEVICE9 paramDevice){
 	mod = Factory::Create<Live2DModel>();
 
 	// 初期化
-	mod->Init(paramDevice);
+	mod->Init(Live2DModel::MODEL_TYPE::ROSA, paramDevice);
+	mod->SetPos(D3DXVECTOR3(-500.0f, -500.0f, 0.0f));
+	mod->SetScl(D3DXVECTOR3(0.7f, 0.7f, 1.0f));
 
 	// 成功
 	return S_OK;
@@ -71,6 +75,18 @@ bool Live2DManager::Init(LPDIRECT3DDEVICE9 paramDevice){
 void Live2DManager::Update(void){
 
 	mod->Update();
+
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_R))
+		mod->TalkStart();
+
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_T))
+		mod->TalkEnd();
 
 }
 //=============================================================================

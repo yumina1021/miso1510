@@ -28,6 +28,7 @@ class CDome;
 class CDomeU;
 class CMeshField;
 class Cform2D;
+class Cform3D;
 class CTitle  : public CScene
 {
 	enum SELECT_TYPE
@@ -67,7 +68,7 @@ class CTitle  : public CScene
 		CDome*			m_pDome;
 		CDomeU*			m_pDome2;
 		CMeshField*		m_pMeshField;
-		Cform2D*		m_pLogo;
+		Cform3D*		m_pLogo;
 		Cform2D*		m_pCharcterPic[3];
 		int				m_nCursor;			//カーソル
 		bool			m_bChangeFlag;		//シーン切替フラグ

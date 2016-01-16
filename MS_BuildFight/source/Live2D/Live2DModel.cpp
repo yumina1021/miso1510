@@ -9,6 +9,8 @@
 #include "Live2DModel.h"
 #include "../administer/finalize.hpp"
 #include "../administer/entityFactory.hpp"
+#include "../administer/Input.h"
+#include "../exten_common.h"
 
 #include <stdio.h>
 
@@ -24,21 +26,144 @@ static const int PRIORITY_NORMAL = 2;
 static const int PRIORITY_FORCE = 3;
 
 
-
 //*****************************************************************************
 // GlobalArea
 //*****************************************************************************
-const LPCWSTR TEXTURES[] = {
+const char* USE_MODEL[] = {
+	"data\\res\\haru\\haru_01.moc",
+	"data\\res\\haru\\haru_02.moc",
+	"data\\res\\haru\\haru_01.moc",
+	"data\\res\\haru\\haru_01.moc",
+	NULL,
+};
+const char* POSE[] = {
+	"data\\res\\haru\\haru.pose.json",
+	"data\\res\\haru\\haru.pose.json",
+	"data\\res\\haru\\haru.pose.json",
+	"data\\res\\haru\\haru.pose.json",
+	NULL,
+};
+const char* PHYSICS[] = {
+	"data\\res\\haru\\haru.physics.json",
+	"data\\res\\haru\\haru.physics.json",
+	"data\\res\\haru\\haru.physics.json",
+	"data\\res\\haru\\haru.physics.json",
+	NULL,
+};
+const LPCWSTR TEXTURES1[] = {
 	L"data\\res\\haru\\haru_01.1024\\texture_00.png",
 	L"data\\res\\haru\\haru_01.1024\\texture_01.png",
 	L"data\\res\\haru\\haru_01.1024\\texture_02.png",
 	NULL,
 };
 
+const LPCWSTR TEXTURES2[] = {
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_00.png",
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_01.png",
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_02.png",
+	NULL,
+};
+const LPCWSTR TEXTURES3[] = {
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_00.png",
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_01.png",
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_02.png",
+	NULL,
+};
+const LPCWSTR TEXTURES4[] = {
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_00.png",
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_01.png",
+	L"data\\res\\haru\\haru_02.1024.1024\\texture_02.png",
+	NULL,
+};
+const char* EX_MOTION1[] = {
+	"data\\res\\haru\\expressions\\f01.exp.json",
+	"data\\res\\haru\\expressions\\f02.exp.json",
+	"data\\res\\haru\\expressions\\f03.exp.json",
+	"data\\res\\haru\\expressions\\f04.exp.json",
+	"data\\res\\haru\\expressions\\f05.exp.json",
+	"data\\res\\haru\\expressions\\f06.exp.json",
+	"data\\res\\haru\\expressions\\f07.exp.json",
+	"data\\res\\haru\\expressions\\f08.exp.json",
+	NULL,
+};
+
+const char* EX_MOTION2[] = {
+	"data\\res\\haru\\expressions\\f01.exp.json",
+	"data\\res\\haru\\expressions\\f02.exp.json",
+	"data\\res\\haru\\expressions\\f03.exp.json",
+	"data\\res\\haru\\expressions\\f04.exp.json",
+	"data\\res\\haru\\expressions\\f05.exp.json",
+	"data\\res\\haru\\expressions\\f06.exp.json",
+	"data\\res\\haru\\expressions\\f07.exp.json",
+	"data\\res\\haru\\expressions\\f08.exp.json",
+	NULL,
+};
+const char* EX_MOTION3[] = {
+	"data\\res\\haru\\expressions\\f01.exp.json",
+	"data\\res\\haru\\expressions\\f02.exp.json",
+	"data\\res\\haru\\expressions\\f03.exp.json",
+	"data\\res\\haru\\expressions\\f04.exp.json",
+	"data\\res\\haru\\expressions\\f05.exp.json",
+	"data\\res\\haru\\expressions\\f06.exp.json",
+	"data\\res\\haru\\expressions\\f07.exp.json",
+	"data\\res\\haru\\expressions\\f08.exp.json",
+	NULL,
+};
+const char* EX_MOTION4[] = {
+	"data\\res\\haru\\expressions\\f01.exp.json",
+	"data\\res\\haru\\expressions\\f02.exp.json",
+	"data\\res\\haru\\expressions\\f03.exp.json",
+	"data\\res\\haru\\expressions\\f04.exp.json",
+	"data\\res\\haru\\expressions\\f05.exp.json",
+	"data\\res\\haru\\expressions\\f06.exp.json",
+	"data\\res\\haru\\expressions\\f07.exp.json",
+	"data\\res\\haru\\expressions\\f08.exp.json",
+	NULL,
+};
+const char* MOTION1[] = {
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	NULL,
+};
+
+const char* MOTION2[] = {
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	NULL,
+};
+const char* MOTION3[] = {
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	NULL,
+};
+const char* MOTION4[] = {
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	NULL,
+};
 //=============================================================================
 // Constructor
 //=============================================================================
-Live2DModel::Live2DModel(){
+Live2DModel::Live2DModel():
+startTimeMSec(0),
+live2DModelPtr(nullptr),
+eyeBlinkPtr(nullptr),
+posePtr(nullptr),
+physicsPtr(nullptr),
+pos(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),
+scl(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),
+createMotionCnt(0),
+createExMotionCnt(0),
+talkStartFlg(false),
+mouthCoff(0.0f){
 
 	// 開始時間の取得
 	startTimeMSec = live2d::UtSystem::getUserTimeMSec();
@@ -50,63 +175,130 @@ Live2DModel::Live2DModel(){
 Live2DModel::~Live2DModel(){
 
 	
-	SafeDelete(live2DModel);
-	SafeDelete(eyeBlink);
-	SafeDelete(pose);
-	SafeDelete(physics);
-	SafeDelete(exMotion1);
-	SafeDelete(exMotion2);
-	SafeDelete(motionMgr);
-	SafeDelete(motion1);
-	SafeDelete(motion2);
+	SafeDelete(live2DModelPtr);
+	SafeDelete(eyeBlinkPtr);
+	SafeDelete(posePtr);
+	SafeDelete(physicsPtr);
+
+
+	for (int i = 0; i < createMotionCnt; i++)
+	{
+		SafeDelete(motionPtr[i]);
+
+	}
+	for (int i = 0; i < createExMotionCnt; i++)
+	{
+		SafeDelete(exMotionPtr[i]);
+
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+
+		//SafeRelease(tex[i]);
+
+	}
 
 }// ~Live2DModel
 //=============================================================================
 // Init
 //=============================================================================
-bool Live2DModel::Init(LPDIRECT3DDEVICE9 paramDevice)
+bool Live2DModel::Init(MODEL_TYPE paramType, LPDIRECT3DDEVICE9 paramDevice)
 {
 
 	// モデルのロード
-	live2DModel = Live2DModelD3D::loadModel("data\\res\\haru\\haru_01.moc");
-
-	// テクスチャのロード
-	for (int i = 0; i < 10; i++){
-		if (!TEXTURES[i]) break;
-
-		LoadTexture(TEXTURES[i], paramDevice, i);
-
-	}// for
+	live2DModelPtr = Live2DModelD3D::loadModel(USE_MODEL[paramType]);
+	
+	// キャラのテクスチャのロード
+	LoadCharcterTexture(paramType, paramDevice);
 
 	// モーション管理
-	motionMgr = new L2DMotionManager();
+	motionMgr;
+
 
 	// 目パチ
-	eyeBlink = new L2DEyeBlink();
+	eyeBlinkPtr = Factory::Create<L2DEyeBlink>();
 
 	// ポーズ
-	pose = CreatePose("data\\res\\haru\\haru.pose.json");
+	posePtr = CreatePose(POSE[paramType]);
 
 	// 物理演算（髪）
-	physics = CreatePysics("data\\res\\haru\\haru.physics.json");
-
+	physicsPtr = CreatePysics(PHYSICS[paramType]);
 
 	// 待機モーション
-	motion1 = CreateMotion("data\\res\\haru\\motions\\idle_00.mtn");
-
-	// タッチモーション
-	motion2 = CreateMotion("data\\res\\haru\\motions\\tapBody_00.mtn");
+	CreateCharcterMotion(paramType);
 
 	// 表情
-	exMotion1 = CreateExMotion("data\\res\\haru\\expressions\\f05.exp.json");
+	CreateCharcterExMotion(paramType);
 
-	// 表情
-	exMotion2 = CreateExMotion("data\\res\\haru\\expressions\\f01.exp.json");
+	//ピクセルシェーダー用に変換1
+	//Create_PS("source/shader/basicPS.hlsl", "PS_TEXDIFFUSE", &shader.ps, &shader.psc, paramDevice);
+
+	//バーテックスシェーダー用に変換1
+//	Create_VS("source/shader/basicVS.hlsl", "VS", &shader.vs, &shader.vsc, m_pDevice);
 
 	// 成功
-	return S_OK;
+	return true;
 
 }// Init
+//=============================================================================
+// FunctionName: LoadTexture
+// Param: 読み込むテクスチャのパス
+// ReturnValue: 読み込み結果
+// Content: テクスチャの読み込み
+//=============================================================================
+bool Live2DModel::LoadCharcterTexture(MODEL_TYPE paramtype, LPDIRECT3DDEVICE9 paramDevice){
+
+	switch (paramtype)
+	{
+	case ROSA:
+
+		// テクスチャのロード
+		for (int i = 0; i < 10; i++){
+			if (!TEXTURES1[i]) break;
+
+			if (!LoadTexture(TEXTURES1[i], paramDevice, i)){ break; };
+
+		}// for
+
+		break;
+	case LILA:
+		// テクスチャのロード
+		for (int i = 0; i < 10; i++){
+			if (!TEXTURES2[i]) break;
+
+			if (!LoadTexture(TEXTURES2[i], paramDevice, i)){ break; };
+
+		}// for
+
+		break;
+	case LICHT:
+		// テクスチャのロード
+		for (int i = 0; i < 10; i++){
+			if (!TEXTURES3[i]) break;
+
+			if (!LoadTexture(TEXTURES3[i], paramDevice, i)){ break; };
+
+		}// for
+
+		break;
+	case NAVI:
+		// テクスチャのロード
+		for (int i = 0; i < 10; i++){
+			if (!TEXTURES4[i]) break;
+
+			if (!LoadTexture(TEXTURES4[i], paramDevice, i)){ break; };
+
+		}// for
+
+		break;
+	default:
+		break;
+	}
+
+	return true;
+
+}// LoadCharcterTexture
 //=============================================================================
 // FunctionName: LoadTexture
 // Param: 読み込むテクスチャのパス
@@ -116,11 +308,10 @@ bool Live2DModel::Init(LPDIRECT3DDEVICE9 paramDevice)
 bool Live2DModel::LoadTexture(const LPCWSTR paramFilePath, LPDIRECT3DDEVICE9 paramDevice, int paramTexNum){
 
 	// 変数宣言
-	LPDIRECT3DTEXTURE9 tex;
 	bool tmpFlg = false;
 
 	// テクスチャ画像をDirextXでの表示用に変換
-	if (SUCCEEDED(D3DXCreateTextureFromFileExW(paramDevice
+	if (FAILED(D3DXCreateTextureFromFileExW(paramDevice
 		, paramFilePath
 		, 0	//width 
 		, 0	//height
@@ -133,18 +324,149 @@ bool Live2DModel::LoadTexture(const LPCWSTR paramFilePath, LPDIRECT3DDEVICE9 par
 		, 0
 		, NULL
 		, NULL
-		, &tex))){
+		, &tex[paramTexNum]))){
+
+	}else{
 
 		// 変換が成功したらセット
-		live2DModel->setTexture(paramTexNum, tex);
+		live2DModelPtr->setTexture(paramTexNum, tex[paramTexNum]);
 		tmpFlg = true;
 
-	}// if
+	}
 
 	// 結果を返す
 	return tmpFlg;
 
+
 }// LoadTexture
+//=============================================================================
+// FunctionName: CreateCharcterExMotion
+// Param: 表情モーション用のインデックス
+// Param: DirectXデバイス
+// ReturnValue: 読み込み結果
+// Content: キャラ別の表情モーションの生成
+//=============================================================================
+bool Live2DModel::CreateCharcterExMotion(MODEL_TYPE paramtype){
+
+	// 変数宣言
+	int cnt = 0;
+	switch (paramtype)
+	{
+	case ROSA:
+
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_EX; cnt++){
+			if (!EX_MOTION1[cnt]) break;
+
+			exMotionPtr[cnt] = CreateExMotion(EX_MOTION1[cnt], cnt);
+
+		}// for
+
+		break;
+	case LILA:
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_EX; cnt++){
+			if (!EX_MOTION2[cnt]) break;
+
+			exMotionPtr[cnt] = CreateExMotion(EX_MOTION1[cnt], cnt);
+
+		}// for
+
+		break;
+	case LICHT:
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_EX; cnt++){
+			if (!EX_MOTION3[cnt]) break;
+
+			exMotionPtr[cnt] = CreateExMotion(EX_MOTION1[cnt], cnt);
+
+		}// for
+
+		break;
+	case NAVI:
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_EX; cnt++){
+			if (!EX_MOTION1[cnt]) break;
+
+			exMotionPtr[cnt] = CreateExMotion(EX_MOTION1[cnt], cnt);
+
+		}// for
+
+		break;
+	default:
+		break;
+	}
+
+	createExMotionCnt = cnt;
+
+	return true;
+
+}// CreateCharcterExMotion
+//=============================================================================
+// FunctionName: CreateCharcterExMotion
+// Param: 表情モーション用のインデックス
+// Param: DirectXデバイス
+// ReturnValue: 読み込み結果
+// Content: キャラ別の表情モーションの生成
+//=============================================================================
+bool Live2DModel::CreateCharcterMotion(MODEL_TYPE paramtype){
+
+	// 変数宣言
+	int cnt = 0;
+
+	switch (paramtype)
+	{
+	case ROSA:
+
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_MOTION; cnt++){
+			if (!MOTION1[cnt]) break;
+
+			motionPtr[cnt] = CreateMotion(MOTION1[cnt], cnt);
+
+		}// for
+
+		break;
+	case LILA:
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_MOTION; cnt++){
+			if (!MOTION2[cnt]) break;
+
+			motionPtr[cnt] = CreateMotion(MOTION2[cnt], cnt);
+
+		}// for
+
+		break;
+	case LICHT:
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_MOTION; cnt++){
+			if (!MOTION3[cnt]) break;
+
+			motionPtr[cnt] = CreateMotion(MOTION3[cnt], cnt);
+
+		}// for
+
+		break;
+	case NAVI:
+		// テクスチャのロード
+		for (cnt = 0; cnt < MAX_LOAD_MOTION; cnt++){
+			if (!MOTION4[cnt]) break;
+
+			motionPtr[cnt] = CreateMotion(MOTION4[cnt], cnt);
+
+		}// for
+
+		break;
+	default:
+		break;
+	}
+
+	// 生成した数を記録
+	createMotionCnt = cnt;
+
+	return true;
+
+}// CreateCharcterExMotion
 //=============================================================================
 // CreatePose
 //=============================================================================
@@ -194,7 +516,7 @@ L2DPhysics* Live2DModel::CreatePysics(const char* paramFilePath){
 //=============================================================================
 // CreateMotion
 //=============================================================================
-AMotion* Live2DModel::CreateMotion(const char* paramFilePath){
+AMotion* Live2DModel::CreateMotion(const char* paramFilePath, const int paramCnt){
 
 	// 変数宣言
 	unsigned char* buf = nullptr;
@@ -217,7 +539,7 @@ AMotion* Live2DModel::CreateMotion(const char* paramFilePath){
 //=============================================================================
 // CreateMotion
 //=============================================================================
-L2DExpressionMotion* Live2DModel::CreateExMotion(const char* paramFilePath){
+L2DExpressionMotion* Live2DModel::CreateExMotion(const char* paramFilePath, const int paramCnt){
 
 	// 変数宣言
 	unsigned char* buf = nullptr;
@@ -280,31 +602,32 @@ unsigned char* Live2DModel::LoadFile(const char* paramFilePath, int &refFileSize
 //=============================================================================
 void Live2DModel::Update(void)
 {
-	eyeBlink->setParam(live2DModel);// 目パチ
+	eyeBlinkPtr->setParam(live2DModelPtr);// 目パチ
 
-	if (GetAsyncKeyState('E') & 0x8000)
-	{
-		motionMgr->startMotionPrio(motion1, false, PRIORITY_IDLE);
-
-
-	}
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		motionMgr->startMotionPrio(motion2, false, PRIORITY_NORMAL);
+	//if (GetAsyncKeyState('E') & 0x8000)
+	//{
+	//	motionMgrPtr->startMotionPrio(motion1, false, PRIORITY_IDLE);
 
 
-	}
-	if (GetAsyncKeyState('W') & 0x8000)
-	{
-		motionMgr->startMotionPrio(exMotion1, false, PRIORITY_NORMAL);
-	}
-	if (GetAsyncKeyState('S') & 0x8000)
-	{
-
-		motionMgr->startMotionPrio(exMotion2, false, PRIORITY_NORMAL);
+	//}
+	//if (GetAsyncKeyState('D') & 0x8000)
+	//{
+	//	motionMgrPtr->startMotionPrio(motion2, false, PRIORITY_NORMAL);
 
 
-	}
+	//}
+	//if (GetAsyncKeyState('W') & 0x8000)
+	//{
+	//	motionMgrPtr->startMotionPrio(exMotion1, false, PRIORITY_NORMAL);
+	//}
+	//if (GetAsyncKeyState('S') & 0x8000)
+	//{
+
+	//	motionMgrPtr->startMotionPrio(exMotion2, false, PRIORITY_NORMAL);
+
+
+	//}
+
 
 }
 //=============================================================================
@@ -319,6 +642,23 @@ void Live2DModel::Draw(LPDIRECT3DDEVICE9 paramDevice)
 	// モデルの描画
 	DrawMod(paramDevice);
 
+	// レンダリングステートパラメータの設定
+	paramDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);				// 裏面をカリング
+	paramDevice->SetRenderState(D3DRS_ZENABLE, TRUE);						// Zバッファを使用
+	paramDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	paramDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
+	paramDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
+
+	// サンプラーステートパラメータの設定
+	paramDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャアドレッシング方法(U値)を設定
+	paramDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);	// テクスチャアドレッシング方法(V値)を設定
+	paramDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);	// テクスチャ縮小フィルタモードを設定
+	paramDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);	// テクスチャ拡大フィルタモードを設定
+
+	// テクスチャステージステートパラメータの設定
+	paramDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// アルファブレンディング処理
+	paramDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// 最初のアルファ引数
+	paramDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);	// ２番目のアルファ引数
 }
 //=============================================================================
 // DrawMod
@@ -328,21 +668,26 @@ void Live2DModel::DrawMod(LPDIRECT3DDEVICE9 paramDevice){
 	// 呼吸など
 	LDint64	 timeMSec = live2d::UtSystem::getUserTimeMSec() - startTimeMSec;
 	double t = (timeMSec / 1000.0) * 2 * 3.14159;//2*Pi*t
-	live2DModel->setParamFloat("PARAM_BREATH", (float)(0.5f + 0.5f * sin(t / 3.2345)), 1);// 0~1 まで周期的に設定。モーションを上書き。
+	live2DModelPtr->setParamFloat("PARAM_BREATH", (float)(0.5f + 0.5f * sin(t / 3.2345)), 1);// 0~1 まで周期的に設定。モーションを上書き。
 
 	// 物理演算でパラメータ更新
-	if (physics != NULL)physics->updateParam(live2DModel);
+	if (physicsPtr != NULL)
+		physicsPtr->updateParam(live2DModelPtr);
 
 	// ポーズの設定
-	if (pose != NULL)pose->updateParam(live2DModel);
+	if (posePtr != NULL)
+		posePtr->updateParam(live2DModelPtr);
 
 	// モーションの更新
-	motionMgr->updateParam(live2DModel);
+	motionMgr.updateParam(live2DModelPtr);
 
-	live2DModel->setDevice(paramDevice);
-	live2DModel->update();
-	live2DModel->draw();
-
+	// 口パク
+	if (talkStartFlg)
+		UpdateTalk();
+	
+	live2DModelPtr->setDevice(paramDevice);
+	live2DModelPtr->update();
+	live2DModelPtr->draw();
 	D3DXMATRIXA16 Identity;
 	D3DXMatrixIdentity(&Identity);
 	paramDevice->SetTransform(D3DTS_PROJECTION, &Identity);
@@ -368,8 +713,8 @@ void Live2DModel::SetupMatrix(LPDIRECT3DDEVICE9 paramDevice){
 
 	float raito = (float)(h / w);
 
-	float modelWidth = live2DModel->getModelImpl()->getCanvasWidth();
-	float modelHeight = live2DModel->getModelImpl()->getCanvasHeight();
+	float modelWidth = live2DModelPtr->getModelImpl()->getCanvasWidth();
+	float modelHeight = live2DModelPtr->getModelImpl()->getCanvasHeight();
 
 	D3DXMatrixOrthoLH(&Ortho2D, modelHeight, -modelHeight * h / w, -1.0f, 1.0f);
 
@@ -389,11 +734,70 @@ void Live2DModel::SetupMatrix(LPDIRECT3DDEVICE9 paramDevice){
 	D3DXMatrixIdentity(&trans);
 
 
-	D3DXMatrixTranslation(&trans, -modelWidth / 2, -modelHeight / 2, 0);
-	D3DXMatrixScaling(&scale, 0.5f, 0.5f, 1.0f);
+	D3DXMatrixTranslation(&trans, pos.x, pos.y, 0.0f);
+	D3DXMatrixScaling(&scale, scl.x, scl.y, 1.0f);
 	world = trans *world * scale;
 
 	paramDevice->SetTransform(D3DTS_WORLD, &world);
 
 }// SetupMatrix
+//=============================================================================
+// Easing処理
+//=============================================================================
+float Live2DModel::EsasingNone(float paramMin, float paramMax, float paramTime){
+
+	float tmpRet(0.0f);
+
+	if (paramTime < 0.5f){
+
+		// 二次曲線
+		tmpRet = (2.0 * paramTime) * (2.0 * paramTime) * 0.5f;
+
+	}else{
+
+		tmpRet = -((2.0 * paramTime - 2.0f) * (2.0 * paramTime - 2.0f)) * 0.5f + 1.0f;
+
+	}// else
+
+	return (paramMax - paramMin) * tmpRet + paramMin;
+
+}// EsasingNone
+//=============================================================================
+// FunctionName: UpdateTalk
+// Param: void
+// ReturnValue: void
+// Content: 口パクの更新
+//=============================================================================
+void Live2DModel::UpdateTalk(){
+
+	live2DModelPtr->setParamFloat("PARAM_MOUTH_OPEN_Y", EsasingNone(0.0f, 0.8f, mouthCoff), 0.8f);
+
+	if (mouthCoff > 1.0f)
+	{
+		mouthCoff = 0.0f;
+
+	}else{
+
+		mouthCoff += 0.05f;
+
+	}// else
+
+
+}// UpdateTalk
+//=============================================================================
+// FunctionName: TalkStart
+// Param: void
+// ReturnValue: void
+// Content: 口パクの更新
+//=============================================================================
+void Live2DModel::TalkEnd(){
+
+	// 各種値の初期化
+	talkStartFlg = false;
+	mouthCoff = 0.0f;
+
+	// 口パクの更新
+	UpdateTalk();
+
+}// TalkEnd
 // EOF
