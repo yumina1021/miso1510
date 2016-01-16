@@ -172,11 +172,26 @@
     <ClCompile Include="source\module\ui\BlowShot.cpp">
       <Filter>source\module\ui</Filter>
     </ClCompile>
-    <ClCompile Include="source\module\ui\Map.cpp">
-      <Filter>source\module\ui</Filter>
+    <ClCompile Include="source\Live2D\L2DExpressionMotion.cpp">
+      <Filter>source\Live2D</Filter>
     </ClCompile>
-    <ClCompile Include="source\module\ui\Cupin.cpp">
-      <Filter>source\module\ui</Filter>
+    <ClCompile Include="source\Live2D\L2DEyeBlink.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Live2D\L2DMotionManager.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Live2D\L2DPhysics.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Live2D\L2DPose.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Live2D\Live2DManager.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Live2D\Live2DModel.cpp">
+      <Filter>source\Live2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,11 +384,26 @@
     <ClInclude Include="source\module\ui\BlowShot.h">
       <Filter>source\module\ui</Filter>
     </ClInclude>
-    <ClInclude Include="source\module\ui\Map.h">
-      <Filter>source\module\ui</Filter>
+    <ClInclude Include="source\Live2D\L2DExpressionMotion.h">
+      <Filter>source\Live2D</Filter>
     </ClInclude>
-    <ClInclude Include="source\module\ui\Cupin.h">
-      <Filter>source\module\ui</Filter>
+    <ClInclude Include="source\Live2D\L2DEyeBlink.h">
+      <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Live2D\L2DMotionManager.h">
+      <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Live2D\L2DPhysics.h">
+      <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Live2D\L2DPose.h">
+      <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Live2D\Live2DManager.h">
+      <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Live2D\Live2DModel.h">
+      <Filter>source\Live2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +445,9 @@
     </Filter>
     <Filter Include="source\module\Gimmick">
       <UniqueIdentifier>{58b1f297-636a-42c7-85e6-8d5cc538fb52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Live2D">
+      <UniqueIdentifier>{91fef631-aa15-4b53-8179-5f028c613dac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
