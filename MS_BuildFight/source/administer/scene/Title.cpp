@@ -272,30 +272,30 @@ void CTitle :: Draw(void)
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_1))
 	{
-		tmpMgr->SetMotion(0, 1);
+		tmpMgr->SetMotion(1, 1);
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_2))
 	{
-		tmpMgr->SetMotion(0, 2);
+		tmpMgr->SetMotion(1, 2);
 
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_3))
 	{
-		tmpMgr->SetMotion(0, 3);
+		tmpMgr->SetMotion(1, 3);
 
 	}
 
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_4))
 	{
-		tmpMgr->SetMotion(1, 1);
+		tmpMgr->SetMotion(1, 4);
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_5))
 	{
-		tmpMgr->SetMotion(1, 2);
+		tmpMgr->SetMotion(1, 5);
 
 	}
 	//エンターキーが押された場合
@@ -308,18 +308,18 @@ void CTitle :: Draw(void)
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_7))
 	{
-		tmpMgr->SetMotion(2, 1);
+		tmpMgr->SetMotion(1, 1);
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_8))
 	{
-		tmpMgr->SetMotion(2, 2);
+		tmpMgr->SetMotion(1, 2);
 
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_9))
 	{
-		tmpMgr->SetMotion(2, 3);
+		tmpMgr->SetMotion(1, 3);
 
 	}
 

@@ -7,9 +7,8 @@
 // Include
 //*****************************************************************************
 #include "renderTarget.h"
-#include "../Resource/texture.h"
-#include "../Utility/factory.hpp"
-#include "../Utility/finalize.hpp"
+#include "../administer/entityFactory.hpp"
+#include "../administer/finalize.hpp"
 
 //*****************************************************************************
 // Link
@@ -61,7 +60,7 @@ bool RenderTarget::Init(LPDIRECT3DDEVICE9 paramDevice9,
 
 
 	if (FAILED(paramDevice9->CreateTexture((UINT)paramWidth,
-											(UINT)paramWidth,
+											(UINT)paramHeight,
 											1,
 											D3DUSAGE_RENDERTARGET,
 											D3DFMT_A32B32G32R32F,

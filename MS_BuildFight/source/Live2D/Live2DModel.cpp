@@ -125,18 +125,36 @@ const char* MOTION1[] = {
 	"data\\res\\haru\\motions\\tapBody_01.mtn",
 	"data\\res\\haru\\motions\\tapBody_02.mtn",
 	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 
 const char* MOTION2[] = {
 	"data\\res\\haru\\motions\\idle_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
 	"data\\res\\haru\\motions\\tapBody_04.mtn",
 	"data\\res\\haru\\motions\\tapBody_05.mtn",
 	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 const char* MOTION3[] = {
 	"data\\res\\haru\\motions\\idle_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
 	"data\\res\\haru\\motions\\tapBody_07.mtn",
 	"data\\res\\haru\\motions\\tapBody_08.mtn",
 	"data\\res\\haru\\motions\\tapBody_09.mtn",
@@ -144,9 +162,15 @@ const char* MOTION3[] = {
 };
 const char* MOTION4[] = {
 	"data\\res\\haru\\motions\\idle_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 //=============================================================================
