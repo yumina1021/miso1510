@@ -998,7 +998,7 @@ void CGame:: PowerDecision()
 		m_pCupin->SetDrawFlag(false);
 	}
 	//‰¼@‘Å‚Â—Í‚ðŒˆ‚ß‚½‚©‚çŽŸ
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) && m_pBlowEffect->GetFlag(m_nPlayerNum))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) && !m_pBlowEffect->GetFlag(m_nPlayerNum))
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		m_bStageflag[m_nPlayerNum] = false;
@@ -1025,7 +1025,7 @@ void CGame:: PowerDecision()
 	}
 	//‰¼@‘Å‚Â—Í‚ðŒˆ‚ß‚½‚©‚çŽŸ
 	//if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
-	if (g_wiishot&&abs(wiicon->GetWiiYaw()) > 40.0f && m_pBlowEffect->GetFlag(m_nPlayerNum))
+	if (g_wiishot&&abs(wiicon->GetWiiYaw()) > 40.0f && !m_pBlowEffect->GetFlag(m_nPlayerNum))
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		for (int i = 0; i < SHOT_EFFECT; i++)
