@@ -231,6 +231,12 @@ void CPlayerM :: Update(void)
 		//m_Move.x += (0.0f - m_Move.x) * REGIST_MOVE;
 		//m_Move.z += (0.0f - m_Move.z) * REGIST_MOVE;
 
+		if ((m_motionType == MOTIONTYPE_SELECT && IsFinishMotion() == true))
+		{// ショットモーション終了
+			// ニュートラルモーション再生
+			SetMotion(MOTIONTYPE_SELECT);
+		}
+
 		if((m_motionType == MOTIONTYPE_SHOT && IsFinishMotion() == true))
 		{// ショットモーション終了
 			// ニュートラルモーション再生
@@ -298,9 +304,11 @@ void CPlayerM::Draw(void)
 
 	CDebugProc::Print("PlayerM%f,%f,%f\n", m_Pos.x, m_Pos.y, m_Pos.z);
 	CDebugProc::Print("PlayerM%f,%f,%f\n", m_Rot.x, m_Rot.y, m_Rot.z);
+
 	// モデルパーツの描画
 	m_apModel[0]->SetPosOrg(m_Pos);
-	m_apModel[0]->SetRot(m_Rot);
+	m_apModel[0]->SetRotOrg(m_Rot);
+
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		if (m_apModel[nCntModel])
@@ -326,6 +334,30 @@ void CPlayerM::SetMotion(MOTIONTYPE motionType)
 	case MOTIONTYPE_SHOT:
 		m_pKeyInfo = &g_aKeyShot[0];
 		m_nNumKey = sizeof g_aKeyShot / sizeof(KEY_INFO);
+		m_bLoopMotion = false;
+		break;
+
+	case MOTIONTYPE_SHOT2:
+		m_pKeyInfo = &g_aKeyShot2[0];
+		m_nNumKey = sizeof g_aKeyShot2 / sizeof(KEY_INFO);
+		m_bLoopMotion = false;
+		break;
+
+	case MOTIONTYPE_ROLLING:
+		m_pKeyInfo = &g_aKeyRolling[0];
+		m_nNumKey = sizeof g_aKeyRolling / sizeof(KEY_INFO);
+		m_bLoopMotion = false;
+		break;
+
+	case MOTIONTYPE_ROLLINGS:
+		m_pKeyInfo = &g_aKeyRollingS[0];
+		m_nNumKey = sizeof g_aKeyRollingS / sizeof(KEY_INFO);
+		m_bLoopMotion = false;
+		break;
+
+	case MOTIONTYPE_SELECT:
+		m_pKeyInfo = &g_aKeySelect[0];
+		m_nNumKey = sizeof g_aKeySelect / sizeof(KEY_INFO);
 		m_bLoopMotion = false;
 		break;
 	}
