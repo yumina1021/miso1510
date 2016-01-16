@@ -288,13 +288,14 @@ void CSelect::Update(void)
 		if (tmpCursorOld[i] != m_Select[i].nSelect)
 		{
 			CButton::ChangeSelectButtonState(m_pCharPicture[tmpCursorOld[i]], m_pCharPicture[m_Select[i].nSelect]);
-
+			if (i == 0){ m_pCharModPlayer1[m_Select[i].nSelect]->SetMotion((MOTIONTYPE)(rand() % 2 + 3)); }
+			if (i == 1){m_pCharModPlayer2[m_Select[i].nSelect]->SetMotion((MOTIONTYPE)(rand() % 2 + 3));}
 		}
 
 		// 選択状態にしておく
 		m_pCharPicture[m_Select[i].nSelect]->SetButtonState(BUTTON_STATE::SELECTED);
-
 	}
+
 	// キャラクター表示用モデル
 	m_pCharModPlayer1[m_Select[0].nSelect]->Update();
 	m_pCharModPlayer2[m_Select[1].nSelect]->Update();
@@ -422,14 +423,13 @@ void CSelect::SelectByKeyboardPlayer2(void)
 	//エンターキーが押された場合
 	if ((pInputKeyboard->GetKeyTrigger(DIK_SPACE)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
-
+		m_pCharModPlayer2[m_Select[1].nSelect]->SetMotion(MOTIONTYPE_SHOT2);
 		pSound->Play(SOUND_LABEL_SE_SELECT002);
 		// エンターキーを押した場合
 		ChkSelectButton(1);
 		m_pSelectCfm[1]->SetPos(m_SelectCfmPos[m_Select[1].nSelect]);
-
-
 	}
+
 	else if (pInputKeyboard->GetKeyTrigger(DIK_UP) || pTmpPad->GetKeyTrigger(WII_BUTTOM_UP))
 	{
 		pSound->Play(SOUND_LABEL_SE_SELECT000);
@@ -539,6 +539,7 @@ void CSelect::SelectByKeyboardPlayer1(void)
 	if ((pInputKeyboard->GetKeyTrigger(DIK_RETURN)) || pTmpPad->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		pSound->Play(SOUND_LABEL_SE_SELECT002);
+		m_pCharModPlayer1[m_Select[0].nSelect]->SetMotion(MOTIONTYPE_SHOT2);
 		if (!m_Select[0].bDecisionFlg)
 		{
 

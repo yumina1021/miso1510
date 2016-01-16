@@ -18,6 +18,7 @@
 // ForwardDeclaration
 //*****************************************************************************
 class Live2DModel;
+class RenderTarget;
 
 //*****************************************************************************
 // class
@@ -63,9 +64,27 @@ public:
 	//=============================================================================
 	void Draw(LPDIRECT3DDEVICE9 paramDevice);
 
+	//=============================================================================
+	// FunctionName: GetModTex
+	// Param: どのキャラのモデルのテクスチャにするかの識別用
+	// ReturnValue: テクスチャバッファ
+	// Content: Live2Dモデルが描画されたテクスチャの取得
+	//=============================================================================
+	LPDIRECT3DTEXTURE9 GetModTex(int paramModState);
+
+	//=============================================================================
+	// FunctionName: SetMotion
+	// Param: どのモデルのモーションを再生するかの識別子
+	// Param: どのモデルのモーションを再生するかの識別子
+	// ReturnValue: void
+	// Content: 指定したモデルのモーションの再生
+	//			※再生終了後に待機モーションに戻ります
+	//=============================================================================
+	void SetMotion(int paramModState, int pramMotionState);
 
 private:
 	Live2DModel* mod;
+	RenderTarget* modRender;
 
 };
 #endif// _LIVE_2D_MANAGER_H_

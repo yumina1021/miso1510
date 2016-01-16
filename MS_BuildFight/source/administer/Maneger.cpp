@@ -34,6 +34,12 @@
 #include "../module/etc/Camera.h"
 
 #include "../administer/Texture.h"
+#include "../administer/entityFactory.hpp"
+#include "../administer/finalize.hpp"
+
+#include "../Live2D/Live2DManager.h"
+#include "../Live2D/renderTarget.h"
+
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -42,6 +48,7 @@ CInputKeyboard* CManager::m_pKeyboard = NULL;			//インプット
 CInputMouse * CManager ::m_pMouse = NULL;
 CInputJoypad * CManager::m_pJoypad = NULL;
 WiiRemote* CManager::wiimote[2] = { NULL ,NULL};
+Live2DManager* CManager::l2dManager = nullptr;
 
 CSound *CManager::m_pSound = NULL;						//サウンド
 
@@ -78,6 +85,8 @@ CManager :: CManager(void)
 //=============================================================================
 CManager :: ~CManager(void)
 {
+	SafeDelete(l2dManager);
+
 }
 //=============================================================================
 // 初期化
@@ -153,6 +162,14 @@ HRESULT CManager :: Init(HINSTANCE hInstance,HWND hWnd,BOOL bWindow)
 	m_nEnemyNum = 0;
 
 	m_hwnd = hWnd;
+
+	// Live2D
+	l2dManager = Factory::Create<Live2DManager>();
+	l2dManager->Init(m_pD3DDevice);
+
+	// バックバッファ
+	backBuff = Factory::Create<RenderTarget>();
+	backBuff->GetRenderTarget(m_pD3DDevice, 0);
 
 	return S_OK;
 }
@@ -479,19 +496,34 @@ void CManager :: Update(void)
 		m_gamewin = PLAYER1_WIN;
 		SetAfterScene(PHASETYPE_RESULT);
 	}
+	
+	// Live2Dの更新
+	l2dManager->Update();
+
 }
 //=============================================================================
 // 描画
 //=============================================================================
 void CManager :: Draw(void)
 {
-	//描画用初期化
-	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(100, 100, 100, 0), 1.0f, 0);
 
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))//描画の開始
 	{
-		//カメラの設定
-		m_pCamera->Set(m_pD3DDevice);
+
+		// Live2Dの描画
+		l2dManager->Draw(m_pD3DDevice);
+
+		m_pD3DDevice->EndScene();//描画の終了
+
+	}
+	if (SUCCEEDED(m_pD3DDevice->BeginScene()))//描画の開始
+	{
+		
+		// バックバッファに描画
+		backBuff->SetRenderTarget(m_pD3DDevice, 0);
+
+		//描画用初期化
+		m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 255, 255, 0), 1.0f, 0);
 
 		m_pScene->Draw();
 
@@ -500,9 +532,10 @@ void CManager :: Draw(void)
 		CDebugProc::Draw();
 #endif
 		m_pD3DDevice->EndScene();//描画の終了
+		m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+
 	}
 
-	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
 //=============================================================================
 // シーン登録用

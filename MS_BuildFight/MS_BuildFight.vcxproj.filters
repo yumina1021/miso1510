@@ -199,6 +199,9 @@
     <ClCompile Include="source\module\ui\Map.cpp">
       <Filter>source\module\ui</Filter>
     </ClCompile>
+    <ClCompile Include="source\Live2D\renderTarget.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -416,6 +419,15 @@
     </ClInclude>
     <ClInclude Include="source\module\ui\Map.h">
       <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Live2D\renderTarget.h">
+      <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\finalize.hpp">
+      <Filter>source\administer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\administer\entityFactory.hpp">
+      <Filter>source\administer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

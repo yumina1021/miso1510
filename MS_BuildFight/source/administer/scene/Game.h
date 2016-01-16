@@ -219,7 +219,7 @@ class CGame  : public CScene
 		D3DXVECTOR3		m_vecrot;
 		D3DXVECTOR3		m_startpos[2];
 		D3DXVECTOR3		m_goalpos;
-		float		m_playerrot_x;
+		float			m_playerrot_x;
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
 		float			m_bcursolmove;
@@ -233,6 +233,8 @@ class CGame  : public CScene
 		bool			m_bBlowFlag;
 		bool			m_bStageflag[2];
 		int				m_bStageflagcount[2];
+		bool			m_bLilaBlow;
+		bool			m_bLichtBlow;
 };
 
 #endif

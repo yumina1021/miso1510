@@ -51,18 +51,15 @@ const int CResult::m_apTextureName[] =
 	TEXTURE_BLUE,
 	TEXTURE_STAR,
 	TEXTURE_ARROW
-
 };
 
 //ご褒美CG用
 const int g_RewardTexture[][2] =
 {
-	{TEXTURE_R_LILA_WIN,				//リーラ
-	 TEXTURE_R_LILA_LOSE },
-
 	{TEXTURE_R_ROSA_WIN,			//ローザ
 	 TEXTURE_R_ROSA_LOSE },
-
+	{TEXTURE_R_LILA_WIN,				//リーラ
+	 TEXTURE_R_LILA_LOSE },
 	{TEXTURE_R_LICHT_WIN,			//リヒト
 	 TEXTURE_R_LICHT_LOSE },
 
@@ -73,15 +70,15 @@ const int g_RewardTexture[][2] =
 //立ち絵表示用
 const int g_StandTexture[][4] =
 {
-	{ TEXTURE_C_LILA_WARA,
-	  TEXTURE_C_LILA_NAKI,
-	  TEXTURE_C_LILA_NORMAL,
-	  TEXTURE_C_LILA_DO },
-	  
 	{ TEXTURE_C_ROSA_WARA,
 	  TEXTURE_C_ROSA_NAKI,
 	  TEXTURE_C_ROSA_NORMAL,
 	  TEXTURE_C_ROSA_DO },
+
+	{ TEXTURE_C_LILA_WARA,
+	  TEXTURE_C_LILA_NAKI,
+	  TEXTURE_C_LILA_NORMAL,
+	  TEXTURE_C_LILA_DO },
 
 	{ TEXTURE_C_NAVI_WARA,
 	  TEXTURE_C_NAVI_NAKI,
@@ -518,7 +515,7 @@ void CResult::_UpdateFade(void)
 	{
 		m_ButtonCounter += 1;
 		//m_pSound->Play(SOUND_LABEL_SE_SENI);
-		m_pSound->PlayVoice(0,VOICE_LABEL_SE_WIN);
+		//m_pSound->PlayVoice(0,VOICE_LABEL_SE_WIN);
 		m_pScenerio[0]->SetScenarioEndFlag(false);
 		m_pScenerio[0]->SetViewFlag(true,0);
 		m_pScenerio[0]->ResultScenario(0);

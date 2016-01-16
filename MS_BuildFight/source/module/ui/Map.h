@@ -27,7 +27,7 @@ class CMap
 public:
 	CMap();										// コンストラクタ
 	~CMap();										// デストラクタ
-	HRESULT Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol);				// 初期化
+	HRESULT Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol, int player1, int player2);				// 初期化
 	void Uninit();									// 解放
 	void Update();									// 更新
 	void Draw();									// 描画
@@ -36,8 +36,9 @@ public:
 	void MapChagePlus(){ vecfactor++; }
 	void MapChageMinus(){ vecfactor++; }
 	void MapChageSet(int id){ vecfactor = id; }
+	void SetDrawFlag(bool tf){ m_bDrawFlag = tf; }
 
-	static CMap* Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol);
+	static CMap* Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol, int player1, int player2);
 //=============================================================================
 // 非公開メンバ
 //=============================================================================
@@ -58,6 +59,7 @@ private:
 	Cform2D* m_cursol;
 	D3DXVECTOR3 m_mappos;
 
+	bool m_bDrawFlag;
 	int m_fieldnum;
 };// class CMap
 #endif	_CMAP_H_

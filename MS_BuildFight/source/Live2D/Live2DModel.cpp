@@ -58,21 +58,21 @@ const LPCWSTR TEXTURES1[] = {
 };
 
 const LPCWSTR TEXTURES2[] = {
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_00.png",
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_01.png",
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_02.png",
+	L"data\\res\\haru\\haru_02.1024\\texture_00.png",
+	L"data\\res\\haru\\haru_02.1024\\texture_01.png",
+	L"data\\res\\haru\\haru_02.1024\\texture_02.png",
 	NULL,
 };
 const LPCWSTR TEXTURES3[] = {
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_00.png",
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_01.png",
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_02.png",
+	L"data\\res\\haru\\haru_01.1024\\texture_00.png",
+	L"data\\res\\haru\\haru_01.1024\\texture_01.png",
+	L"data\\res\\haru\\haru_01.1024\\texture_02.png",
 	NULL,
 };
 const LPCWSTR TEXTURES4[] = {
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_00.png",
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_01.png",
-	L"data\\res\\haru\\haru_02.1024.1024\\texture_02.png",
+	L"data\\res\\haru\\haru_02.1024\\texture_00.png",
+	L"data\\res\\haru\\haru_02.1024\\texture_01.png",
+	L"data\\res\\haru\\haru_02.1024\\texture_02.png",
 	NULL,
 };
 const char* EX_MOTION1[] = {
@@ -121,32 +121,56 @@ const char* EX_MOTION4[] = {
 	NULL,
 };
 const char* MOTION1[] = {
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\idle_00.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 
 const char* MOTION2[] = {
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\idle_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 const char* MOTION3[] = {
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\idle_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 const char* MOTION4[] = {
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
-	"data\\res\\haru\\motions\\flickHead_00.mtn",
+	"data\\res\\haru\\motions\\idle_00.mtn",
+	"data\\res\\haru\\motions\\tapBody_01.mtn",
+	"data\\res\\haru\\motions\\tapBody_02.mtn",
+	"data\\res\\haru\\motions\\tapBody_03.mtn",
+	"data\\res\\haru\\motions\\tapBody_04.mtn",
+	"data\\res\\haru\\motions\\tapBody_05.mtn",
+	"data\\res\\haru\\motions\\tapBody_06.mtn",
+	"data\\res\\haru\\motions\\tapBody_07.mtn",
+	"data\\res\\haru\\motions\\tapBody_08.mtn",
+	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
 //=============================================================================
@@ -211,10 +235,6 @@ bool Live2DModel::Init(MODEL_TYPE paramType, LPDIRECT3DDEVICE9 paramDevice)
 	
 	// キャラのテクスチャのロード
 	LoadCharcterTexture(paramType, paramDevice);
-
-	// モーション管理
-	motionMgr;
-
 
 	// 目パチ
 	eyeBlinkPtr = Factory::Create<L2DEyeBlink>();
@@ -602,7 +622,27 @@ unsigned char* Live2DModel::LoadFile(const char* paramFilePath, int &refFileSize
 //=============================================================================
 void Live2DModel::Update(void)
 {
-	eyeBlinkPtr->setParam(live2DModelPtr);// 目パチ
+
+	// 目パチ
+	eyeBlinkPtr->setParam(live2DModelPtr);
+
+	// 
+	//-----------------------------------------------------------------
+	live2DModelPtr->loadParam();// 前回セーブされた状態をロード
+	if (motionMgr.isFinished())
+	{
+		// モーションの再生がない場合、待機モーションの中からランダムで再生する
+		//startRandomMotion(MOTION_GROUP_IDLE, PRIORITY_IDLE);
+		motionMgr.startMotionPrio(motionPtr[0], false, PRIORITY_IDLE);
+
+	}else{
+
+		motionMgr.updateParam(live2DModelPtr);// モーションを更新
+
+	}
+	live2DModelPtr->saveParam();// 状態を保存
+	//-----------------------------------------------------------------
+
 
 	//if (GetAsyncKeyState('E') & 0x8000)
 	//{
@@ -708,8 +748,8 @@ void Live2DModel::SetupMatrix(LPDIRECT3DDEVICE9 paramDevice){
 	D3DXMATRIX Identity;
 
 	int w, h;
-	w = 1300;
-	h = 750;
+	w = SCREEN_WIDTH;
+	h = SCREEN_HEIGHT;
 
 	float raito = (float)(h / w);
 
@@ -734,7 +774,7 @@ void Live2DModel::SetupMatrix(LPDIRECT3DDEVICE9 paramDevice){
 	D3DXMatrixIdentity(&trans);
 
 
-	D3DXMatrixTranslation(&trans, pos.x, pos.y, 0.0f);
+	D3DXMatrixTranslation(&trans, -modelWidth / 2, -modelHeight / 2 + 600, 0.0f);
 	D3DXMatrixScaling(&scale, scl.x, scl.y, 1.0f);
 	world = trans *world * scale;
 
@@ -792,6 +832,9 @@ void Live2DModel::UpdateTalk(){
 //=============================================================================
 void Live2DModel::TalkEnd(){
 
+	// 口パクしている場合のみ停止
+	if (!talkStartFlg){ return; }
+
 	// 各種値の初期化
 	talkStartFlg = false;
 	mouthCoff = 0.0f;
@@ -800,4 +843,31 @@ void Live2DModel::TalkEnd(){
 	UpdateTalk();
 
 }// TalkEnd
+//=============================================================================
+// FunctionName: TalkStart
+// Param: void
+// ReturnValue: void
+// Content: 口パクの更新
+//=============================================================================
+void Live2DModel::TalkStart(){
+
+	// 口パクしていない場合のみ開始
+	if (talkStartFlg){ return; }
+
+	// 口パク開始
+	talkStartFlg = true;
+
+}// TalkStart
+//=============================================================================
+// FunctionName: SetMotion
+// Param: どのモーションを再生するかの識別子
+// ReturnValue: void
+// Content: モーションの再生
+//			※再生終了後に待機モーションに戻ります
+//=============================================================================
+void Live2DModel::SetMotion(int pramMotionState){
+
+	motionMgr.startMotionPrio(motionPtr[pramMotionState], false, PRIORITY_NORMAL);
+
+}// SetMotion
 // EOF

@@ -268,6 +268,10 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_fnavimove = 0.0f;
 
 	m_bBlowFlag = 0.0f;
+
+	m_pMap->SetDrawFlag(false);
+	m_bLichtBlow = false;
+	m_bLilaBlow = false;
 	return S_OK;
 }
 //=============================================================================
@@ -739,6 +743,7 @@ void CGame::GameScenario()
 		//エンター押して終了
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
+			m_pMap->SetDrawFlag(true);
 			m_nGameStartCount = 0;
 			m_pScenario[m_nPlayerNum]->SetViewFlag(false, 0);
 			if (m_pBall[m_nPlayerNum]->GetMagnet() == S){ m_pEffect[0]->SetView(true); }
@@ -982,13 +987,6 @@ void CGame:: PowerDecision()
 		m_pBlowEffect->SetFlag(true, m_nPlayerNum);
 		m_bBlowFlag = true;
 	}
-#if _DEBUG
-	if ((pInputKeyboard->GetKeyPress(DIK_L) || wiicon->GetKeyTrigger(WII_BUTTOM_UP)))
-	{
-		m_pBlowEffect->SetFlag(true, m_nPlayerNum);
-		m_bBlowFlag = true;
-	}
-#endif
 	if (pInputKeyboard->GetKeyPress(DIK_C))
 	{
 		m_pCupin->SetFlag(true);
@@ -1000,7 +998,7 @@ void CGame:: PowerDecision()
 		m_pCupin->SetDrawFlag(false);
 	}
 	//仮　打つ力を決めたから次
-	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
+	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) && m_pBlowEffect->GetFlag(m_nPlayerNum))
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		m_bStageflag[m_nPlayerNum] = false;
@@ -1027,7 +1025,7 @@ void CGame:: PowerDecision()
 	}
 	//仮　打つ力を決めたから次
 	//if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
-	if (g_wiishot&&abs(wiicon->GetWiiYaw()) > 40.0f)
+	if (g_wiishot&&abs(wiicon->GetWiiYaw()) > 40.0f && m_pBlowEffect->GetFlag(m_nPlayerNum))
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		for (int i = 0; i < SHOT_EFFECT; i++)
@@ -1046,7 +1044,12 @@ void CGame:: PowerDecision()
 			m_pEffect[9]->FadeInAfterCount(20, CEffect::UP_LEFT, 50);
 		}
 		pSound->Play(SOUND_LABEL_SE_SHOT);
+
 		m_nSwitchCount = MOVE_PHASE;
+		if (m_bLichtBlow)
+		{
+			power *= 0.5f;
+		}
 		m_pBall[m_nPlayerNum]->AddForce(power*m_PowerShot);
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
 	}
@@ -1071,7 +1074,6 @@ void CGame:: PowerDecision()
 void CGame::BallMove()
 {
 	D3DXVECTOR3 velocity = m_pBall[m_nPlayerNum]->GetVelocity();
-	Magnet();
 	ObjHitCheck();
 	D3DXVECTOR3 bpos = m_pBall[m_nPlayerNum]->GetPos();
 	D3DXVECTOR3 gpos = m_pGoal->GetPos();
@@ -1199,6 +1201,17 @@ void CGame::End()
 	//仮　入らなかった交代
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
+		m_bLichtBlow = false;
+		m_bLilaBlow = false;
+		if (m_bBlowFlag && m_pPlayer[m_nPlayerNum]->GetType() == 1)
+		{
+			m_bLilaBlow = true;
+		}
+		if (m_bBlowFlag && m_pPlayer[m_nPlayerNum]->GetType() == 2)
+		{
+			m_bLichtBlow = true;
+		}
+		m_pMap->SetDrawFlag(false);
 		if (endflag)
 		{
 			m_bChangeFlag = true;
@@ -1300,7 +1313,7 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 
 
 	// hack load場所が悪い
-	m_pMap = CMap::Create(pDevice, m_pBall, m_pGoal, m_cursol);
+	m_pMap = CMap::Create(pDevice, m_pBall, m_pGoal, m_cursol, m_nPnum, m_nEnum);
 
 
 	LoadGiimick(pDevice);
@@ -1337,10 +1350,21 @@ void CGame::ObjHitCheck()
 		{
 			m_pBall[m_nPlayerNum]->SetGoalFlag(true);
 		}
+		if (m_bLilaBlow)
+		{
+			D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
+			m_pBall[0]->SetVelocity(-vecball);
+		}
 	}
 	else
 	{
 		m_pGoal->Sethit(0.5f);
+	}
+
+	Magnet();
+	if (m_bBlowFlag && m_pPlayer[m_nPlayerNum]->GetType() == 0)
+	{
+		return;
 	}
 	if (m_nTurnCount != 1)
 	{
@@ -1370,8 +1394,6 @@ void CGame::ObjHitCheck()
 	{
 		if (SphireHit(ball, 20.0f, m_nStageinfo[i].pos, m_nStageinfo[i].size))
 		{
-			//D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
-			//m_pBall[1]->SetVelocity(-vecball);
 			stageflag = true;
 		}
 	}
@@ -1485,12 +1507,19 @@ void CGame::Magnet(void)
 {
 	D3DXVECTOR3 ballpos = m_pBall[m_nPlayerNum]->GetPos();
 	NS ballns = m_pBall[m_nPlayerNum]->GetMagnet();
-
+	if (m_bLilaBlow)
+	{
+		return;
+	}
 	m_pBall[m_nPlayerNum]->AddForce(
 		MagnetMove(ballns, ballpos,
 		m_pGoal->GetMagnet(),
 		m_pGoal->GetPos()));
 
+	if (m_bBlowFlag && m_pPlayer[m_nPlayerNum]->GetType() == 0)
+	{
+		return;
+	}
 	//if (m_nMoveCount < 100)
 	{
 		//ギミック数カウント

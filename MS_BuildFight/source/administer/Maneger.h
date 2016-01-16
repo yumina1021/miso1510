@@ -59,6 +59,8 @@ class Cform;
 class CLight;
 class CEffect;
 class CTexture;
+class Live2DManager;
+class RenderTarget;
 #ifdef _DEBUG
 class CDebugProc;
 #endif
@@ -118,6 +120,8 @@ class CManager
 		static int GetWin(void){ return m_gamewin; }
 
 		static WiiRemote* GetWii(int id){ return wiimote[id]; }
+
+		static Live2DManager* GetL2DManager(){ return l2dManager; };
 	private:
 		void RenderTargetDraw(void);
 		HRESULT RenderInit(HWND hWnd, BOOL bWindow);
@@ -147,6 +151,7 @@ class CManager
 		static HWND				m_hwnd;
 		static WiiRemote* wiimote[2];
 		CTexture* m_ptexture;
+		static Live2DManager* l2dManager;
 #ifdef _DEBUG
 		static  CDebugProc *m_pDebugProc;			//デバッグ処理へのポインタ
 #endif
@@ -159,6 +164,7 @@ class CManager
 		int						m_nEnemyNum;
 
 		RenderTagets*			m_renderTargets[5];
+		RenderTarget*			backBuff;
 
 		LPDIRECT3DSURFACE9		m_pSurfaceBack;	//バックバッファ用サーフェス
 		LPDIRECT3DSURFACE9		m_pSurfaceBackD;//バックバッファ用サーフェス
