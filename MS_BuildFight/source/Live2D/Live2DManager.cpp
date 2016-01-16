@@ -119,11 +119,11 @@ void Live2DManager::Update(void){
 
 	//ƒGƒ“ƒ^[ƒL[‚ª‰Ÿ‚³‚ê‚½ê‡
 	if (pInputKeyboard->GetKeyTrigger(DIK_R))
-		mod->TalkStart();
+		mod[1].TalkStart();
 
 	//ƒGƒ“ƒ^[ƒL[‚ª‰Ÿ‚³‚ê‚½ê‡
 	if (pInputKeyboard->GetKeyTrigger(DIK_T))
-		mod->TalkEnd();
+		mod[1].TalkEnd();
 
 }
 //=============================================================================
@@ -135,7 +135,7 @@ void Live2DManager::Draw(LPDIRECT3DDEVICE9 paramDevice){
 	modRender[0].SetRenderTarget(paramDevice, 0);
 
 	//•`‰æ—p‰Šú‰»
-	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 255, 255, 0), 1.0f, 0);
+	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 255, 255, 255), 1.0f, 0);
 
 	// •`‰æ
 	mod[0].Draw(paramDevice);
@@ -147,7 +147,7 @@ void Live2DManager::Draw(LPDIRECT3DDEVICE9 paramDevice){
 	modRender[1].SetRenderTarget(paramDevice, 0);
 
 	//•`‰æ—p‰Šú‰»
-	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 0, 255, 0), 1.0f, 0);
+	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 0, 255, 255), 1.0f, 0);
 
 	// •`‰æ
 	mod[1].Draw(paramDevice);
@@ -159,7 +159,7 @@ void Live2DManager::Draw(LPDIRECT3DDEVICE9 paramDevice){
 	modRender[2].SetRenderTarget(paramDevice, 0);
 
 	//•`‰æ—p‰Šú‰»
-	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 255, 0, 0), 1.0f, 0);
+	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 255, 0, 255), 1.0f, 0);
 
 	// •`‰æ
 	mod[2].Draw(paramDevice);

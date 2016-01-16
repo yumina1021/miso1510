@@ -96,6 +96,7 @@
     <ClCompile Include="source\Live2D\L2DPose.cpp" />
     <ClCompile Include="source\Live2D\Live2DManager.cpp" />
     <ClCompile Include="source\Live2D\Live2DModel.cpp" />
+    <ClCompile Include="source\Live2D\renderTarget.cpp" />
     <ClCompile Include="source\module\etc\ShotEffect.cpp" />
     <ClCompile Include="source\module\Gimmick\Gimmick.cpp" />
     <ClCompile Include="source\module\Gimmick\Magnet.cpp" />
@@ -153,6 +154,8 @@
     <ClCompile Include="source\module\ui\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\administer\entityFactory.hpp" />
+    <ClInclude Include="source\administer\finalize.hpp" />
     <ClInclude Include="source\administer\scene\StageSelect.h" />
     <ClInclude Include="source\administer\Texture.h" />
     <ClInclude Include="source\administer\wiicon\wiimote.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="source\Live2D\L2DPose.h" />
     <ClInclude Include="source\Live2D\Live2DManager.h" />
     <ClInclude Include="source\Live2D\Live2DModel.h" />
+    <ClInclude Include="source\Live2D\renderTarget.h" />
     <ClInclude Include="source\module\etc\ShotEffect.h" />
     <ClInclude Include="source\module\Gimmick\Gimmick.h" />
     <ClInclude Include="source\module\Gimmick\Magnet.h" />
