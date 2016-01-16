@@ -92,7 +92,7 @@ public:
 	// ReturnValue: void
 	// Content: 口パクの更新
 	//=============================================================================
-	void TalkStart(){ talkStartFlg = true; };
+	void TalkStart();
 
 	//=============================================================================
 	// FunctionName: TalkStart
@@ -102,6 +102,15 @@ public:
 	//=============================================================================
 	void TalkEnd();
 
+	//=============================================================================
+	// FunctionName: SetMotion
+	// Param: どのモデルのモーションを再生するかの識別子
+	// Param: どのモーションを再生するかの識別子
+	// ReturnValue: void
+	// Content: 指定したモデルのモーションの再生
+	//			※再生終了後に待機モーションに戻ります
+	//=============================================================================
+	void SetMotion(int pramMotionState);
 
 	//=============================================================================
 	// Setter
@@ -237,16 +246,14 @@ private:
 	AMotion* motionPtr[MAX_LOAD_MOTION];
 	L2DMotionManager motionMgr;
 	MODEL_TYPE type;
+	
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 scl;
+	
 	int createMotionCnt;
 	int createExMotionCnt;
 	bool talkStartFlg;
 	float mouthCoff;
-
-	SHADER_SET				shader;
-
-
 };
 
 #endif// _LIVE2D_MODEL_H_

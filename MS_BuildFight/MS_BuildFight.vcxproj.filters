@@ -199,6 +199,9 @@
     <ClCompile Include="source\module\ui\Map.cpp">
       <Filter>source\module\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Desktop\toonRendering\Source\DirectX\renderTarget.cpp">
+      <Filter>source\Live2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -416,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="source\module\ui\Map.h">
       <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Desktop\toonRendering\Source\DirectX\renderTarget.h">
+      <Filter>source\Live2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

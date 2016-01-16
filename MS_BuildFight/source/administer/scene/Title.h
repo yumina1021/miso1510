@@ -68,7 +68,7 @@ class CTitle  : public CScene
 		CDome*			m_pDome;
 		CDomeU*			m_pDome2;
 		CMeshField*		m_pMeshField;
-		Cform3D*		m_pLogo;
+		Cform2D*		m_pLogo;
 		Cform2D*		m_pCharcterPic[3];
 		int				m_nCursor;			//カーソル
 		bool			m_bChangeFlag;		//シーン切替フラグ
@@ -77,6 +77,8 @@ class CTitle  : public CScene
 		CCursor*		m_pCursor[2];			//メニュー用
 		bool m_btitlecoll;
 		LPDIRECT3DDEVICE9 dxDevice;
+		Cform2D*		m_pLive2DMod[3];
+
 };
 
 #endif
