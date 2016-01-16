@@ -101,6 +101,7 @@
     <ClCompile Include="source\module\Gimmick\Magnet.cpp" />
     <ClCompile Include="source\module\ui\BlowShot.cpp" />
     <ClCompile Include="source\module\ui\Button.cpp" />
+    <ClCompile Include="source\module\ui\Cupin.cpp" />
     <ClCompile Include="source\module\ui\Cursor.cpp" />
     <ClCompile Include="source\administer\Debugproc.cpp" />
     <ClCompile Include="source\administer\FrustumCulling.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="source\module\ui\Gauge.cpp" />
     <ClCompile Include="source\module\ui\Icon.cpp" />
     <ClCompile Include="source\module\ui\Lock.cpp" />
+    <ClCompile Include="source\module\ui\Map.cpp" />
     <ClCompile Include="source\module\ui\Number.cpp" />
     <ClCompile Include="source\module\ui\ResultScore.cpp" />
     <ClCompile Include="source\module\ui\Scenario.cpp" />
@@ -169,6 +171,7 @@
     <ClInclude Include="source\module\Gimmick\Magnet.h" />
     <ClInclude Include="source\module\ui\BlowShot.h" />
     <ClInclude Include="source\module\ui\Button.h" />
+    <ClInclude Include="source\module\ui\Cupin.h" />
     <ClInclude Include="source\module\ui\Cursor.h" />
     <ClInclude Include="source\administer\data.h" />
     <ClInclude Include="source\administer\Debugproc.h" />
@@ -214,6 +217,7 @@
     <ClInclude Include="source\module\ui\Gauge.h" />
     <ClInclude Include="source\module\ui\Icon.h" />
     <ClInclude Include="source\module\ui\Lock.h" />
+    <ClInclude Include="source\module\ui\Map.h" />
     <ClInclude Include="source\module\ui\Number.h" />
     <ClInclude Include="source\module\ui\ResultScore.h" />
     <ClInclude Include="source\module\ui\Scenario.h" />

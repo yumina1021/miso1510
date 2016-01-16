@@ -193,10 +193,10 @@
     <ClCompile Include="source\Live2D\Live2DModel.cpp">
       <Filter>source\Live2D</Filter>
     </ClCompile>
-    <ClCompile Include="source\module\ui\Map.cpp">
+    <ClCompile Include="source\module\ui\Cupin.cpp">
       <Filter>source\module\ui</Filter>
     </ClCompile>
-    <ClCompile Include="source\module\ui\Cupin.cpp">
+    <ClCompile Include="source\module\ui\Map.cpp">
       <Filter>source\module\ui</Filter>
     </ClCompile>
   </ItemGroup>
