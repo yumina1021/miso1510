@@ -1387,7 +1387,7 @@ void CGame::ObjHitCheck()
 	if (!stageflag && !m_bStageflag[m_nPlayerNum])
 	{
 		D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
-		m_pBall[m_nPlayerNum]->SetVelocity(-vecball * 2);
+		m_pBall[m_nPlayerNum]->SetVelocity(-vecball);
 		m_bStageflag[m_nPlayerNum] = true;
 		m_bStageflagcount[m_nPlayerNum] = 0;
 	}
