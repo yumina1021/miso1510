@@ -33,8 +33,10 @@ class Cform2D  : public Cform
 		~Cform2D(void);//デストラクタ
 
 		static Cform2D *Create(LPDIRECT3DDEVICE9 pDevice, int pFileName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);
+		static Cform2D *CreateLive2D(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);
 
-		HRESULT Init(LPDIRECT3DDEVICE9 pDevice,int pFileName,D3DXVECTOR3 pos,D3DXVECTOR3 rot,float width,float height);//初期化
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, int pFileName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);//初期化
+		HRESULT Init(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);//初期化
 		//HRESULT Init2(LPDIRECT3DDEVICE9 pDevice, int pFileName, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height);//初期化
 		void Uninit(void);//終了
 		void Uninit2(void);//終了
@@ -56,6 +58,7 @@ class Cform2D  : public Cform
 		D3DXVECTOR2 GetLengthWH(void){ return D3DXVECTOR2(m_fWidth, m_fHeight); };
 		void SetLength(float length){ m_fLength = length; };
 		float GetLength(void){ return m_fLength; };
+		void Draw(LPDIRECT3DTEXTURE9 paramTexBuff);
 
 	private:
 		//LPDIRECT3DTEXTURE9  	m_pD3DTex;		//テクスチャ表示用

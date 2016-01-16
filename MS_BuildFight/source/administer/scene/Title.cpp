@@ -49,14 +49,12 @@ const float MENU_X((float)SCREEN_WIDTH / 2.0f);	//メニューのX位置
 const float MENU_Y(500.0f);			//メニューのY位置
 
 const float CHAR_POS_X((float)SCREEN_WIDTH / 2.0f);
-const float CHAR_POS_Y(300.0f);
-const float CHAR_WIDTH(450.0f);
-const float CHAR_HEIGHT(600.0f);
+const float CHAR_POS_Y(400.0f);
+const float CHAR_WIDTH(600.0f);
+const float CHAR_HEIGHT(450.0f);
 
 const int LOGO_WIDTH(800.0f);			//メニューの横サイズ
 const int LOGO_HEIGHT(250.0f);			//メニューの縦サイズ
-
-Live2DManager* l2dManager;
 
 //=============================================================================
 // コンストラクタ
@@ -99,8 +97,8 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//背景の作成
 	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
-	//m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT/2, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
-	m_pLogo = Cform3D::Create(pDevice, TEXTURE_S_7, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	//m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2);
+	m_pLogo = Cform2D::Create(pDevice, TEXTURE_S_7, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//空の作成
 	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -115,12 +113,15 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pCursor[1] = CCursor::Create(pDevice, s_4, D3DXVECTOR3(200.0f, 600.0f, 0.0f), 64, 64);
 
 	// ロゴ用キャラクター
-	//m_pCharcterPic[0] = Cform2D::Create(pDevice, "data/TEXTURE/Rosa.png", D3DXVECTOR3(CHAR_POS_X, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
 	//m_pCharcterPic[1] = Cform2D::Create(pDevice, "data/TEXTURE/Lila.png", D3DXVECTOR3(CHAR_POS_X - CHAR_WIDTH, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
 	//m_pCharcterPic[2] = Cform2D::Create(pDevice, "data/TEXTURE/Licht.png", D3DXVECTOR3(CHAR_POS_X + CHAR_WIDTH, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
 
 	// 選択状態にしておく
 	m_pMenueButton[m_nCursor]->SetButtonState(BUTTON_STATE::SELECTED);
+
+	m_pLive2DMod[0] = Cform2D::Create(pDevice, TEXTURE_S_7, D3DXVECTOR3(200.0f, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
+	m_pLive2DMod[1] = Cform2D::Create(pDevice, TEXTURE_S_7, D3DXVECTOR3(600.0f, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
+	m_pLive2DMod[2] = Cform2D::Create(pDevice, TEXTURE_S_7, D3DXVECTOR3(1000.0f, CHAR_POS_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CHAR_WIDTH, CHAR_HEIGHT);
 
 	//サウンド取得の作成
 	CSound *pSound;
@@ -129,12 +130,11 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//サウンド再生の作成
 	pSound->Play(SOUND_LABEL_BGM000);
 
-	l2dManager = Factory::Create<Live2DManager>();
-	l2dManager->Init(pDevice);
-
 	//フェードの作成
 	m_pFade = CFade::Create(pDevice, 1);
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
+
+	
 
 	return S_OK;
 }
@@ -149,8 +149,6 @@ void CTitle :: Uninit(void)
 
 	//サウンド再生の作成
 	pSound->Stop();
-
-	SafeDelete(l2dManager);
 
 	//シーンを全て終了
 	Cform::ReleaseAll();
@@ -226,10 +224,6 @@ void CTitle :: Update(void)
 
 	}
 
-	l2dManager->Update();
-
-	m_pLogo->SetPos(0.0f, 0.0f, -4100.0f);
-
 #ifdef _DEBUG
 
 	float test = m_pLogo->GetPos().z;
@@ -248,7 +242,7 @@ void CTitle :: Draw(void)
 	m_pDome->Draw();
 	m_pDome2->Draw();
 
-	m_pLogo->Draw2();
+	m_pLogo->Draw();
 
 	m_pMenueButton[GAME_START]->Draw();
 	m_pMenueButton[GAME_END]->Draw();
@@ -268,9 +262,74 @@ void CTitle :: Draw(void)
 
 	}
 
+	Live2DManager* tmpMgr = CManager::GetL2DManager();
+
+	//キーボードインプットの受け取り
+	CInputKeyboard *pInputKeyboard;
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_1))
+	{
+		tmpMgr->SetMotion(0, 1);
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_2))
+	{
+		tmpMgr->SetMotion(0, 2);
+
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_3))
+	{
+		tmpMgr->SetMotion(0, 3);
+
+	}
+
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_4))
+	{
+		tmpMgr->SetMotion(1, 1);
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_5))
+	{
+		tmpMgr->SetMotion(1, 2);
+
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_6))
+	{
+		tmpMgr->SetMotion(1, 3);
+
+	}
+
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_7))
+	{
+		tmpMgr->SetMotion(2, 1);
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_8))
+	{
+		tmpMgr->SetMotion(2, 2);
+
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_9))
+	{
+		tmpMgr->SetMotion(2, 3);
+
+	}
+
+	// 
+	m_pLive2DMod[0]->Draw(tmpMgr->GetModTex(0));
+	m_pLive2DMod[1]->Draw(tmpMgr->GetModTex(1));
+	m_pLive2DMod[2]->Draw(tmpMgr->GetModTex(2));
+
 	//フェード
 	m_pFade->Draw();
-	l2dManager->Draw(dxDevice);
 
 }
 //=============================================================================

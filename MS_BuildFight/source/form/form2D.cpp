@@ -37,6 +37,18 @@ Cform2D *Cform2D::Create(LPDIRECT3DDEVICE9 pDevice, int pFileName, D3DXVECTOR3 p
 	return pform2D;
 }
 //=============================================================================
+// Cform2D生成
+//=============================================================================
+Cform2D *Cform2D::CreateLive2D(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height)
+{
+	Cform2D *pform2D;
+
+	pform2D = new Cform2D();
+	pform2D->Init(pDevice, pos, rot, width, height);
+
+	return pform2D;
+}
+//=============================================================================
 // 初期化
 //=============================================================================
 HRESULT Cform2D :: Init(LPDIRECT3DDEVICE9 pDevice,int pFileName,D3DXVECTOR3 pos,D3DXVECTOR3 rot,float width,float height)
@@ -122,6 +134,69 @@ HRESULT Cform2D :: Init(LPDIRECT3DDEVICE9 pDevice,int pFileName,D3DXVECTOR3 pos,
 //=============================================================================
 // 初期化
 //=============================================================================
+//=============================================================================
+// 初期化
+//=============================================================================
+HRESULT Cform2D::Init(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 pos, D3DXVECTOR3 rot, float width, float height)
+{
+	m_pDevice = pDevice;
+
+	m_Pos = pos;
+	m_Rot = rot;
+
+	m_fWidth = width;
+	m_fHeight = height;
+
+	//ポリゴン対角線の長さ初期化
+	m_fLength = sqrtf(((m_fWidth / 2)*(m_fWidth / 2)) + ((m_fHeight / 2)*(m_fHeight / 2)));
+
+	//ポリゴン対角線の角度初期化
+	m_fAngle = atan2f((m_fWidth / 2), (m_fHeight / 2));
+
+	D3DXVECTOR3 Setpos[POINT_MAX];					//ポリゴンの位置
+
+	//回転
+	Setpos[0].x = m_Pos.x + (sin(-m_Rot.z - m_fAngle)*m_fLength);
+	Setpos[0].y = m_Pos.y - (cos(-m_Rot.z - m_fAngle)*m_fLength);
+	Setpos[1].x = m_Pos.x + (sin(-m_Rot.z + m_fAngle)*m_fLength);
+	Setpos[1].y = m_Pos.y - (cos(-m_Rot.z + m_fAngle)*m_fLength);
+	Setpos[2].x = m_Pos.x + (sin(m_Rot.z - m_fAngle)*m_fLength);
+	Setpos[2].y = m_Pos.y + (cos(m_Rot.z - m_fAngle)*m_fLength);
+	Setpos[3].x = m_Pos.x + (sin(m_Rot.z + m_fAngle)*m_fLength);
+	Setpos[3].y = m_Pos.y + (cos(m_Rot.z + m_fAngle)*m_fLength);
+
+	VERTEX_2D *pVtx;
+
+	//ロック
+	m_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//ポリゴンの設定
+
+	pVtx[0].vtx = D3DXVECTOR3(Setpos[0].x, Setpos[0].y, 0.0f);//x,yの順
+	pVtx[1].vtx = D3DXVECTOR3(Setpos[1].x, Setpos[1].y, 0.0f);
+	pVtx[2].vtx = D3DXVECTOR3(Setpos[2].x, Setpos[2].y, 0.0f);
+	pVtx[3].vtx = D3DXVECTOR3(Setpos[3].x, Setpos[3].y, 0.0f);
+
+	pVtx[0].hrw = 1.0f;//1.0f固定
+	pVtx[1].hrw = 1.0f;
+	pVtx[2].hrw = 1.0f;
+	pVtx[3].hrw = 1.0f;
+
+	pVtx[0].diffuse = D3DCOLOR_RGBA(255, 255, 255, 255);//色は白
+	pVtx[1].diffuse = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[2].diffuse = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[3].diffuse = D3DCOLOR_RGBA(255, 255, 255, 255);
+
+	pVtx[0].tex = D3DXVECTOR2(0, 0);//画像のUV値　U,Vの順
+	pVtx[1].tex = D3DXVECTOR2(1, 0);
+	pVtx[2].tex = D3DXVECTOR2(0, 1);
+	pVtx[3].tex = D3DXVECTOR2(1, 1);
+
+	//アンロック
+	m_pD3DVtxBuff->Unlock();
+
+	return S_OK;
+}
 //=============================================================================
 // 終了
 //=============================================================================
@@ -215,6 +290,26 @@ void Cform2D :: Draw(void)
 	//m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	//m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
 }
+//=============================================================================
+// 描画
+//=============================================================================
+void Cform2D::Draw(LPDIRECT3DTEXTURE9 paramTexBuff)
+{
+
+	//様々なオブジェクトの描画処理
+	m_pDevice->SetStreamSource(0, m_pD3DVtxBuff, 0, sizeof(VERTEX_2D));
+
+		//テクスチャの設定
+	m_pDevice->SetTexture(0, paramTexBuff);
+
+	//頂点フォーマットの描画
+	m_pDevice->SetFVF(FVF_VERTEX_2D);
+
+	//ポリゴンの描画
+	m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+}
+
 
 void Cform2D :: SetDiffuse(float r,float g,float b,float a)
 {
