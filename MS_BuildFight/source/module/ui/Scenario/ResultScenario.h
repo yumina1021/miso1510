@@ -26,43 +26,59 @@ typedef struct
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //rosa（ピンク）
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-ResultScenarioData result_rosa[4] =
+ResultScenarioData result_rosa_win[2] =
 {
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "うふっ、その程度なんですね", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "私に勝てるかしら？", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "勝てたらご褒美あげるわっ♪", false },
 	LAST
 };
 
+ResultScenarioData result_rosa_lose[2] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "もう一回よ、次はこうはいかないんだから", false },
+	LAST
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //リーラ（青）
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-ResultScenarioData result_lila[4] =
+ResultScenarioData result_lila_win[2] =
 {
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "面倒だけど相手してあげる", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "つまらない戦いしたら許さないから", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "覚悟してね", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "つまらない、特訓して出直しなさい", false },
+	LAST
+};
+
+ResultScenarioData result_lila_lose[2] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SAD, "思ったよりやるわね、見直したわ", false },
 	LAST
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //ojyo(黄)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-ResultScenarioData result_ojyo[3] =
+ResultScenarioData result_ojyo_win[2] =
 {
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "わたくしの相手はあなた？", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_NORMAL, "平民の分際でわたくしと戦えるのです。光栄に思いなさい！", false },
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "粋がるなよ雑種、おーっほっほっほっほ！", false },
+	LAST
+};
+
+ResultScenarioData result_ojyo_lose[2] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_ANGERY, "このわたくしがおまえに敗れるのは必定だったか、なかなかに愉しかったぞ", false },
 	LAST
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //tutorial(チュートリアル子)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-ResultScenarioData result_tutorial[4] =
+ResultScenarioData result_jiji_lose[2] =
 {
 	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "うぐっ。こ、腰が・・・。", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "勝利の女神はどちらに微笑むか！？", false },
-	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "注目の一戦です！！", false },
+	LAST
+};
+
+ResultScenarioData result_jiji_win[2] =
+{
+	{ DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_SPEED, FACIAL_SMILE, "まだまだ若いもんには負けんわい。", false },
 	LAST
 };
 
