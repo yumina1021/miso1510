@@ -193,6 +193,12 @@
     <ClCompile Include="source\Live2D\Live2DModel.cpp">
       <Filter>source\Live2D</Filter>
     </ClCompile>
+    <ClCompile Include="source\module\ui\Map.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\module\ui\Cupin.cpp">
+      <Filter>source\module\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\administer\Maneger.h">
@@ -404,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="source\Live2D\Live2DModel.h">
       <Filter>source\Live2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Cupin.h">
+      <Filter>source\module\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\module\ui\Map.h">
+      <Filter>source\module\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
