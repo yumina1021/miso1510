@@ -16,7 +16,7 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 	{ "data/BGM/BGM_TITLE.wav",		true },
 	{ "data/BGM/BGM_SELECT.wav",	true },
 	{ "data/BGM/BGM_GAME.wav",		true },
-	{ "data/BGM/BGM_RESULT2.wav",	true },
+	{ "data/BGM/BGM_RESULT.wav",	true },
 	{ "data/BGM/INFINITE_SKY.wav",	true },
 	{ "data/SE/cursor.wav",			false },
 	{ "data/SE/button.wav",			false },

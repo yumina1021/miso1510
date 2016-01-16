@@ -40,6 +40,8 @@ class CNumber;
 class CShotEffect;
 class CGimmick;
 class CBlowShot;
+class CCupin;
+class CMap;
 
 enum GAME_PHASE
 {
@@ -70,7 +72,11 @@ public:
 	void SetLen_W(int elem, float length){ m_fLength[elem] = length; };			// 指定軸方向の長さを取得
 	void SetPos_W(D3DXVECTOR3 pos){ m_Pos = pos; };				// 位置を取得
 };
-
+typedef struct
+{
+	D3DXVECTOR3 pos;	// 各モデルのキー要素
+	float size;	// 各モデルのキー要素
+} STAGE_INFO;
 #define SHOT_EFFECT	(16)
 class CGame  : public CScene
 {
@@ -101,8 +107,10 @@ class CGame  : public CScene
 		CScore *GetScore(void){ return m_pScore; };
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
-		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
-
+		CIcon *GetIconEnemy(void){ return m_pIconEnemy; };
+		D3DXVECTOR3 GetFieldPos(int id){ return m_nStageinfo[id].pos; }
+		float GetFieldsize(int id){ return m_nStageinfo[id].size; }
+		int GetFieldNum(){ return m_nStagenum; }
 		void SetTimer(int time);
 
 		static bool SphireHit(D3DXVECTOR3 a, float al, D3DXVECTOR3 b, float bl){
@@ -155,6 +163,7 @@ class CGame  : public CScene
 		void charachange();		//キャラ変更
 		void ObjHitCheck();
 		void Magnet();
+		void LoadGiimick(LPDIRECT3DDEVICE9 pDevice);
 
 		D3DXVECTOR3 CheckVector(D3DXVECTOR3 ball, D3DXVECTOR3 player);		//ベクトル算出
 
@@ -182,8 +191,10 @@ class CGame  : public CScene
 		Cform2D*		m_pgoalnavi[4];
 		CShotEffect*	m_pShotEffect[SHOT_EFFECT];
 		CBlowShot*		m_pBlowEffect;
+		CCupin*			m_pCupin;
+		CMap*			m_pMap;
 
-		CGimmick*		m_pGimmick[10];
+		CGimmick**		m_pGimmick_stage;
 
 		int				m_nCount;
 		int				m_nClearType;
@@ -202,18 +213,26 @@ class CGame  : public CScene
 		int				m_nPnum;
 		bool			m_bJudge;
 		int				m_nTurnCount;
-		int				m_GimmickMax;
 		static int		m_nSwitchCount;
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
 		D3DXVECTOR3		m_vecrot;
+		D3DXVECTOR3		m_startpos[2];
+		D3DXVECTOR3		m_goalpos;
 		float		m_playerrot_x;
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
 		float			m_bcursolmove;
 		static D3DXVECTOR3		m_playercamera;
 
+		float			m_fnavimove;
 		bool			m_bnaviFlag[4];
+		int				m_nStagenum;
+		int				m_nGimmickmax;
+		STAGE_INFO*		m_nStageinfo;
+		bool			m_bBlowFlag;
+		bool			m_bStageflag[2];
+		int				m_bStageflagcount[2];
 };
 
 #endif

@@ -56,6 +56,9 @@
 
 #include "../../module/ui/BlowShot.h"
 
+#include "../../module/ui/Cupin.h"
+#include "../../module/ui/Map.h"
+
 #define PLAYER_MAX	(2)	//プレイヤー数
 #define SHOT_RIMIT	(0.05f)
 #define PLAYER_DISTANCE	(100.0f)
@@ -72,11 +75,13 @@ bool CGame::m_bReplayFlag =false;
 bool CGame::m_bVsSelectFlag = false;
 int	CGame::m_nPlayerNum;
 int	CGame::m_nSwitchCount;
+
 D3DXVECTOR3		CGame::m_PowerShot;
 D3DXVECTOR3		CGame::m_playercamera;
 
 bool g_wiishot;
-int g_movelimit;
+bool g_cupinflag;
+float g_movelimit;
 key2Con K2CList[8]={
 	{DIK_Z, COMMAND_SHOT},
 	{DIK_X, COMMAND_ATTACK},
@@ -86,6 +91,13 @@ key2Con K2CList[8]={
 	{DIK_S, COMMAND_DOWN},
 	{DIK_D, COMMAND_RIGHT},
 	{DIK_A, COMMAND_LEFT}
+};
+char* g_fieldname[]
+{
+	"data/MAP/save.mof",
+	"data/MAP/save.mof",
+	"data/MAP/save.mof",
+	"data/MAP/save.mof"
 };
 //=============================================================================
 // コンストラクタ
@@ -112,7 +124,6 @@ CGame :: CGame(void)
 	m_playercamera = D3DXVECTOR3(0.f, 0.0f, 0.f);
 	m_pBall[1] = {};
 
-	m_pGimmick[12] = {};
 }
 //=============================================================================
 // デストラクタ
@@ -142,7 +153,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	//剣のエフェクト表示
 	for (int i = 0; i < 20; i++)
 	{
-		m_pLocusEffect[i] = CLocusEffect::Create(pDevice, NULL, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pLocusEffect[i] = CLocusEffect::Create(pDevice, TEXTURE_STAR, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 
 	for (int i = 0; i < SHOT_EFFECT; i++)
@@ -192,11 +203,17 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_pBlowEffect = CBlowShot::Create(pDevice, m_nPnum, m_nEnum);
 
+	m_pCupin = CCupin::Create(pDevice);
 	float length_n = 100.0f;
-	m_pgoalnavi[0] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH / 2, length_n, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), length_n, length_n);
-	m_pgoalnavi[1] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(length_n, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI / 2), length_n, length_n);
-	m_pgoalnavi[2] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH - length_n, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, -D3DX_PI / 2), length_n, length_n);
-	m_pgoalnavi[3] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT - length_n, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), length_n, length_n);
+	//m_pgoalnavi[0] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH / 2, length_n, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), length_n, length_n);
+	//m_pgoalnavi[1] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(length_n, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI / 2), length_n, length_n);
+	//m_pgoalnavi[2] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH - length_n, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, -D3DX_PI / 2), length_n, length_n);
+	//m_pgoalnavi[3] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT - length_n, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), length_n, length_n);
+
+	m_pgoalnavi[0] = Cform2D::Create(pDevice, TEXTURE_GOAL_NAVI, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - length_n * 2.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), length_n * 2, length_n);
+	m_pgoalnavi[1] = Cform2D::Create(pDevice, TEXTURE_GOAL_NAVI, D3DXVECTOR3(SCREEN_WIDTH / 2 - length_n * 2.0f, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI / 2), length_n * 2, length_n);
+	m_pgoalnavi[2] = Cform2D::Create(pDevice, TEXTURE_GOAL_NAVI, D3DXVECTOR3(SCREEN_WIDTH / 2 + length_n * 2.0f, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, -D3DX_PI / 2), length_n * 2, length_n);
+	m_pgoalnavi[3] = Cform2D::Create(pDevice, TEXTURE_GOAL_NAVI, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + length_n * 2.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), length_n * 2, length_n);
 	for (int i = 0; i < 4; i++)
 	{
 		m_bnaviFlag[i] = false;
@@ -222,6 +239,7 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_nTurnCount = 0;
 
+
 	//サウンド再生の作成
 	pSound->Play(SOUND_LABEL_BGM002);
 
@@ -246,6 +264,10 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
 	CManager::SetWin(PLAYER_DRAW);
+
+	m_fnavimove = 0.0f;
+
+	m_bBlowFlag = 0.0f;
 	return S_OK;
 }
 //=============================================================================
@@ -273,12 +295,20 @@ void CGame :: Uninit(void)
 		delete m_pScenario[i];
 		m_pScenario[i] = NULL;
 	}
+
+	delete[] m_pGimmick_stage;
 	m_pGoal->Uninit();
 	delete m_pGoal;
 	m_pGoal = NULL;
 
 	m_pBlowEffect->Uninit();
 	delete m_pBlowEffect;
+	m_pCupin->Uninit();
+	delete m_pCupin;
+	m_pMap->Uninit();
+	delete m_pMap;
+
+	delete m_nStageinfo;
 	//シーンを全て終了
 	Cform::ReleaseAll();
 }
@@ -292,12 +322,20 @@ void CGame :: Update(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	m_pGoal->Update();
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	for (int i = 0; i < SHOT_EFFECT; i++)
 	{
 		m_pShotEffect[i]->Update();
 	}
-
-
+	m_pCupin->Update();
+	if (pInputKeyboard->GetKeyTrigger(DIK_I) || wiicon->GetKeyTrigger(WII_BUTTOM_1))
+	{
+		m_pMap->MapChagePlus();
+	}
+	if (pInputKeyboard->GetKeyTrigger(DIK_O) || wiicon->GetKeyTrigger(WII_BUTTOM_2))
+	{
+		m_pMap->MapChageMinus();
+	}
 	//更新本体
 	if (!m_bChangeFlag)
 	{
@@ -467,6 +505,7 @@ void CGame :: Update(void)
 			CManager::SetAfterScene(PHASETYPE_VSEND);
 		}
 	}
+	m_pMap->Update();
 }
 //=============================================================================
 // 描画
@@ -497,9 +536,9 @@ void CGame :: Draw(void)
 
 		if (m_bcursol)m_cursol->Draw();
 		m_pGoal->Draw();
-		for (int i = 0; i < m_GimmickMax; i++)
+		for (int i = 0; i < m_nGimmickmax; i++)
 		{
-			m_pGimmick[i]->Draw();
+			m_pGimmick_stage[i]->Draw();
 		}
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
@@ -513,6 +552,8 @@ void CGame :: Draw(void)
 				m_pShotEffect[i]->Draw();
 			}
 		}
+		m_pMap->Draw();
+		m_pCupin->Draw();
 		for (int i = 0; i < EFFECT_MAX; i++)
 		{
 			m_pEffect[i]->Draw();
@@ -601,6 +642,7 @@ void CGame::TurnStart()
 		m_shotrot = D3DXVECTOR3(-2.4f, 0, 0);
 		m_vecrot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_playerrot_x = m_shotrot.x;
+
 	}
 
 	m_nGameStartCount++;
@@ -610,6 +652,7 @@ void CGame::TurnStart()
 	{
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
+			m_bBlowFlag = false;
 			m_nGameStartCount = 0;
 			m_pBall[m_nPlayerNum]->SetAlpha(0.3f);
 			D3DXVECTOR3 vec;
@@ -778,28 +821,28 @@ void CGame::AngleDecision()
 	D3DXVECTOR3 ball = m_pBall[m_nPlayerNum]->GetPos();
 	if (pInputKeyboard->GetKeyPress(DIK_RIGHT) || wiicon->GetKeyPress(WII_BUTTOM_RIGHT))
 	{
-		m_shotrot.y += D3DX_PI * 0.01f;
-		m_vecrot.y += D3DX_PI * 0.01f;
+		m_shotrot.y += D3DX_PI * 0.005f;
+		m_vecrot.y += D3DX_PI * 0.005f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
 		m_vecrot.y = Rotation_Normalizer(m_vecrot.y);
 	}
 	else if (pInputKeyboard->GetKeyPress(DIK_LEFT) || wiicon->GetKeyPress(WII_BUTTOM_LEFT))
 	{
-		m_shotrot.y -= D3DX_PI * 0.01f;
-		m_vecrot.y -= D3DX_PI * 0.01f;
+		m_shotrot.y -= D3DX_PI * 0.005f;
+		m_vecrot.y -= D3DX_PI * 0.005f;
 		m_shotrot.y = Rotation_Normalizer(m_shotrot.y);
 		m_vecrot.y = Rotation_Normalizer(m_vecrot.y);
 	}
 
-	bool rotlimit_x_max = g_movelimit > -48;
-	bool rotlimit_x_min = g_movelimit < 50;
+	bool rotlimit_x_max = (int)g_movelimit > -48;
+	bool rotlimit_x_min = (int)g_movelimit < 50;
 	if (pInputKeyboard->GetKeyPress(DIK_UP) || wiicon->GetKeyPress(WII_BUTTOM_UP))
 	{
 		if (rotlimit_x_max)
 		{
-			g_movelimit--;
-			m_shotrot.x -= D3DX_PI * 0.01f;
-			m_vecrot.x -= D3DX_PI * 0.01f;
+			g_movelimit -= 1.0f * 0.5f;
+			m_shotrot.x -= D3DX_PI * 0.005f;
+			m_vecrot.x -= D3DX_PI * 0.005f;
 			m_playerrot_x += D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 			m_vecrot.x = Rotation_Normalizer(m_vecrot.x);
@@ -810,9 +853,9 @@ void CGame::AngleDecision()
 	{
 		if (rotlimit_x_min)
 		{
-			g_movelimit++;
-			m_shotrot.x += D3DX_PI * 0.01f;
-			m_vecrot.x += D3DX_PI * 0.01f;
+			g_movelimit += 1.0f * 0.5f;
+			m_shotrot.x += D3DX_PI * 0.005f;
+			m_vecrot.x += D3DX_PI * 0.005f;
 			m_playerrot_x -= D3DX_PI * 0.01f;
 			m_shotrot.x = Rotation_Normalizer(m_shotrot.x);
 			m_vecrot.x = Rotation_Normalizer(m_vecrot.x);
@@ -846,6 +889,49 @@ void CGame::AngleDecision()
 												m_vecrot.y + D3DX_PI  * 0.5f - D3DX_PI  * 0.225f * cosf(m_vecrot.x),
 												D3DX_PI  * 0.25f * sinf(m_vecrot.x)));
 	m_pPlayer[m_nPlayerNum]->SetPos(work_p);
+
+
+	// ゴール位置検索
+	D3DXVECTOR3 goal_vec;
+	goal_vec = CheckVector(m_pGoal->GetPos(), ball);
+	m_fnavimove += 0.1f;
+
+	m_fnavimove = Rotation_Normalizer(m_fnavimove);
+
+	for (int i = 0; i < 4; i++)
+	{
+		D3DXVECTOR3 nevi_pos = m_pgoalnavi[i]->GetPos();
+		switch ((i))
+		{
+		case 0: nevi_pos.y -= sinf(m_fnavimove) * 5; break;
+		case 1: nevi_pos.x -= sinf(m_fnavimove) * 5; break;
+		case 2: nevi_pos.x += sinf(m_fnavimove) * 5; break;
+		case 3: nevi_pos.y += sinf(m_fnavimove) * 5; break;
+		default:
+			break;
+		}
+		m_pgoalnavi[i]->SetPos(nevi_pos);
+	}
+
+	D3DXVECTOR3 cross;
+	D3DXVec3Cross(&cross, &goal_vec, &m_PowerShot);
+
+	if (cross.z > 0.0f){ m_bnaviFlag[2] = true; m_bnaviFlag[1] = false; }
+	else if (cross.z < 0.0f){ m_bnaviFlag[2] = false; m_bnaviFlag[1] = true; }
+	else{ m_bnaviFlag[2] = false; m_bnaviFlag[1] = false; }
+
+	if (goal_vec.y - m_PowerShot.y> 0.2f){ m_bnaviFlag[0] = true; m_bnaviFlag[3] = false; }
+	else if (goal_vec.y - m_PowerShot.y < -0.2f){ m_bnaviFlag[0] = false; m_bnaviFlag[3] = true; }
+	else{ m_bnaviFlag[0] = false; m_bnaviFlag[3] = false; }
+
+	if (calcRaySphere(ball, m_PowerShot, m_pGoal->GetPos(), m_fCupDistance[m_nPlayerNum] * 5.0f))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			m_bnaviFlag[i] = false;
+		}
+	}
+
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 	{
 		for (int i = 0; i < 4; i++)
@@ -869,28 +955,6 @@ void CGame::AngleDecision()
 		g_wiishot = false;
 		m_bcursol = false;
 	}
-	// ゴール位置検索
-	D3DXVECTOR3 goal_vec;
-	goal_vec = CheckVector(m_pGoal->GetPos(), ball);
-
-	D3DXVECTOR3 cross;
-	D3DXVec3Cross(&cross, &goal_vec, &m_PowerShot);
-	CDebugProc::Print("cross : :%f,%f,%f\n", cross.x, cross.y, cross.z);
-	if (cross.z > 0.0f){ m_bnaviFlag[2] = true; m_bnaviFlag[1] = false; }
-	else if (cross.z < 0.0f){ m_bnaviFlag[2] = false; m_bnaviFlag[1] = true; }
-	else{ m_bnaviFlag[2] = false; m_bnaviFlag[1] = false; }
-
-	if (goal_vec.y - m_PowerShot.y> 0.2f){ m_bnaviFlag[0] = true; m_bnaviFlag[3] = false; }
-	else if (goal_vec.y - m_PowerShot.y < -0.2f){ m_bnaviFlag[0] = false; m_bnaviFlag[3] = true; }
-	else{ m_bnaviFlag[0] = false; m_bnaviFlag[3] = false; }
-
-	if (calcRaySphere(ball, m_PowerShot, m_pGoal->GetPos(), m_fCupDistance[m_nPlayerNum]) * 5.0f)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			m_bnaviFlag[i] = false;
-		}
-	}
 }
 //打つ力の決定
 void CGame:: PowerDecision()
@@ -904,14 +968,6 @@ void CGame:: PowerDecision()
 	CSound *pSound;
 	pSound = CManager::GetSound();
 	//弾のスピード調節
-	if (pInputKeyboard->GetKeyPress(DIK_Q))
-	{
-		m_MovePow.y += 1.0f;
-	}
-	else if (pInputKeyboard->GetKeyPress(DIK_A))
-	{
-		m_MovePow.y -= 1.0f;
-	}
 	if (pInputKeyboard->GetKeyPress(DIK_W))
 	{
 		m_MovePow.x += 1.0f;
@@ -920,32 +976,35 @@ void CGame:: PowerDecision()
 	{
 		m_MovePow.x -= 1.0f;
 	}
-	if (pInputKeyboard->GetKeyPress(DIK_E))
-	{
-		m_MovePow.z += 1.0f;
-	}
-	else if (pInputKeyboard->GetKeyPress(DIK_D))
-	{
-		m_MovePow.z -= 1.0f;
-	}
 
-	if (pInputKeyboard->GetKeyPress(DIK_L))
-	{
-		for (int i = 0; i < SHOT_EFFECT; i++)
-		{
-			m_pShotEffect[i]->SetFlag(true);
-			m_pShotEffect[i]->SetVector(-m_PowerShot);
-			m_pShotEffect[i]->SetPos(ball);
-		}
-	}
-	if (pInputKeyboard->GetKeyPress(DIK_K))
+	if ((pInputKeyboard->GetKeyPress(DIK_K) || wiicon->GetKeyTrigger(WII_BUTTOM_DOWN)) && !m_bBlowFlag)
 	{
 		m_pBlowEffect->SetFlag(true, m_nPlayerNum);
+		m_bBlowFlag = true;
+	}
+#if _DEBUG
+	if ((pInputKeyboard->GetKeyPress(DIK_L) || wiicon->GetKeyTrigger(WII_BUTTOM_UP)))
+	{
+		m_pBlowEffect->SetFlag(true, m_nPlayerNum);
+		m_bBlowFlag = true;
+	}
+#endif
+	if (pInputKeyboard->GetKeyPress(DIK_C))
+	{
+		m_pCupin->SetFlag(true);
+		m_pCupin->SetDrawFlag(true);
+	}
+	if (pInputKeyboard->GetKeyPress(DIK_V))
+	{
+		m_pCupin->SetFlag(false);
+		m_pCupin->SetDrawFlag(false);
 	}
 	//仮　打つ力を決めたから次
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
+		m_bStageflag[m_nPlayerNum] = false;
+		m_bStageflagcount[m_nPlayerNum] = 0;
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(true);
@@ -967,7 +1026,8 @@ void CGame:: PowerDecision()
 		m_pBall[m_nPlayerNum]->SetMoveFlag(true);
 	}
 	//仮　打つ力を決めたから次
-	if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
+	//if (g_wiishot&&wiicon->GetWiiYaw() <-40.0f)
+	if (g_wiishot&&abs(wiicon->GetWiiYaw()) > 40.0f)
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
 		for (int i = 0; i < SHOT_EFFECT; i++)
@@ -1019,14 +1079,17 @@ void CGame::BallMove()
 	m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
 	if (abs(velocity.x) < SHOT_RIMIT && abs(velocity.y) < SHOT_RIMIT && abs(velocity.z) < SHOT_RIMIT)
 	{
-		m_pBall[m_nPlayerNum]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pBall[0]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pBall[1]->SetVelocity(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_nSwitchCount = JUDGE_PHASE;
-		m_pBall[m_nPlayerNum]->SetMoveFlag(false);
+		m_pBall[0]->SetMoveFlag(false);
+		m_pBall[1]->SetMoveFlag(false);
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(false);
 		}
 		m_pBlowEffect->SetFlag(false, m_nPlayerNum);
+		m_bBlowFlag = false;
 	}
 }
 //結果判定
@@ -1056,9 +1119,9 @@ void CGame::Judge()
 			m_nSwitchCount = CUPIN_PHASE;
 			m_fCupDistance[m_nPlayerNum] = 0.0f;
 			m_pCountDistance[0]->ResetCount((int)m_fCupDistance[m_nPlayerNum]);
-			m_pScenario[m_nPlayerNum]->SetScenarioEndFlag(false);
-			m_pScenario[m_nPlayerNum]->SetViewFlag(true, 0);
-			m_pScenario[m_nPlayerNum]->GameScenario(m_nGameStartCount, CScenario::AFFAIR_WIN);
+			m_pCupin->SetDrawFlag(true);
+			m_pCupin->SetFlag(true);
+			g_cupinflag = false;
 		}
 	}
 }
@@ -1067,10 +1130,15 @@ void CGame::CupIn()
 	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
-	m_pEffect[10]->SetView(true);
-
+	if (!m_pCupin->GetFlag() && !g_cupinflag)
+	{
+		m_pScenario[m_nPlayerNum]->SetScenarioEndFlag(false);
+		m_pScenario[m_nPlayerNum]->SetViewFlag(true, 0);
+		m_pScenario[m_nPlayerNum]->GameScenario(m_nGameStartCount, CScenario::AFFAIR_CUPIN);
+		g_cupinflag = true;
+	}
 	//シナリオが終了したら
-	if (m_pScenario[m_nPlayerNum]->GetScenarioEndFlag())
+	if (m_pScenario[m_nPlayerNum]->GetScenarioEndFlag() && g_cupinflag)
 	{
 		//エンター押して終了
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
@@ -1079,7 +1147,9 @@ void CGame::CupIn()
 			m_pScenario[m_nPlayerNum]->SetViewFlag(false, 0);
 			m_pGoal->Sethit(0.0f);
 			m_nSwitchCount = END_PHASE;
-			m_pEffect[10]->SetView(false);
+			m_pCupin->SetDrawFlag(false);
+			m_pCupin->SetFlag(false);
+			g_cupinflag = false;
 		}
 	}
 	else
@@ -1088,7 +1158,7 @@ void CGame::CupIn()
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
 			m_nGameStartCount++;
-			m_pScenario[m_nPlayerNum]->GameScenario(m_nGameStartCount, CScenario::AFFAIR_WIN);
+			m_pScenario[m_nPlayerNum]->GameScenario(m_nGameStartCount, CScenario::AFFAIR_CUPIN);
 		}
 	}
 }
@@ -1216,33 +1286,40 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_nPnum = CManager::GetSelectChar(0);
 	m_nEnum = CManager::GetSelectChar(1);
 	ObjectInit(pDevice);
+	m_startpos[0] = D3DXVECTOR3(0.0f, 300.0f, 400.0f);
+	m_startpos[1] = D3DXVECTOR3(400.0f, -300.0f, 0.0f);
 
-	m_pPlayer[0] = CPlayerM::Create(pDevice, m_nPnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[0] = CPlayerM::Create(pDevice, m_nPnum, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 
-	m_pBall[0] = CBall::Create(pDevice, m_nPnum, D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pBall[1] = CBall::Create(pDevice, m_nEnum, D3DXVECTOR3(0.0f, 100.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
+	m_pBall[0] = CBall::Create(pDevice, m_nPnum, m_startpos[0], D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pBall[1] = CBall::Create(pDevice, m_nEnum, m_startpos[1], D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_cursol = CformX::Create(pDevice, "data/MODEL/cursol.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+
+	// hack load場所が悪い
+	m_pMap = CMap::Create(pDevice, m_pBall, m_pGoal, m_cursol);
+
+
+	LoadGiimick(pDevice);
+
+	m_pBall[0]->SetPos(m_startpos[0]);
+	m_pBall[1]->SetPos(m_startpos[1]);
+
+
+
+
 }
 //
 void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
 {
 	// ファイル読みこみに後に変更
-	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 600.0f,600.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 600.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGoal->SetMagnet(S);
 
-	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_STOP, D3DXVECTOR3(400.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pGimmick[0]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-	m_pGimmick[1] = CGimmick::Create(pDevice, GIMMICK_TORNADO, MOVETYPE_STOP, D3DXVECTOR3(-400.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pGimmick[1]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-	m_pGimmick[2] = CGimmick::Create(pDevice, GIMMICK_UFO, MOVETYPE_SLIDE, D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pGimmick[2]->SetSize(D3DXVECTOR3(30.0f, 30.0f, 30.0f));
-	m_pGimmick[2]->SetMagnet(N);
 	// とりあえずマックスはここで
-	m_GimmickMax = 3;
 }
 // 当たり判定
 void CGame::ObjHitCheck()
@@ -1252,6 +1329,7 @@ void CGame::ObjHitCheck()
 	D3DXVECTOR3 obj = m_pGoal->GetPos();
 	D3DXVECTOR3 size;
 	D3DXVECTOR3 rot;
+	m_nTurnCount;
 	if (SphireHit(ball, 20.0f, obj, 10.0f))
 	{
 		m_pGoal->Sethit(1.0f);
@@ -1264,14 +1342,63 @@ void CGame::ObjHitCheck()
 	{
 		m_pGoal->Sethit(0.5f);
 	}
-	// とりあえずギミックとの当たり判定
-	for (int i = 0; i < m_GimmickMax; i++)
+	if (m_nTurnCount != 1)
 	{
-		obj = m_pGimmick[i]->GetPos();
-		size = m_pGimmick[i]->GetSize();
+		D3DXVECTOR3 ball1 = m_pBall[0]->GetPos();
+		D3DXVECTOR3 ball2 = m_pBall[1]->GetPos();
+		if (SphireHit(ball1, 20.0f, ball2, 20.0f))
+		{
+			// ball1 -> ball2
+			D3DXVECTOR3 vec = CheckVector(ball2, ball1);
+			D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
+			if (m_nPlayerNum == 0)
+			{
+				m_pBall[1]->AddForce(vecball * 0.5f + vec);
+				m_pBall[1]->SetMoveFlag(true);
+				m_pBall[0]->SetVelocity(vecball * 0.5f - vec);
+			}
+			else
+			{
+				m_pBall[0]->AddForce(vecball * 0.5f - vec);
+				m_pBall[0]->SetMoveFlag(true);
+				m_pBall[1]->SetVelocity(vecball * 0.5f + vec);
+			}
+		}
+	}
+	bool stageflag = false;
+	for (int i = 0; i < m_nStagenum && !stageflag; i++)
+	{
+		if (SphireHit(ball, 20.0f, m_nStageinfo[i].pos, m_nStageinfo[i].size))
+		{
+			//D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
+			//m_pBall[1]->SetVelocity(-vecball);
+			stageflag = true;
+		}
+	}
+	if (m_bStageflag[m_nPlayerNum])
+	{
+		m_bStageflagcount[m_nPlayerNum] ++;
+		if (m_bStageflagcount[m_nPlayerNum] > 0)
+		{
+			m_bStageflag[m_nPlayerNum] = false;
+			m_bStageflagcount[m_nPlayerNum] = 0;
+		}
+	}
+	if (!stageflag && !m_bStageflag[m_nPlayerNum])
+	{
+		D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
+		m_pBall[m_nPlayerNum]->SetVelocity(-vecball);
+		m_bStageflag[m_nPlayerNum] = true;
+		m_bStageflagcount[m_nPlayerNum] = 0;
+	}
+	// とりあえずギミックとの当たり判定
+	for (int i = 0; i < m_nGimmickmax; i++)
+	{
+		obj = m_pGimmick_stage[i]->GetPos();
+		size = m_pGimmick_stage[i]->GetSize();
 		D3DXVECTOR3 vector = m_pBall[m_nPlayerNum]->GetVelocity();
-		D3DXVECTOR3 rot = m_pGimmick[i]->GetRot();
-		switch (m_pGimmick[i]->GetGimmickType())
+		D3DXVECTOR3 rot = m_pGimmick_stage[i]->GetRot();
+		switch (m_pGimmick_stage[i]->GetGimmickType())
 		{
 		case GIMMICK_CUBE:
 			m_pBall[m_nPlayerNum]->AddForce(
@@ -1367,16 +1494,100 @@ void CGame::Magnet(void)
 	//if (m_nMoveCount < 100)
 	{
 		//ギミック数カウント
-		for (int i = 0; i < m_GimmickMax; i++)
+		for (int i = 0; i < m_nGimmickmax; i++)
 		{
 			//UFOならば
-			if (m_pGimmick[i]->GetGimmickType() == GIMMICK_UFO)
+			if (m_pGimmick_stage[i]->GetGimmickType() == GIMMICK_UFO)
 			{
 				m_pBall[m_nPlayerNum]->AddForce(
 					MagnetMove(ballns, ballpos,
-					m_pGimmick[i]->GetMagnet(),
-					m_pGimmick[i]->GetPos()));
+					m_pGimmick_stage[i]->GetMagnet(),
+					m_pGimmick_stage[i]->GetPos()));
 			}
 		}
 	}
+}
+void CGame::LoadGiimick(LPDIRECT3DDEVICE9 pDevice)
+{
+
+	int stage_id = CManager::GetSelectMap();
+	char defDif[MAX_PATH] = { NULL };
+	FILE *fp;
+	fp = fopen(g_fieldname[stage_id], "rb");
+	int loadnum;
+	fscanf(fp, "%d\n", &loadnum);
+	fseek(fp, 0, SEEK_SET);
+	fseek(fp, sizeof(int), SEEK_SET);
+
+	m_nStageinfo = new STAGE_INFO[loadnum];
+	m_nStagenum = loadnum;
+	m_pMap->SetMapFieldNum(loadnum);
+	for (int n = 0; n < loadnum; n++)
+	{
+		int type = 0;
+		float special = 0;
+		D3DXVECTOR3 pos;
+		D3DXVECTOR3 size;
+		D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		fscanf(fp, "%f,%f,%f\n", &pos.x, &pos.y, &pos.z);
+		fscanf(fp, "%f,%f,%f\n", &size.x, &size.y, &size.z);
+		m_nStageinfo[n].pos = pos;
+		m_nStageinfo[n].size = size.x;
+		m_pMap->SetMapFieldPos(n,pos,size.x);
+	}
+	fclose(fp);
+	fp = fopen("data/MAP/test.sto", "rb");
+	fscanf(fp, "%d\n", &loadnum);
+	fseek(fp, 0, SEEK_SET);
+	fseek(fp, sizeof(int), SEEK_SET);
+	m_pGimmick_stage = new CGimmick*[loadnum - 3];
+	m_nGimmickmax = loadnum - 3;
+	int numgimmick = 0;
+	for (int n = 0; n < loadnum; n++)
+	{
+		char name[256];
+		char fname[256];
+		int type;
+		float special;
+		D3DXVECTOR3 pos;
+		D3DXVECTOR3 size;
+		D3DXVECTOR3 rot;
+		D3DXVECTOR3 scale;
+		fscanf(fp, "%s\n", &name);
+		fscanf(fp, "%d\n", &type);
+		fscanf(fp, "%f,%f,%f\n", &pos.x, &pos.y, &pos.z);
+		fscanf(fp, "%f,%f,%f\n", &size.x, &size.y, &size.z);
+		fscanf(fp, "%f,%f,%f\n", &rot.x, &rot.y, &rot.z);
+		fscanf(fp, "%f\n", &scale.x);
+		fscanf(fp, "%f\n", &special);
+		sprintf(fname, "%s", strstr(name, "object"));
+		scale.y = scale.z = scale.x;
+		if (type < GIMMICK_MAX)
+		{
+			m_pGimmick_stage[numgimmick] = CGimmick::Create(pDevice, (GIMMICKTYPE)type, (MOVETYPE)((int)special), pos, size);
+			if (type == GIMMICK_UFO)
+			{
+				m_pGimmick_stage[numgimmick]->SetMagnet(N);
+			}
+
+			numgimmick++;
+		}
+		else
+		{
+			if (type == GIMMICK_MAX)
+			{ 
+				m_startpos[0] = pos; 
+			}
+			else if (type =- GIMMICK_MAX + 1)
+			{
+				m_startpos[1] = pos; 
+			}
+			else
+			{
+				m_goalpos = pos;
+			}
+
+		}
+	}
+	fclose(fp);
 }

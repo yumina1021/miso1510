@@ -56,12 +56,13 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;L2D_TARGET_D3D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>source\Live2D\lib\live2d_directX_mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;L2D_TARGET_D3D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -80,6 +81,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>source\Live2D\lib\live2d_directX_mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -87,11 +89,19 @@
     <ClCompile Include="source\administer\Texture.cpp" />
     <ClCompile Include="source\administer\wiicon\wiimote.cpp" />
     <ClCompile Include="source\administer\wiicon\WiiRemote.cpp" />
+    <ClCompile Include="source\Live2D\L2DExpressionMotion.cpp" />
+    <ClCompile Include="source\Live2D\L2DEyeBlink.cpp" />
+    <ClCompile Include="source\Live2D\L2DMotionManager.cpp" />
+    <ClCompile Include="source\Live2D\L2DPhysics.cpp" />
+    <ClCompile Include="source\Live2D\L2DPose.cpp" />
+    <ClCompile Include="source\Live2D\Live2DManager.cpp" />
+    <ClCompile Include="source\Live2D\Live2DModel.cpp" />
     <ClCompile Include="source\module\etc\ShotEffect.cpp" />
     <ClCompile Include="source\module\Gimmick\Gimmick.cpp" />
     <ClCompile Include="source\module\Gimmick\Magnet.cpp" />
     <ClCompile Include="source\module\ui\BlowShot.cpp" />
     <ClCompile Include="source\module\ui\Button.cpp" />
+    <ClCompile Include="source\module\ui\Cupin.cpp" />
     <ClCompile Include="source\module\ui\Cursor.cpp" />
     <ClCompile Include="source\administer\Debugproc.cpp" />
     <ClCompile Include="source\administer\FrustumCulling.cpp" />
@@ -133,6 +143,7 @@
     <ClCompile Include="source\module\ui\Gauge.cpp" />
     <ClCompile Include="source\module\ui\Icon.cpp" />
     <ClCompile Include="source\module\ui\Lock.cpp" />
+    <ClCompile Include="source\module\ui\Map.cpp" />
     <ClCompile Include="source\module\ui\Number.cpp" />
     <ClCompile Include="source\module\ui\ResultScore.cpp" />
     <ClCompile Include="source\module\ui\Scenario.cpp" />
@@ -148,11 +159,19 @@
     <ClInclude Include="source\administer\wiicon\wiimote_common.h" />
     <ClInclude Include="source\administer\wiicon\wiimote_state.h" />
     <ClInclude Include="source\administer\wiicon\WiiRemote.h" />
+    <ClInclude Include="source\Live2D\L2DExpressionMotion.h" />
+    <ClInclude Include="source\Live2D\L2DEyeBlink.h" />
+    <ClInclude Include="source\Live2D\L2DMotionManager.h" />
+    <ClInclude Include="source\Live2D\L2DPhysics.h" />
+    <ClInclude Include="source\Live2D\L2DPose.h" />
+    <ClInclude Include="source\Live2D\Live2DManager.h" />
+    <ClInclude Include="source\Live2D\Live2DModel.h" />
     <ClInclude Include="source\module\etc\ShotEffect.h" />
     <ClInclude Include="source\module\Gimmick\Gimmick.h" />
     <ClInclude Include="source\module\Gimmick\Magnet.h" />
     <ClInclude Include="source\module\ui\BlowShot.h" />
     <ClInclude Include="source\module\ui\Button.h" />
+    <ClInclude Include="source\module\ui\Cupin.h" />
     <ClInclude Include="source\module\ui\Cursor.h" />
     <ClInclude Include="source\administer\data.h" />
     <ClInclude Include="source\administer\Debugproc.h" />
@@ -198,6 +217,7 @@
     <ClInclude Include="source\module\ui\Gauge.h" />
     <ClInclude Include="source\module\ui\Icon.h" />
     <ClInclude Include="source\module\ui\Lock.h" />
+    <ClInclude Include="source\module\ui\Map.h" />
     <ClInclude Include="source\module\ui\Number.h" />
     <ClInclude Include="source\module\ui\ResultScore.h" />
     <ClInclude Include="source\module\ui\Scenario.h" />
