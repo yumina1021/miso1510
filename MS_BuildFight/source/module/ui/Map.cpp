@@ -4,17 +4,19 @@
 #include "../etc/Ball.h"
 #include "../etc/Goal.h"
 #include "../../administer/Texture.h"
+#include "../../form/formX.h"
 
-#define SIZE_CONVERT	(0.09f)
+#define SIZE_CONVERT	(0.04f)
 void CreateMapModel(int no, D3DXVECTOR3 pos, LPDIRECT3DDEVICE9 device);
 //=============================================================================
 // CMap初期化
 //=============================================================================
-HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal)
+HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol)
 {
 	m_pDevice = device;
 	m_pBall[0] = ball[0];
 	m_pBall[1] = ball[1];
+	m_pCursol = cursol;
 	m_pGoal = goal;
 	m_mappos = D3DXVECTOR3(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT / 2.0f - 80.0f, 0.0f);
 
@@ -22,6 +24,8 @@ HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal)
 	m_player[1] =	Cform2D::Create(m_pDevice,	TEXTURE_CUPIN_U, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
 	m_goal =		Cform2D::Create(m_pDevice,	TEXTURE_CUPIN_C, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
 	m_flame =		Cform2D::Create(m_pDevice,	TEXTURE_CHARAFRAME, m_mappos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 300, 300);
+	m_cursol = Cform2D::Create(m_pDevice, TEXTURE_MAP_FIELD, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
+	m_cursol->SetDiffuse(0.2f,0.f,0.2f,1.f);
 	vecfactor = 0;
 	return TRUE;
 }
@@ -30,6 +34,8 @@ HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal)
 //=============================================================================
 void CMap :: Uninit()
 {
+	delete m_fieldpos;
+	delete[] m_Field;
 }
 //=============================================================================
 // CMap更新
@@ -45,31 +51,61 @@ void CMap :: Update()
 		// 上
 		m_player[0]->SetPos(D3DXVECTOR3(m_pBall[0]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[0]->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		m_player[1]->SetPos(D3DXVECTOR3(m_pBall[1]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[1]->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		}
+		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 1:
 		// 下
 		m_player[0]->SetPos(D3DXVECTOR3(-m_pBall[0]->GetPos().x * SIZE_CONVERT + m_mappos.x, m_pBall[0]->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		m_player[1]->SetPos(D3DXVECTOR3(-m_pBall[1]->GetPos().x * SIZE_CONVERT + m_mappos.x, m_pBall[1]->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, m_fieldpos[i].z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		}
+		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 2:
 		// 右
 		m_player[0]->SetPos(D3DXVECTOR3(m_pBall[0]->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pBall[0]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		m_player[1]->SetPos(D3DXVECTOR3(m_pBall[1]->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pBall[1]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].z * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		}
+		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 3:
 		// 左
 		m_player[0]->SetPos(D3DXVECTOR3(-m_pBall[0]->GetPos().z * SIZE_CONVERT + m_mappos.x,-m_pBall[0]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
-		m_player[1]->SetPos(D3DXVECTOR3(-m_pBall[1]->GetPos().z * SIZE_CONVERT + m_mappos.x,-m_pBall[1]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_player[1]->SetPos(D3DXVECTOR3(-m_pBall[1]->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pBall[1]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].z * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		}
+		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 4:
 		// 手前
 		m_player[0]->SetPos(D3DXVECTOR3(m_pBall[0]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[0]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		m_player[1]->SetPos(D3DXVECTOR3(m_pBall[1]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[1]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		}
+		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 5:
 		// 奥
-		m_player[0]->SetPos(D3DXVECTOR3(-m_pBall[0]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[0]->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
-		m_player[1]->SetPos(D3DXVECTOR3(-m_pBall[1]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[1]->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_player[0]->SetPos(D3DXVECTOR3(-m_pBall[0]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[0]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_player[1]->SetPos(D3DXVECTOR3(-m_pBall[1]->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pBall[1]->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		}
+		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	}
 }
@@ -79,9 +115,14 @@ void CMap :: Update()
 void CMap :: Draw()
 {
 	m_flame->Draw();
+	for (int i = 0; i < m_fieldnum; i++)
+	{
+		m_Field[i]->Draw();
+	}
 	m_player[0]->Draw();
 	m_player[1]->Draw();
 	m_goal->Draw();
+	m_cursol->Draw();
 }
 //=============================================================================
 // CMap座標設定
@@ -104,12 +145,12 @@ CMap :: ~CMap()
 }
 
 
-CMap* CMap::Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal)
+CMap* CMap::Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol)
 {
 	CMap* pObject;
 	pObject = new CMap();
 	
-	pObject->Init(device, ball, goal);
+	pObject->Init(device, ball, goal, cursol);
 
 	return pObject;
 }
@@ -118,4 +159,16 @@ CMap* CMap::Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal)
 void CreateMapModel(int no, D3DXVECTOR3 pos, LPDIRECT3DDEVICE9 device)
 {
 
+}
+void CMap::SetMapFieldNum(int num)
+{
+	m_fieldnum = num;
+	m_fieldpos = new D3DXVECTOR3[num];
+	m_Field = new Cform2D*[num];
+}
+void CMap::SetMapFieldPos(int id,D3DXVECTOR3 pos,float map_size)
+{
+	D3DXVECTOR3 work;
+	m_Field[id] = Cform2D::Create(m_pDevice, TEXTURE_MAP_FIELD, pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), map_size * SIZE_CONVERT * 2.0f, map_size * SIZE_CONVERT * 2.0f);
+	m_fieldpos[id] = pos;
 }

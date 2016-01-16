@@ -92,6 +92,13 @@ key2Con K2CList[8]={
 	{DIK_D, COMMAND_RIGHT},
 	{DIK_A, COMMAND_LEFT}
 };
+char* g_fieldname[]
+{
+	"data/MAP/save.mof",
+	"data/MAP/save.mof",
+	"data/MAP/save.mof",
+	"data/MAP/save.mof"
+};
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -117,7 +124,6 @@ CGame :: CGame(void)
 	m_playercamera = D3DXVECTOR3(0.f, 0.0f, 0.f);
 	m_pBall[1] = {};
 
-	m_pGimmick[12] = {};
 }
 //=============================================================================
 // デストラクタ
@@ -198,8 +204,6 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pBlowEffect = CBlowShot::Create(pDevice, m_nPnum, m_nEnum);
 
 	m_pCupin = CCupin::Create(pDevice);
-
-	m_pMap = CMap::Create(pDevice,m_pBall,m_pGoal);
 	float length_n = 100.0f;
 	//m_pgoalnavi[0] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(SCREEN_WIDTH / 2, length_n, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), length_n, length_n);
 	//m_pgoalnavi[1] = Cform2D::Create(pDevice, TEXTURE_LOSER, D3DXVECTOR3(length_n, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI / 2), length_n, length_n);
@@ -235,7 +239,6 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 
 	m_nTurnCount = 0;
 
-	m_bBlowShot = false;
 
 	//サウンド再生の作成
 	pSound->Play(SOUND_LABEL_BGM002);
@@ -263,6 +266,8 @@ HRESULT CGame::Init(LPDIRECT3DDEVICE9 pDevice)
 	CManager::SetWin(PLAYER_DRAW);
 
 	m_fnavimove = 0.0f;
+
+	m_bBlowFlag = 0.0f;
 	return S_OK;
 }
 //=============================================================================
@@ -290,6 +295,8 @@ void CGame :: Uninit(void)
 		delete m_pScenario[i];
 		m_pScenario[i] = NULL;
 	}
+
+	delete[] m_pGimmick_stage;
 	m_pGoal->Uninit();
 	delete m_pGoal;
 	m_pGoal = NULL;
@@ -300,6 +307,8 @@ void CGame :: Uninit(void)
 	delete m_pCupin;
 	m_pMap->Uninit();
 	delete m_pMap;
+
+	delete m_nStageinfo;
 	//シーンを全て終了
 	Cform::ReleaseAll();
 }
@@ -313,12 +322,20 @@ void CGame :: Update(void)
 	pInputKeyboard = CManager::GetInputKeyboard();
 
 	m_pGoal->Update();
+	WiiRemote *wiicon = CManager::GetWii(m_nPlayerNum);
 	for (int i = 0; i < SHOT_EFFECT; i++)
 	{
 		m_pShotEffect[i]->Update();
 	}
 	m_pCupin->Update();
-
+	if (pInputKeyboard->GetKeyTrigger(DIK_I) || wiicon->GetKeyTrigger(WII_BUTTOM_1))
+	{
+		m_pMap->MapChagePlus();
+	}
+	if (pInputKeyboard->GetKeyTrigger(DIK_O) || wiicon->GetKeyTrigger(WII_BUTTOM_2))
+	{
+		m_pMap->MapChageMinus();
+	}
 	//更新本体
 	if (!m_bChangeFlag)
 	{
@@ -519,9 +536,9 @@ void CGame :: Draw(void)
 
 		if (m_bcursol)m_cursol->Draw();
 		m_pGoal->Draw();
-		for (int i = 0; i < m_GimmickMax; i++)
+		for (int i = 0; i < m_nGimmickmax; i++)
 		{
-			m_pGimmick[i]->Draw();
+			m_pGimmick_stage[i]->Draw();
 		}
 		m_pBall[0]->Draw();
 		m_pBall[1]->Draw();
@@ -635,6 +652,7 @@ void CGame::TurnStart()
 	{
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
 		{
+			m_bBlowFlag = false;
 			m_nGameStartCount = 0;
 			m_pBall[m_nPlayerNum]->SetAlpha(0.3f);
 			D3DXVECTOR3 vec;
@@ -920,7 +938,6 @@ void CGame::AngleDecision()
 		{
 			m_bnaviFlag[i] = false;
 		}
-		m_bBlowShot = false;
 		m_pBall[m_nPlayerNum]->SetAlpha(1.0f);
 		//ベクトルの関数呼ぶ場所
 		m_pEffect[0]->SetView(false);
@@ -960,20 +977,18 @@ void CGame:: PowerDecision()
 		m_MovePow.x -= 1.0f;
 	}
 
-	if (pInputKeyboard->GetKeyPress(DIK_L) && !m_bBlowShot)
-	{
-		for (int i = 0; i < SHOT_EFFECT; i++)
-		{
-			m_pShotEffect[i]->SetFlag(true);
-			m_pShotEffect[i]->SetVector(-m_PowerShot);
-			m_pShotEffect[i]->SetPos(ball);
-		}
-		m_bBlowShot = true;
-	}
-	if (pInputKeyboard->GetKeyPress(DIK_K))
+	if ((pInputKeyboard->GetKeyPress(DIK_K) || wiicon->GetKeyTrigger(WII_BUTTOM_DOWN)) && !m_bBlowFlag)
 	{
 		m_pBlowEffect->SetFlag(true, m_nPlayerNum);
+		m_bBlowFlag = true;
 	}
+#if _DEBUG
+	if ((pInputKeyboard->GetKeyPress(DIK_L) || wiicon->GetKeyTrigger(WII_BUTTOM_UP)))
+	{
+		m_pBlowEffect->SetFlag(true, m_nPlayerNum);
+		m_bBlowFlag = true;
+	}
+#endif
 	if (pInputKeyboard->GetKeyPress(DIK_C))
 	{
 		m_pCupin->SetFlag(true);
@@ -988,6 +1003,8 @@ void CGame:: PowerDecision()
 	if (pInputKeyboard->GetKeyTrigger(DIK_RETURN))
 	{
 		m_pBall[m_nPlayerNum]->SetShotNum(m_pBall[m_nPlayerNum]->GetShotNum() + 1);
+		m_bStageflag[m_nPlayerNum] = false;
+		m_bStageflagcount[m_nPlayerNum] = 0;
 		for (int i = 0; i < SHOT_EFFECT; i++)
 		{
 			m_pShotEffect[i]->SetFlag(true);
@@ -1072,6 +1089,7 @@ void CGame::BallMove()
 			m_pShotEffect[i]->SetFlag(false);
 		}
 		m_pBlowEffect->SetFlag(false, m_nPlayerNum);
+		m_bBlowFlag = false;
 	}
 }
 //結果判定
@@ -1120,7 +1138,7 @@ void CGame::CupIn()
 		g_cupinflag = true;
 	}
 	//シナリオが終了したら
-	if (m_pScenario[m_nPlayerNum]->GetScenarioEndFlag())
+	if (m_pScenario[m_nPlayerNum]->GetScenarioEndFlag() && g_cupinflag)
 	{
 		//エンター押して終了
 		if (pInputKeyboard->GetKeyTrigger(DIK_RETURN) || wiicon->GetKeyTrigger(WII_BUTTOM_A))
@@ -1271,15 +1289,28 @@ void CGame::ModelInit(LPDIRECT3DDEVICE9 pDevice)
 	m_startpos[0] = D3DXVECTOR3(0.0f, 300.0f, 400.0f);
 	m_startpos[1] = D3DXVECTOR3(400.0f, -300.0f, 0.0f);
 
-	m_pPlayer[0] = CPlayerM::Create(pDevice, m_nPnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[0] = CPlayerM::Create(pDevice, m_nPnum, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum , D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer[1] = CPlayerM::Create(pDevice, m_nEnum, D3DXVECTOR3(0, 0, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 
 	m_pBall[0] = CBall::Create(pDevice, m_nPnum, m_startpos[0], D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pBall[1] = CBall::Create(pDevice, m_nEnum, m_startpos[1], D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
 	m_cursol = CformX::Create(pDevice, "data/MODEL/cursol.x", D3DXVECTOR3(0.0f, 100.0f, 200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+
+	// hack load場所が悪い
+	m_pMap = CMap::Create(pDevice, m_pBall, m_pGoal, m_cursol);
+
+
+	LoadGiimick(pDevice);
+
+	m_pBall[0]->SetPos(m_startpos[0]);
+	m_pBall[1]->SetPos(m_startpos[1]);
+
+
+
+
 }
 //
 void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
@@ -1288,15 +1319,7 @@ void CGame::ObjectInit(LPDIRECT3DDEVICE9 pDevice)
 	m_pGoal = CGoal::Create(pDevice, 0, D3DXVECTOR3(0.0f, 600.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_pGoal->SetMagnet(S);
 
-	m_pGimmick[0] = CGimmick::Create(pDevice, GIMMICK_CUBE, MOVETYPE_STOP, D3DXVECTOR3(400.0f, 400.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pGimmick[0]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-	m_pGimmick[1] = CGimmick::Create(pDevice, GIMMICK_TORNADO, MOVETYPE_STOP, D3DXVECTOR3(-400.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pGimmick[1]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-	m_pGimmick[2] = CGimmick::Create(pDevice, GIMMICK_UFO, MOVETYPE_SLIDE, D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	m_pGimmick[2]->SetSize(D3DXVECTOR3(30.0f, 30.0f, 30.0f));
-	m_pGimmick[2]->SetMagnet(N);
 	// とりあえずマックスはここで
-	m_GimmickMax = 3;
 }
 // 当たり判定
 void CGame::ObjHitCheck()
@@ -1342,22 +1365,40 @@ void CGame::ObjHitCheck()
 			}
 		}
 	}
-	//for (int i = 0; i < MAX_FIELD_BALL; i++)
-	//{
-	//	if (SphireHit(ball, 20.0f, m_pfield[i].pos, m_pfield[i].size))
-	//	{
-	//		D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
-	//		m_pBall[1]->SetVelocity(-vecball);
-	//	}
-	//}
-	// とりあえずギミックとの当たり判定
-	for (int i = 0; i < m_GimmickMax; i++)
+	bool stageflag = false;
+	for (int i = 0; i < m_nStagenum && !stageflag; i++)
 	{
-		obj = m_pGimmick[i]->GetPos();
-		size = m_pGimmick[i]->GetSize();
+		if (SphireHit(ball, 20.0f, m_nStageinfo[i].pos, m_nStageinfo[i].size))
+		{
+			//D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
+			//m_pBall[1]->SetVelocity(-vecball);
+			stageflag = true;
+		}
+	}
+	if (m_bStageflag[m_nPlayerNum])
+	{
+		m_bStageflagcount[m_nPlayerNum] ++;
+		if (m_bStageflagcount[m_nPlayerNum] > 0)
+		{
+			m_bStageflag[m_nPlayerNum] = false;
+			m_bStageflagcount[m_nPlayerNum] = 0;
+		}
+	}
+	if (!stageflag && !m_bStageflag[m_nPlayerNum])
+	{
+		D3DXVECTOR3 vecball = m_pBall[m_nPlayerNum]->GetVelocity();
+		m_pBall[m_nPlayerNum]->SetVelocity(-vecball * 2);
+		m_bStageflag[m_nPlayerNum] = true;
+		m_bStageflagcount[m_nPlayerNum] = 0;
+	}
+	// とりあえずギミックとの当たり判定
+	for (int i = 0; i < m_nGimmickmax; i++)
+	{
+		obj = m_pGimmick_stage[i]->GetPos();
+		size = m_pGimmick_stage[i]->GetSize();
 		D3DXVECTOR3 vector = m_pBall[m_nPlayerNum]->GetVelocity();
-		D3DXVECTOR3 rot = m_pGimmick[i]->GetRot();
-		switch (m_pGimmick[i]->GetGimmickType())
+		D3DXVECTOR3 rot = m_pGimmick_stage[i]->GetRot();
+		switch (m_pGimmick_stage[i]->GetGimmickType())
 		{
 		case GIMMICK_CUBE:
 			m_pBall[m_nPlayerNum]->AddForce(
@@ -1453,15 +1494,15 @@ void CGame::Magnet(void)
 	//if (m_nMoveCount < 100)
 	{
 		//ギミック数カウント
-		for (int i = 0; i < m_GimmickMax; i++)
+		for (int i = 0; i < m_nGimmickmax; i++)
 		{
 			//UFOならば
-			if (m_pGimmick[i]->GetGimmickType() == GIMMICK_UFO)
+			if (m_pGimmick_stage[i]->GetGimmickType() == GIMMICK_UFO)
 			{
 				m_pBall[m_nPlayerNum]->AddForce(
 					MagnetMove(ballns, ballpos,
-					m_pGimmick[i]->GetMagnet(),
-					m_pGimmick[i]->GetPos()));
+					m_pGimmick_stage[i]->GetMagnet(),
+					m_pGimmick_stage[i]->GetPos()));
 			}
 		}
 	}
@@ -1469,16 +1510,18 @@ void CGame::Magnet(void)
 void CGame::LoadGiimick(LPDIRECT3DDEVICE9 pDevice)
 {
 
+	int stage_id = CManager::GetSelectMap();
 	char defDif[MAX_PATH] = { NULL };
 	FILE *fp;
-	fp = fopen(defDif, "rb");
+	fp = fopen(g_fieldname[stage_id], "rb");
 	int loadnum;
 	fscanf(fp, "%d\n", &loadnum);
 	fseek(fp, 0, SEEK_SET);
 	fseek(fp, sizeof(int), SEEK_SET);
 
 	m_nStageinfo = new STAGE_INFO[loadnum];
-
+	m_nStagenum = loadnum;
+	m_pMap->SetMapFieldNum(loadnum);
 	for (int n = 0; n < loadnum; n++)
 	{
 		int type = 0;
@@ -1490,13 +1533,16 @@ void CGame::LoadGiimick(LPDIRECT3DDEVICE9 pDevice)
 		fscanf(fp, "%f,%f,%f\n", &size.x, &size.y, &size.z);
 		m_nStageinfo[n].pos = pos;
 		m_nStageinfo[n].size = size.x;
+		m_pMap->SetMapFieldPos(n,pos,size.x);
 	}
 	fclose(fp);
-	fp = fopen(defDif, "rb");
+	fp = fopen("data/MAP/test.sto", "rb");
 	fscanf(fp, "%d\n", &loadnum);
 	fseek(fp, 0, SEEK_SET);
 	fseek(fp, sizeof(int), SEEK_SET);
-	m_pGimmick_stage = new CGimmick*[loadnum - 2];
+	m_pGimmick_stage = new CGimmick*[loadnum - 3];
+	m_nGimmickmax = loadnum - 3;
+	int numgimmick = 0;
 	for (int n = 0; n < loadnum; n++)
 	{
 		char name[256];
@@ -1518,12 +1564,28 @@ void CGame::LoadGiimick(LPDIRECT3DDEVICE9 pDevice)
 		scale.y = scale.z = scale.x;
 		if (type < GIMMICK_MAX)
 		{
-			m_pGimmick[n] = CGimmick::Create(pDevice, (GIMMICKTYPE)type, (MOVETYPE)((int)special), pos, size);
+			m_pGimmick_stage[numgimmick] = CGimmick::Create(pDevice, (GIMMICKTYPE)type, (MOVETYPE)((int)special), pos, size);
+			if (type == GIMMICK_UFO)
+			{
+				m_pGimmick_stage[numgimmick]->SetMagnet(N);
+			}
+
+			numgimmick++;
 		}
 		else
 		{
-			if (n == GIMMICK_MAX){ m_startpos[0] = pos; }
-			else{ m_startpos[1] = pos; }
+			if (type == GIMMICK_MAX)
+			{ 
+				m_startpos[0] = pos; 
+			}
+			else if (type =- GIMMICK_MAX + 1)
+			{
+				m_startpos[1] = pos; 
+			}
+			else
+			{
+				m_goalpos = pos;
+			}
 
 		}
 	}

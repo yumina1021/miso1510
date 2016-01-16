@@ -99,9 +99,9 @@ void CCupin :: Update(void)
 
 		if (m_timer > 0.24f){ m_s_timer[4] += 0.05f; }
 
-		if (m_s_timer[4] > 3.0f)
+		if (m_s_timer[4] > 2.0f)
 		{
-			m_s_timer[4] = 3.0f; m_bFlag = false;
+			m_s_timer[4] = 2.0f; m_bFlag = false;
 		}
 		D3DXVECTOR3 pos;
 		for (int i = 0; i < 5; i++)

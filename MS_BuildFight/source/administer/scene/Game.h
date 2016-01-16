@@ -107,8 +107,10 @@ class CGame  : public CScene
 		CScore *GetScore(void){ return m_pScore; };
 		CLocusEffect *GetLocusEffect(int i){return m_pLocusEffect[i];};
 		CIcon *GetIcon(void){return m_pIcon;};
-		CIcon *GetIconEnemy(void){return m_pIconEnemy;};
-
+		CIcon *GetIconEnemy(void){ return m_pIconEnemy; };
+		D3DXVECTOR3 GetFieldPos(int id){ return m_nStageinfo[id].pos; }
+		float GetFieldsize(int id){ return m_nStageinfo[id].size; }
+		int GetFieldNum(){ return m_nStagenum; }
 		void SetTimer(int time);
 
 		static bool SphireHit(D3DXVECTOR3 a, float al, D3DXVECTOR3 b, float bl){
@@ -192,7 +194,6 @@ class CGame  : public CScene
 		CCupin*			m_pCupin;
 		CMap*			m_pMap;
 
-		CGimmick*		m_pGimmick[10];
 		CGimmick**		m_pGimmick_stage;
 
 		int				m_nCount;
@@ -212,12 +213,12 @@ class CGame  : public CScene
 		int				m_nPnum;
 		bool			m_bJudge;
 		int				m_nTurnCount;
-		int				m_GimmickMax;
 		static int		m_nSwitchCount;
 		D3DXVECTOR3		m_MovePow;
 		D3DXVECTOR3		m_shotrot;
 		D3DXVECTOR3		m_vecrot;
 		D3DXVECTOR3		m_startpos[2];
+		D3DXVECTOR3		m_goalpos;
 		float		m_playerrot_x;
 		static D3DXVECTOR3		m_PowerShot;
 		bool			m_bcursol;
@@ -226,9 +227,12 @@ class CGame  : public CScene
 
 		float			m_fnavimove;
 		bool			m_bnaviFlag[4];
-		bool			m_bBlowShot;
 		int				m_nStagenum;
+		int				m_nGimmickmax;
 		STAGE_INFO*		m_nStageinfo;
+		bool			m_bBlowFlag;
+		bool			m_bStageflag[2];
+		int				m_bStageflagcount[2];
 };
 
 #endif
