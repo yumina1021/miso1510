@@ -23,9 +23,16 @@
 #include "../../module/field/Domeunder.h"
 #include "../../form/formX.h"
 #include "../../form/form2D.h"
+#include "../../form/form3D.h"
 #include "../../module/robot/PlayerM.h"
+#include "../Texture.h"
 
 #include "../wiicon/wiimote.h"
+
+#include "../../Live2D/Live2DManager.h"
+
+#include "../entityFactory.hpp"
+#include "../finalize.hpp"
 
 #include "../../administer/Debugproc.h"
 
@@ -48,6 +55,8 @@ const float CHAR_HEIGHT(600.0f);
 
 const int LOGO_WIDTH(800.0f);			//メニューの横サイズ
 const int LOGO_HEIGHT(250.0f);			//メニューの縦サイズ
+
+Live2DManager* l2dManager;
 
 //=============================================================================
 // コンストラクタ
@@ -84,10 +93,14 @@ CTitle :: ~CTitle(void)
 HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 {
 
+	dxDevice = pDevice;
+
+
 	//背景の作成
 	//m_pBackGround=CBackGround::Create(pDevice,BACKGROUND_TITLE);
 
-	m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT/2, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	//m_pLogo = CButton::Create(pDevice, s_7, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT/2, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_pLogo = Cform3D::Create(pDevice, TEXTURE_S_7, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-D3DX_PI / 2.0f, 0.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//空の作成
 	m_pDome = CDome::Create(pDevice, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -116,6 +129,8 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	//サウンド再生の作成
 	pSound->Play(SOUND_LABEL_BGM000);
 
+	l2dManager = Factory::Create<Live2DManager>();
+	l2dManager->Init(pDevice);
 
 	//フェードの作成
 	m_pFade = CFade::Create(pDevice, 1);
@@ -134,6 +149,8 @@ void CTitle :: Uninit(void)
 
 	//サウンド再生の作成
 	pSound->Stop();
+
+	SafeDelete(l2dManager);
 
 	//シーンを全て終了
 	Cform::ReleaseAll();
@@ -159,9 +176,17 @@ void CTitle :: Update(void)
 	fTmpPosR.x = fTmpPosP.x + sinf(fTmpRot.y / 180.0f * D3DX_PI) * -5000.0f;
 	fTmpPosR.z = fTmpPosP.z + cosf(fTmpRot.y / 180.0f * D3DX_PI) * 5000.0f;
 
-	pTmpCamera->SetRotCamera(fTmpRot);
-	pTmpCamera->SetPosR(fTmpPosR);
+	//pTmpCamera->SetRotCamera(fTmpRot);
+	//pTmpCamera->SetPosR(fTmpPosR);
 	
+	D3DXVECTOR3 rot = m_pDome->GetRot();
+
+	rot.y += 0.001f;
+
+	m_pDome->SetRot(rot);
+	m_pDome2->SetRot(rot);
+
+
 	// 一時的に保存
 	int tmpCursorOld = m_nCursor;
 
@@ -201,10 +226,17 @@ void CTitle :: Update(void)
 
 	}
 
+	l2dManager->Update();
+
+	m_pLogo->SetPos(0.0f, 0.0f, -4100.0f);
+
 #ifdef _DEBUG
 
+	float test = m_pLogo->GetPos().z;
+
 	CDebugProc::Print("選択中のボタン:%d\n", m_nCursor);
-	CDebugProc::Print("モード選択:%d\n ※0:ボタン 1:カーソル", m_nType);
+	CDebugProc::Print("モード選択:%d\n ※0:ボタン 1:カーソル\n", m_nType);
+	CDebugProc::Print("座標Z:%f\n", test);
 
 #endif
 }
@@ -213,12 +245,10 @@ void CTitle :: Update(void)
 //=============================================================================
 void CTitle :: Draw(void)
 {
-	//m_pBackGround->Draw();
-
 	m_pDome->Draw();
 	m_pDome2->Draw();
 
-	m_pLogo->Draw();
+	m_pLogo->Draw2();
 
 	m_pMenueButton[GAME_START]->Draw();
 	m_pMenueButton[GAME_END]->Draw();
@@ -240,6 +270,7 @@ void CTitle :: Draw(void)
 
 	//フェード
 	m_pFade->Draw();
+	l2dManager->Draw(dxDevice);
 
 }
 //=============================================================================
