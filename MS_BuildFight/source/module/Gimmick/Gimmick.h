@@ -70,6 +70,7 @@ class CGimmick : public CformX
 
 		void SetMagnet(NS mag){ m_nsMagnet = mag; };
 		NS GetMagnet(void){ return  m_nsMagnet; };
+
 	private:
 		void _UpdateObject(void);
 		void _UpdateCube(void);

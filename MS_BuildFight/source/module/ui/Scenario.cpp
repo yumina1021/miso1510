@@ -20,6 +20,31 @@
 
 #include "../../administer/Texture.h"
 
+#include "../../administer/Sound.h"
+
+#include "../../administer/Maneger.h"
+
+int win_voice[][3]
+=
+{
+	{ VOICE_LABEL_SE_VOICE11, VOICE_LABEL_SE_VOICE12 },
+	{ VOICE_LABEL_SE_VOICE09, VOICE_LABEL_SE_VOICE10 },
+	{ VOICE_LABEL_SE_VOICE11, VOICE_LABEL_SE_VOICE12 },
+};
+int draw_voice[][3]
+=
+{
+	{ VOICE_LABEL_SE_VOICE02, VOICE_LABEL_SE_VOICE02, VOICE_LABEL_SE_VOICE03 },
+	{ VOICE_LABEL_SE_VOICE00, VOICE_LABEL_SE_VOICE03 },
+	{ VOICE_LABEL_SE_VOICE00, VOICE_LABEL_SE_VOICE01 },
+};
+int lose_voice[][3]
+=
+{
+	{ VOICE_LABEL_SE_VOICE05, VOICE_LABEL_SE_VOICE06 },
+	{ VOICE_LABEL_SE_VOICE01, VOICE_LABEL_SE_VOICE02 },
+	{ VOICE_LABEL_SE_VOICE02, VOICE_LABEL_SE_VOICE03 },
+};
 //*****************************************************************************
 // 静的変数
 //*****************************************************************************
@@ -113,6 +138,9 @@ void CScenario :: Draw(void)
 //=============================================================================
 void CScenario::GameScenario(int count, GameAffair affair)
 {
+	//サウンド取得の作成
+	CSound *pSound;
+	pSound = CManager::GetSound();
 	if (m_nCount <= count)
 	{
 		GameScenarioData data;
@@ -129,6 +157,7 @@ void CScenario::GameScenario(int count, GameAffair affair)
 				case 2:data = scenario_ojyo_start[m_nCount]; break;
 				case 3:data = scenario_tutorial_start[m_nCount]; break;
 				}
+				if (m_charaType > 2)pSound->PlayVoice(m_charaType, (VOICE_LABEL)win_voice[m_charaType][m_nCount]);
 			break;
 			case AFFAIR_WIN:
 				switch (m_charaType)
@@ -138,6 +167,7 @@ void CScenario::GameScenario(int count, GameAffair affair)
 				case 2:data = scenario_ojyo_win[m_nCount]; break;
 				case 3:data = scenario_tutorial_win[m_nCount]; break;
 				}
+				if (m_charaType > 2)pSound->PlayVoice(m_charaType, (VOICE_LABEL)win_voice[m_charaType][m_nCount]);
 			break;
 			case AFFAIR_LOSE:
 				switch (m_charaType)
@@ -147,6 +177,7 @@ void CScenario::GameScenario(int count, GameAffair affair)
 				case 2:data = scenario_ojyo_lose[m_nCount]; break;
 				case 3:data = scenario_tutorial_lose[m_nCount]; break;
 				}
+				if (m_charaType > 2)pSound->PlayVoice(m_charaType, (VOICE_LABEL)win_voice[m_charaType][m_nCount]);
 			break;
 			case AFFAIR_HALF:
 				switch (m_charaType)
@@ -156,6 +187,7 @@ void CScenario::GameScenario(int count, GameAffair affair)
 				case 2:data = scenario_ojyo_harf[m_nCount]; break;
 				case 3:data = scenario_tutorial_harf[m_nCount]; break;
 				}
+				if (m_charaType > 2)pSound->PlayVoice(m_charaType, (VOICE_LABEL)win_voice[m_charaType][m_nCount]);
 			break;
 			case AFFAIR_CUPIN:
 				switch (m_charaType)
@@ -165,6 +197,7 @@ void CScenario::GameScenario(int count, GameAffair affair)
 				case 2:data = scenario_ojyo_cupin[m_nCount]; break;
 				case 3:data = scenario_tutorial_cupin[m_nCount]; break;
 				}
+				if (m_charaType > 2)pSound->PlayVoice(m_charaType, (VOICE_LABEL)win_voice[m_charaType][m_nCount]);
 			break;
 		}
 

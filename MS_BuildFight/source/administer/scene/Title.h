@@ -75,6 +75,7 @@ class CTitle  : public CScene
 		float			m_fDiffuse;			//メニューアニメーション用
 		SELECT_TYPE		m_nType;
 		CCursor*		m_pCursor[2];			//メニュー用
+		bool m_btitlecoll;
 		LPDIRECT3DDEVICE9 dxDevice;
 };
 

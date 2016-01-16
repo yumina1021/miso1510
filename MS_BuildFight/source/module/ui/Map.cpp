@@ -8,10 +8,17 @@
 
 #define SIZE_CONVERT	(0.04f)
 void CreateMapModel(int no, D3DXVECTOR3 pos, LPDIRECT3DDEVICE9 device);
+int g_icon_char[] =
+{
+	TEXTURE_ICON_ROSA,
+	TEXTURE_ICON_LILA,
+	TEXTURE_ICON_LICHT,
+	TEXTURE_ICON_JIJI
+};
 //=============================================================================
 // CMap‰Šú‰»
 //=============================================================================
-HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol)
+HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol, int player1, int player2)
 {
 	m_pDevice = device;
 	m_pBall[0] = ball[0];
@@ -20,13 +27,14 @@ HRESULT CMap::Init(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX
 	m_pGoal = goal;
 	m_mappos = D3DXVECTOR3(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT / 2.0f - 80.0f, 0.0f);
 
-	m_player[0] =	Cform2D::Create(m_pDevice,	TEXTURE_CUPIN_P, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
-	m_player[1] =	Cform2D::Create(m_pDevice,	TEXTURE_CUPIN_U, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
-	m_goal =		Cform2D::Create(m_pDevice,	TEXTURE_CUPIN_C, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
+	m_player[0] = Cform2D::Create(m_pDevice, g_icon_char[player1], D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 32, SCREEN_HEIGHT / 32);
+	m_player[1] = Cform2D::Create(m_pDevice, g_icon_char[player2], D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 32, SCREEN_HEIGHT / 32);
+	m_goal = Cform2D::Create(m_pDevice, TEXTURE_ICON_FLAG, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 32, SCREEN_HEIGHT / 32);
 	m_flame =		Cform2D::Create(m_pDevice,	TEXTURE_CHARAFRAME, m_mappos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), 300, 300);
-	m_cursol = Cform2D::Create(m_pDevice, TEXTURE_MAP_FIELD, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
-	m_cursol->SetDiffuse(0.2f,0.f,0.2f,1.f);
+	m_cursol = Cform2D::Create(m_pDevice, TEXTURE_ICON_BALL, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), SCREEN_WIDTH / 64, SCREEN_HEIGHT / 64);
+	//m_cursol->SetDiffuse(0.1f,0.f,0.1f,0.1f);
 	vecfactor = 0;
+	m_bDrawFlag = false;
 	return TRUE;
 }
 //=============================================================================
@@ -42,7 +50,6 @@ void CMap :: Uninit()
 //=============================================================================
 void CMap :: Update()
 {
-	m_goal->SetPos(D3DXVECTOR3(-m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 	if (vecfactor > 5)vecfactor = 0;
 	if (vecfactor < 0)vecfactor = 5;
 	switch (vecfactor)
@@ -56,6 +63,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(-m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 1:
 		// ‰º
@@ -66,6 +74,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, m_fieldpos[i].z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(-m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 2:
 		// ‰E
@@ -76,6 +85,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].z * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 3:
 		// ¶
@@ -86,6 +96,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].z * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 4:
 		// Žè‘O
@@ -96,6 +107,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 5:
 		// ‰œ
@@ -106,6 +118,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(-m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	}
 }
@@ -114,15 +127,18 @@ void CMap :: Update()
 //=============================================================================
 void CMap :: Draw()
 {
-	m_flame->Draw();
-	for (int i = 0; i < m_fieldnum; i++)
+	if (m_bDrawFlag)
 	{
-		m_Field[i]->Draw();
+		m_flame->Draw();
+		for (int i = 0; i < m_fieldnum; i++)
+		{
+			m_Field[i]->Draw();
+		}
+		m_player[0]->Draw();
+		m_player[1]->Draw();
+		m_goal->Draw();
+		m_cursol->Draw();
 	}
-	m_player[0]->Draw();
-	m_player[1]->Draw();
-	m_goal->Draw();
-	m_cursol->Draw();
 }
 //=============================================================================
 // CMapÀ•WÝ’è
@@ -145,12 +161,12 @@ CMap :: ~CMap()
 }
 
 
-CMap* CMap::Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol)
+CMap* CMap::Create(LPDIRECT3DDEVICE9 device, CBall* ball[2], CGoal* goal, CformX* cursol, int player1, int player2)
 {
 	CMap* pObject;
 	pObject = new CMap();
 	
-	pObject->Init(device, ball, goal, cursol);
+	pObject->Init(device, ball, goal, cursol, player1, player2);
 
 	return pObject;
 }

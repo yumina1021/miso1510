@@ -35,6 +35,7 @@
 #include "../finalize.hpp"
 
 #include "../../administer/Debugproc.h"
+#include "../../exten_common.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -136,6 +137,7 @@ HRESULT CTitle :: Init(LPDIRECT3DDEVICE9 pDevice)
 	m_pFade = CFade::Create(pDevice, 1);
 	m_pFade->StartFade(FADE_OUT,50,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),CManager::GetSelectChar(0));
 
+	m_btitlecoll = false;
 	return S_OK;
 }
 //=============================================================================
@@ -160,6 +162,8 @@ void CTitle :: Uninit(void)
 //=============================================================================
 void CTitle :: Update(void)
 {
+	CSound *pSound;
+	pSound = CManager::GetSound();
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
 	pInputKeyboard = CManager::GetInputKeyboard();
@@ -230,6 +234,10 @@ void CTitle :: Update(void)
 
 	m_pLogo->SetPos(0.0f, 0.0f, -4100.0f);
 
+	if (m_btitlecoll)
+	{
+		pSound->PlayVoice(mersenne_twister_u16(0, 2), VOICE_LABEL_SE_TITLE_CALL);
+	}
 #ifdef _DEBUG
 
 	float test = m_pLogo->GetPos().z;
@@ -294,6 +302,7 @@ void CTitle::KeyCommand(void)
 	{
 
 		pSound->Play(SOUND_LABEL_SE_SELECT002);
+		pSound->PlayVoice(mersenne_twister_u16(0, 2), VOICE_LABEL_SE_TITLE_CALL);
 		ChangeState();
 
 	}
