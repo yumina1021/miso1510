@@ -46,8 +46,8 @@ public:
 		ROSA = 0,
 		LILA,
 		LICHT,
-		NAVI,
 	};
+
 	//=============================================================================
 	// FunctionName: Constructor
 	// Param: void
@@ -104,13 +104,36 @@ public:
 
 	//=============================================================================
 	// FunctionName: SetMotion
-	// Param: どのモデルのモーションを再生するかの識別子
 	// Param: どのモーションを再生するかの識別子
 	// ReturnValue: void
-	// Content: 指定したモデルのモーションの再生
+	// Content: モーションの再生
 	//			※再生終了後に待機モーションに戻ります
 	//=============================================================================
 	void SetMotion(int pramMotionState);
+
+	//=============================================================================
+	// FunctionName: SetExMotion
+	// Param: どのモデルのモーションを再生するかの識別子
+	// ReturnValue: void
+	// Content: 表情モーションの再生
+	//=============================================================================
+	void SetExMotion(int pramExMotionState);
+
+	//=============================================================================
+	// FunctionName: DrawStart
+	// Param: void
+	// ReturnValue: void
+	// Content: 描画開始
+	//=============================================================================
+	void DrawStart(){ drawFlg = true; };
+
+	//=============================================================================
+	// FunctionName: DrawEnd
+	// Param: void
+	// ReturnValue: void
+	// Content: 描画終了
+	//=============================================================================
+	void DrawEnd(){ drawFlg = false; };
 
 	//=============================================================================
 	// Setter
@@ -123,6 +146,7 @@ public:
 	//=============================================================================
 	D3DXVECTOR3 GetPos(){ return pos; };
 	D3DXVECTOR3 GetScl(){ return scl; };
+	bool GetDrawFlg(){ return drawFlg; };
 
 private:
 	//=============================================================================
@@ -226,6 +250,14 @@ private:
 	void UpdateTalk();
 
 	//=============================================================================
+	// FunctionName: UpdateMotion
+	// Param: void
+	// ReturnValue: void
+	// Content: モーションの更新
+	//=============================================================================
+	void UpdateMotion();
+
+	//=============================================================================
 	// FunctionName: EsasingNone
 	// Param: 最小値
 	// Param: 最大値
@@ -245,6 +277,7 @@ private:
 	L2DExpressionMotion* exMotionPtr[MAX_LOAD_EX];
 	AMotion* motionPtr[MAX_LOAD_MOTION];
 	L2DMotionManager motionMgr;
+	L2DMotionManager exMotionMgr;
 	MODEL_TYPE type;
 	
 	D3DXVECTOR3 pos;
@@ -254,6 +287,8 @@ private:
 	int createExMotionCnt;
 	bool talkStartFlg;
 	float mouthCoff;
+	bool drawFlg;
+
 };
 
 #endif// _LIVE2D_MODEL_H_

@@ -27,7 +27,7 @@ static const int PRIORITY_IDLE = 1;
 static const int PRIORITY_NORMAL = 2;
 static const int PRIORITY_FORCE = 3;
 
-static const int MAX_CHARCTER(4);
+static const int MAX_CHARCTER(3);
 //*****************************************************************************
 // NameSpace
 //*****************************************************************************
@@ -83,11 +83,6 @@ bool Live2DManager::Init(LPDIRECT3DDEVICE9 paramDevice){
 	mod[Live2DModel::MODEL_TYPE::LICHT].SetPos(D3DXVECTOR3(-SCREEN_WIDTH / 2, -600.0f, 0.0f));
 	mod[Live2DModel::MODEL_TYPE::LICHT].SetScl(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 
-	// 初期化
-	mod[Live2DModel::MODEL_TYPE::NAVI].Init(Live2DModel::MODEL_TYPE::NAVI, paramDevice);
-	mod[Live2DModel::MODEL_TYPE::NAVI].SetPos(D3DXVECTOR3(-SCREEN_WIDTH / 2, -600.0f, 0.0f));
-	mod[Live2DModel::MODEL_TYPE::NAVI].SetScl(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
-
 	// Live2Dモデル用のレンダーターゲット
 	for (int i = 0; i < MAX_CHARCTER; i++){
 
@@ -131,41 +126,25 @@ void Live2DManager::Update(void){
 //=============================================================================
 void Live2DManager::Draw(LPDIRECT3DDEVICE9 paramDevice){
 
-	// レンダーステートの切替
-	modRender[0].SetRenderTarget(paramDevice, 0);
+	for (int i = 0; i < MAX_CHARCTER; i++){
 
-	//描画用初期化
-	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 255, 255, 255), 1.0f, 0);
+		if (mod[i].GetDrawFlg()){
 
-	// 描画
-	mod[0].Draw(paramDevice);
-	
-	// レンダーステートの切替
-	modRender[0].ReleaseRenderTarget(paramDevice, 0);
+			// レンダーステートの切替
+			modRender[i].SetRenderTarget(paramDevice, 0);
 
-	// レンダーステートの切替
-	modRender[1].SetRenderTarget(paramDevice, 0);
+			//描画用初期化
+			paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 255, 255, 0), 1.0f, 0);
 
-	//描画用初期化
-	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 0, 255, 255), 1.0f, 0);
+			// 描画
+			mod[i].Draw(paramDevice);
 
-	// 描画
-	mod[1].Draw(paramDevice);
+			// レンダーステートの切替
+			modRender[i].ReleaseRenderTarget(paramDevice, 0);
 
-	// レンダーステートの切替
-	modRender[1].ReleaseRenderTarget(paramDevice, 0);
+		}// if
 
-	// レンダーステートの切替
-	modRender[2].SetRenderTarget(paramDevice, 0);
-
-	//描画用初期化
-	paramDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(255, 255, 0, 255), 1.0f, 0);
-
-	// 描画
-	mod[2].Draw(paramDevice);
-
-	// レンダーステートの切替
-	modRender[2].ReleaseRenderTarget(paramDevice, 0);
+	}// for
 
 }// Draw
 //=============================================================================
@@ -193,4 +172,42 @@ void Live2DManager::SetMotion(int paramModState, int pramMotionState){
 	mod[paramModState].SetMotion(pramMotionState);
 
 }// SetMotion
+//=============================================================================
+// FunctionName: SetExMotion
+// Param: どのモデルの表情モーションを再生するかの識別子
+// Param: どのモデルの表情モーションを再生するかの識別子
+// ReturnValue: void
+// Content: 指定した表情モデルのモーションの再生
+//			※再生終了後に待機モーションに戻ります
+//=============================================================================
+void Live2DManager::SetExMotion(int paramModState, int pramExMotionState){
+
+	// 表情モーションの再生
+	mod[paramModState].SetExMotion(pramExMotionState);
+
+}// SetExMotion
+//=============================================================================
+// FunctionName: DrawStart
+// Param: どのモデルの描画をするかの識別子
+// ReturnValue: void
+// Content: この関数を呼び出した次のフレームから描画開始
+//=============================================================================
+void Live2DManager::SetDrawStart(int paramModState){
+
+	// 描画開始
+	mod[paramModState].DrawStart();
+
+}// DrawStart
+//=============================================================================
+// FunctionName: DrawEnd
+// Param: void
+// ReturnValue: void
+// Content: この関数を呼び出した次のフレームから描画終了
+//=============================================================================
+void Live2DManager::SetDrawEnd(int paramModState){
+
+	// 描画終了
+	mod[paramModState].DrawEnd();
+
+}// DrawEnd
 // EOF

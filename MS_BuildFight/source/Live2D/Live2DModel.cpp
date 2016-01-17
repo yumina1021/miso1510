@@ -33,18 +33,15 @@ const char* USE_MODEL[] = {
 	"data\\res\\haru\\haru_01.moc",
 	"data\\res\\haru\\haru_02.moc",
 	"data\\res\\haru\\haru_01.moc",
-	"data\\res\\haru\\haru_01.moc",
 	NULL,
 };
 const char* POSE[] = {
 	"data\\res\\haru\\haru.pose.json",
 	"data\\res\\haru\\haru.pose.json",
 	"data\\res\\haru\\haru.pose.json",
-	"data\\res\\haru\\haru.pose.json",
 	NULL,
 };
 const char* PHYSICS[] = {
-	"data\\res\\haru\\haru.physics.json",
 	"data\\res\\haru\\haru.physics.json",
 	"data\\res\\haru\\haru.physics.json",
 	"data\\res\\haru\\haru.physics.json",
@@ -67,12 +64,6 @@ const LPCWSTR TEXTURES3[] = {
 	L"data\\res\\haru\\haru_01.1024\\texture_00.png",
 	L"data\\res\\haru\\haru_01.1024\\texture_01.png",
 	L"data\\res\\haru\\haru_01.1024\\texture_02.png",
-	NULL,
-};
-const LPCWSTR TEXTURES4[] = {
-	L"data\\res\\haru\\haru_02.1024\\texture_00.png",
-	L"data\\res\\haru\\haru_02.1024\\texture_01.png",
-	L"data\\res\\haru\\haru_02.1024\\texture_02.png",
 	NULL,
 };
 const char* EX_MOTION1[] = {
@@ -109,19 +100,10 @@ const char* EX_MOTION3[] = {
 	"data\\res\\haru\\expressions\\f08.exp.json",
 	NULL,
 };
-const char* EX_MOTION4[] = {
-	"data\\res\\haru\\expressions\\f01.exp.json",
-	"data\\res\\haru\\expressions\\f02.exp.json",
-	"data\\res\\haru\\expressions\\f03.exp.json",
-	"data\\res\\haru\\expressions\\f04.exp.json",
-	"data\\res\\haru\\expressions\\f05.exp.json",
-	"data\\res\\haru\\expressions\\f06.exp.json",
-	"data\\res\\haru\\expressions\\f07.exp.json",
-	"data\\res\\haru\\expressions\\f08.exp.json",
-	NULL,
-};
 const char* MOTION1[] = {
 	"data\\res\\haru\\motions\\idle_00.mtn",
+	"data\\res\\haru\\motions\\idle_01.mtn",
+	"data\\res\\haru\\motions\\idle_02.mtn",
 	"data\\res\\haru\\motions\\tapBody_01.mtn",
 	"data\\res\\haru\\motions\\tapBody_02.mtn",
 	"data\\res\\haru\\motions\\tapBody_03.mtn",
@@ -135,19 +117,8 @@ const char* MOTION1[] = {
 };
 
 const char* MOTION2[] = {
+	"data\\res\\haru\\motions\\idle_00.mtn",
 	"data\\res\\haru\\motions\\idle_01.mtn",
-	"data\\res\\haru\\motions\\tapBody_01.mtn",
-	"data\\res\\haru\\motions\\tapBody_02.mtn",
-	"data\\res\\haru\\motions\\tapBody_03.mtn",
-	"data\\res\\haru\\motions\\tapBody_04.mtn",
-	"data\\res\\haru\\motions\\tapBody_05.mtn",
-	"data\\res\\haru\\motions\\tapBody_06.mtn",
-	"data\\res\\haru\\motions\\tapBody_07.mtn",
-	"data\\res\\haru\\motions\\tapBody_08.mtn",
-	"data\\res\\haru\\motions\\tapBody_09.mtn",
-	NULL,
-};
-const char* MOTION3[] = {
 	"data\\res\\haru\\motions\\idle_02.mtn",
 	"data\\res\\haru\\motions\\tapBody_01.mtn",
 	"data\\res\\haru\\motions\\tapBody_02.mtn",
@@ -160,8 +131,10 @@ const char* MOTION3[] = {
 	"data\\res\\haru\\motions\\tapBody_09.mtn",
 	NULL,
 };
-const char* MOTION4[] = {
+const char* MOTION3[] = {
 	"data\\res\\haru\\motions\\idle_00.mtn",
+	"data\\res\\haru\\motions\\idle_01.mtn",
+	"data\\res\\haru\\motions\\idle_02.mtn",
 	"data\\res\\haru\\motions\\tapBody_01.mtn",
 	"data\\res\\haru\\motions\\tapBody_02.mtn",
 	"data\\res\\haru\\motions\\tapBody_03.mtn",
@@ -187,7 +160,8 @@ scl(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),
 createMotionCnt(0),
 createExMotionCnt(0),
 talkStartFlg(false),
-mouthCoff(0.0f){
+mouthCoff(0.0f),
+drawFlg(false){
 
 	// 開始時間の取得
 	startTimeMSec = live2d::UtSystem::getUserTimeMSec();
@@ -251,12 +225,6 @@ bool Live2DModel::Init(MODEL_TYPE paramType, LPDIRECT3DDEVICE9 paramDevice)
 	// 表情
 	CreateCharcterExMotion(paramType);
 
-	//ピクセルシェーダー用に変換1
-	//Create_PS("source/shader/basicPS.hlsl", "PS_TEXDIFFUSE", &shader.ps, &shader.psc, paramDevice);
-
-	//バーテックスシェーダー用に変換1
-//	Create_VS("source/shader/basicVS.hlsl", "VS", &shader.vs, &shader.vsc, m_pDevice);
-
 	// 成功
 	return true;
 
@@ -302,16 +270,6 @@ bool Live2DModel::LoadCharcterTexture(MODEL_TYPE paramtype, LPDIRECT3DDEVICE9 pa
 		}// for
 
 		break;
-	case NAVI:
-		// テクスチャのロード
-		for (int i = 0; i < 10; i++){
-			if (!TEXTURES4[i]) break;
-
-			if (!LoadTexture(TEXTURES4[i], paramDevice, i)){ break; };
-
-		}// for
-
-		break;
 	default:
 		break;
 	}
@@ -321,9 +279,6 @@ bool Live2DModel::LoadCharcterTexture(MODEL_TYPE paramtype, LPDIRECT3DDEVICE9 pa
 }// LoadCharcterTexture
 //=============================================================================
 // FunctionName: LoadTexture
-// Param: 読み込むテクスチャのパス
-// ReturnValue: 読み込み結果
-// Content: テクスチャの読み込み
 //=============================================================================
 bool Live2DModel::LoadTexture(const LPCWSTR paramFilePath, LPDIRECT3DDEVICE9 paramDevice, int paramTexNum){
 
@@ -360,18 +315,13 @@ bool Live2DModel::LoadTexture(const LPCWSTR paramFilePath, LPDIRECT3DDEVICE9 par
 
 }// LoadTexture
 //=============================================================================
-// FunctionName: CreateCharcterExMotion
-// Param: 表情モーション用のインデックス
-// Param: DirectXデバイス
-// ReturnValue: 読み込み結果
-// Content: キャラ別の表情モーションの生成
+// CreateCharcterExMotion
 //=============================================================================
 bool Live2DModel::CreateCharcterExMotion(MODEL_TYPE paramtype){
 
 	// 変数宣言
 	int cnt = 0;
-	switch (paramtype)
-	{
+	switch (paramtype){
 	case ROSA:
 
 		// テクスチャのロード
@@ -403,16 +353,6 @@ bool Live2DModel::CreateCharcterExMotion(MODEL_TYPE paramtype){
 		}// for
 
 		break;
-	case NAVI:
-		// テクスチャのロード
-		for (cnt = 0; cnt < MAX_LOAD_EX; cnt++){
-			if (!EX_MOTION1[cnt]) break;
-
-			exMotionPtr[cnt] = CreateExMotion(EX_MOTION1[cnt], cnt);
-
-		}// for
-
-		break;
 	default:
 		break;
 	}
@@ -423,19 +363,14 @@ bool Live2DModel::CreateCharcterExMotion(MODEL_TYPE paramtype){
 
 }// CreateCharcterExMotion
 //=============================================================================
-// FunctionName: CreateCharcterExMotion
-// Param: 表情モーション用のインデックス
-// Param: DirectXデバイス
-// ReturnValue: 読み込み結果
-// Content: キャラ別の表情モーションの生成
+// CreateCharcterExMotion
 //=============================================================================
 bool Live2DModel::CreateCharcterMotion(MODEL_TYPE paramtype){
 
 	// 変数宣言
 	int cnt = 0;
 
-	switch (paramtype)
-	{
+	switch (paramtype){
 	case ROSA:
 
 		// テクスチャのロード
@@ -463,16 +398,6 @@ bool Live2DModel::CreateCharcterMotion(MODEL_TYPE paramtype){
 			if (!MOTION3[cnt]) break;
 
 			motionPtr[cnt] = CreateMotion(MOTION3[cnt], cnt);
-
-		}// for
-
-		break;
-	case NAVI:
-		// テクスチャのロード
-		for (cnt = 0; cnt < MAX_LOAD_MOTION; cnt++){
-			if (!MOTION4[cnt]) break;
-
-			motionPtr[cnt] = CreateMotion(MOTION4[cnt], cnt);
 
 		}// for
 
@@ -620,56 +545,38 @@ unsigned char* Live2DModel::LoadFile(const char* paramFilePath, int &refFileSize
 //=============================================================================
 // Update
 //=============================================================================
-void Live2DModel::Update(void)
-{
+void Live2DModel::Update(){
 
 	// 目パチ
 	eyeBlinkPtr->setParam(live2DModelPtr);
 
-	// 
-	//-----------------------------------------------------------------
-	live2DModelPtr->loadParam();// 前回セーブされた状態をロード
-	if (motionMgr.isFinished())
-	{
-		// モーションの再生がない場合、待機モーションの中からランダムで再生する
-		//startRandomMotion(MOTION_GROUP_IDLE, PRIORITY_IDLE);
-		motionMgr.startMotionPrio(motionPtr[0], false, PRIORITY_IDLE);
+	// モーションの更新
+	UpdateMotion();
 
-	}else{
+	// 呼吸など
+	LDint64	 timeMSec = live2d::UtSystem::getUserTimeMSec() - startTimeMSec;
+	double t = (timeMSec / 1000.0) * 2 * 3.14159;//2*Pi*t
+	live2DModelPtr->setParamFloat("PARAM_BREATH", (float)(0.5f + 0.5f * sin(t / 3.2345)), 1);// 0~1 まで周期的に設定。モーションを上書き。
 
-		motionMgr.updateParam(live2DModelPtr);// モーションを更新
+	// 物理演算でパラメータ更新
+	if (physicsPtr)
+		physicsPtr->updateParam(live2DModelPtr);
 
-	}
-	live2DModelPtr->saveParam();// 状態を保存
-	//-----------------------------------------------------------------
+	// ポーズの設定
+	if (posePtr)
+		posePtr->updateParam(live2DModelPtr);
 
+	// モーションの更新
+	motionMgr.updateParam(live2DModelPtr);
 
-	//if (GetAsyncKeyState('E') & 0x8000)
-	//{
-	//	motionMgrPtr->startMotionPrio(motion1, false, PRIORITY_IDLE);
+	// 口パク
+	if (talkStartFlg)
+		UpdateTalk();
 
+	// モデルの更新
+	live2DModelPtr->update();
 
-	//}
-	//if (GetAsyncKeyState('D') & 0x8000)
-	//{
-	//	motionMgrPtr->startMotionPrio(motion2, false, PRIORITY_NORMAL);
-
-
-	//}
-	//if (GetAsyncKeyState('W') & 0x8000)
-	//{
-	//	motionMgrPtr->startMotionPrio(exMotion1, false, PRIORITY_NORMAL);
-	//}
-	//if (GetAsyncKeyState('S') & 0x8000)
-	//{
-
-	//	motionMgrPtr->startMotionPrio(exMotion2, false, PRIORITY_NORMAL);
-
-
-	//}
-
-
-}
+}// Update
 //=============================================================================
 // Draw
 //=============================================================================
@@ -705,29 +612,10 @@ void Live2DModel::Draw(LPDIRECT3DDEVICE9 paramDevice)
 //=============================================================================
 void Live2DModel::DrawMod(LPDIRECT3DDEVICE9 paramDevice){
 
-	// 呼吸など
-	LDint64	 timeMSec = live2d::UtSystem::getUserTimeMSec() - startTimeMSec;
-	double t = (timeMSec / 1000.0) * 2 * 3.14159;//2*Pi*t
-	live2DModelPtr->setParamFloat("PARAM_BREATH", (float)(0.5f + 0.5f * sin(t / 3.2345)), 1);// 0~1 まで周期的に設定。モーションを上書き。
 
-	// 物理演算でパラメータ更新
-	if (physicsPtr != NULL)
-		physicsPtr->updateParam(live2DModelPtr);
-
-	// ポーズの設定
-	if (posePtr != NULL)
-		posePtr->updateParam(live2DModelPtr);
-
-	// モーションの更新
-	motionMgr.updateParam(live2DModelPtr);
-
-	// 口パク
-	if (talkStartFlg)
-		UpdateTalk();
-	
 	live2DModelPtr->setDevice(paramDevice);
-	live2DModelPtr->update();
 	live2DModelPtr->draw();
+
 	D3DXMATRIXA16 Identity;
 	D3DXMatrixIdentity(&Identity);
 	paramDevice->SetTransform(D3DTS_PROJECTION, &Identity);
@@ -782,7 +670,7 @@ void Live2DModel::SetupMatrix(LPDIRECT3DDEVICE9 paramDevice){
 
 }// SetupMatrix
 //=============================================================================
-// Easing処理
+// EsasingNone
 //=============================================================================
 float Live2DModel::EsasingNone(float paramMin, float paramMax, float paramTime){
 
@@ -803,10 +691,7 @@ float Live2DModel::EsasingNone(float paramMin, float paramMax, float paramTime){
 
 }// EsasingNone
 //=============================================================================
-// FunctionName: UpdateTalk
-// Param: void
-// ReturnValue: void
-// Content: 口パクの更新
+// UpdateTalk
 //=============================================================================
 void Live2DModel::UpdateTalk(){
 
@@ -825,10 +710,7 @@ void Live2DModel::UpdateTalk(){
 
 }// UpdateTalk
 //=============================================================================
-// FunctionName: TalkStart
-// Param: void
-// ReturnValue: void
-// Content: 口パクの更新
+// TalkStart
 //=============================================================================
 void Live2DModel::TalkEnd(){
 
@@ -844,10 +726,7 @@ void Live2DModel::TalkEnd(){
 
 }// TalkEnd
 //=============================================================================
-// FunctionName: TalkStart
-// Param: void
-// ReturnValue: void
-// Content: 口パクの更新
+// TalkStart
 //=============================================================================
 void Live2DModel::TalkStart(){
 
@@ -859,15 +738,44 @@ void Live2DModel::TalkStart(){
 
 }// TalkStart
 //=============================================================================
-// FunctionName: SetMotion
-// Param: どのモーションを再生するかの識別子
-// ReturnValue: void
-// Content: モーションの再生
-//			※再生終了後に待機モーションに戻ります
+// SetMotion
 //=============================================================================
 void Live2DModel::SetMotion(int pramMotionState){
 
 	motionMgr.startMotionPrio(motionPtr[pramMotionState], false, PRIORITY_NORMAL);
 
 }// SetMotion
+//=============================================================================
+// SetExMotion
+//=============================================================================
+void Live2DModel::SetExMotion(int pramMotionState){
+
+	exMotionMgr.startMotion(exMotionPtr[pramMotionState], false);
+
+}// SetMotion
+//=============================================================================
+// UpdateMotion
+//=============================================================================
+void Live2DModel::UpdateMotion(){
+
+	// 前回セーブされた状態をロード
+	live2DModelPtr->loadParam();
+
+	// モーションが終了していたら
+	if (motionMgr.isFinished()){
+
+		// モーションの再生がない場合、待機モーションの中からランダムで再生する
+		//startRandomMotion(MOTION_GROUP_IDLE, PRIORITY_IDLE);
+		motionMgr.startMotionPrio(motionPtr[0], false, PRIORITY_IDLE);
+
+	}else{
+
+		motionMgr.updateParam(live2DModelPtr);// モーションを更新
+
+	}// else
+
+	// 状態を保存
+	live2DModelPtr->saveParam();
+
+}// UpdateMotion
 // EOF
