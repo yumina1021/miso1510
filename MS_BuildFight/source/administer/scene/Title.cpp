@@ -263,6 +263,7 @@ void CTitle :: Draw(void)
 	}
 
 	Live2DManager* tmpMgr = CManager::GetL2DManager();
+	tmpMgr->SetDrawStart(1);
 
 	//キーボードインプットの受け取り
 	CInputKeyboard *pInputKeyboard;
@@ -272,57 +273,88 @@ void CTitle :: Draw(void)
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_1))
 	{
-		tmpMgr->SetMotion(1, 1);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_1);
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_2))
 	{
-		tmpMgr->SetMotion(1, 2);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_2);
 
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_3))
 	{
-		tmpMgr->SetMotion(1, 3);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_3);
 
 	}
 
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_4))
 	{
-		tmpMgr->SetMotion(1, 4);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_4);
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_5))
 	{
-		tmpMgr->SetMotion(1, 5);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_5);
 
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_6))
 	{
-		tmpMgr->SetMotion(1, 3);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_6);
 
 	}
 
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_7))
 	{
-		tmpMgr->SetMotion(1, 1);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_7);
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_8))
 	{
-		tmpMgr->SetMotion(1, 2);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_8);
 
 	}
 	//エンターキーが押された場合
 	if (pInputKeyboard->GetKeyTrigger(DIK_9))
 	{
-		tmpMgr->SetMotion(1, 3);
+		tmpMgr->SetMotion(1, Live2DManager::MOTION_9);
 
 	}
 
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_Y))
+	{
+		tmpMgr->SetExMotion(1, Live2DManager::EX_MOTION_2);
+
+	}
+
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_U))
+	{
+		tmpMgr->SetExMotion(1, Live2DManager::EX_MOTION_3);
+
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_I))
+	{
+		tmpMgr->SetExMotion(1, Live2DManager::EX_MOTION_4);
+
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_O))
+	{
+		tmpMgr->SetExMotion(1, Live2DManager::EX_MOTION_5);
+
+	}
+	//エンターキーが押された場合
+	if (pInputKeyboard->GetKeyTrigger(DIK_P))
+	{
+		tmpMgr->SetExMotion(1, Live2DManager::EX_MOTION_6);
+
+	}
 	// 
 	m_pLive2DMod[0]->Draw(tmpMgr->GetModTex(0));
 	m_pLive2DMod[1]->Draw(tmpMgr->GetModTex(1));

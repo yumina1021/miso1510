@@ -26,6 +26,35 @@ class RenderTarget;
 class Live2DManager
 {
 public:
+	enum MOTIN_TYPE
+	{
+		IDLE_0 = 0,
+		IDLE_1,
+		IDLE_2,
+		MOTION_1,
+		MOTION_2,
+		MOTION_3,
+		MOTION_4,
+		MOTION_5,
+		MOTION_6,
+		MOTION_7,
+		MOTION_8,
+		MOTION_9,
+
+	};
+	enum EX_MOTIN_TYPE
+	{
+		EX_MOTION_1 = 0,
+		EX_MOTION_2,
+		EX_MOTION_3,
+		EX_MOTION_4,
+		EX_MOTION_5,
+		EX_MOTION_6,
+		EX_MOTION_7,
+		EX_MOTION_8,
+		EX_MOTION_9,
+
+	};
 	//=============================================================================
 	// FunctionName: Constructor
 	// Param: void
@@ -81,6 +110,32 @@ public:
 	//			※再生終了後に待機モーションに戻ります
 	//=============================================================================
 	void SetMotion(int paramModState, int pramMotionState);
+
+	//=============================================================================
+	// FunctionName: SetExMotion
+	// Param: どのモデルの表情モーションを再生するかの識別子
+	// Param: どのモデルの表情モーションを再生するかの識別子
+	// ReturnValue: void
+	// Content: 指定した表情モデルのモーションの再生
+	//			※再生終了後に待機モーションに戻ります
+	//=============================================================================
+	void SetExMotion(int paramModState, int pramExMotionState);
+
+	//=============================================================================
+	// FunctionName: DrawStart
+	// Param: どのモデルの描画をするかの識別子
+	// ReturnValue: void
+	// Content: 指定したモデルの描画開始
+	//=============================================================================
+	void SetDrawStart(int paramparamModState);
+
+	//=============================================================================
+	// FunctionName: DrawEnd
+	// Param: void
+	// ReturnValue: void
+	// Content: 指定したモデルの描画終了
+	//=============================================================================
+	void SetDrawEnd(int paramparamModState);
 
 private:
 	Live2DModel* mod;

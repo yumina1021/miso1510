@@ -86,7 +86,7 @@ CManager :: CManager(void)
 CManager :: ~CManager(void)
 {
 	SafeDelete(l2dManager);
-
+	SafeDelete(backBuff);
 }
 //=============================================================================
 // ‰Šú‰»
