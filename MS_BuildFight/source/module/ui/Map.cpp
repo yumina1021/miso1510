@@ -6,7 +6,7 @@
 #include "../../administer/Texture.h"
 #include "../../form/formX.h"
 
-#define SIZE_CONVERT	(0.04f)
+#define SIZE_CONVERT	(0.05f)
 void CreateMapModel(int no, D3DXVECTOR3 pos, LPDIRECT3DDEVICE9 device);
 int g_icon_char[] =
 {
@@ -63,7 +63,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(m_fieldpos[i].x * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(m_pCursol->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
-		m_goal->SetPos(D3DXVECTOR3(-m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(m_pGoal->GetPos().x * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 1:
 		// ‰º
@@ -96,7 +96,7 @@ void CMap :: Update()
 			m_Field[i]->SetPos(D3DXVECTOR3(-m_fieldpos[i].z * SIZE_CONVERT + m_mappos.x, -m_fieldpos[i].y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		}
 		m_cursol->SetPos(D3DXVECTOR3(-m_pCursol->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pCursol->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
-		m_goal->SetPos(D3DXVECTOR3(m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
+		m_goal->SetPos(D3DXVECTOR3(-m_pGoal->GetPos().z * SIZE_CONVERT + m_mappos.x, -m_pGoal->GetPos().y * SIZE_CONVERT + m_mappos.y, 1.0f));
 		break;
 	case 4:
 		// Žè‘O
@@ -134,10 +134,10 @@ void CMap :: Draw()
 		{
 			m_Field[i]->Draw();
 		}
-		m_player[0]->Draw();
-		m_player[1]->Draw();
-		m_goal->Draw();
 		m_cursol->Draw();
+		if (CGame::GetBallFlag(0)) m_player[0]->Draw();
+		if (CGame::GetBallFlag(1)) m_player[1]->Draw();
+		m_goal->Draw();
 	}
 }
 //=============================================================================

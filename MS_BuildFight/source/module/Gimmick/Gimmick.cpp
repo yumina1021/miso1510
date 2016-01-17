@@ -35,6 +35,7 @@ CGimmick::CGimmick() :CformX()
 	m_Work			= D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_GimmickType	= GIMMICK_TORNADO;
 	m_MoveType		= MOVETYPE_STOP;
+	m_fLimitMove = 300.0f;
 }
 //=============================================================================
 // デストラクタ
@@ -162,9 +163,9 @@ void CGimmick::UpdateCubeMoveSlide(void)
 {
 	m_Pos.x += m_Speed;
 	
-	if (m_Pos.x > m_Work.x+300)
+	if (m_Pos.x > m_Work.x + m_fLimitMove)
 	{ m_Speed *= -1.0f; }
-	if (m_Pos.x < m_Work.x-300)
+	if (m_Pos.x < m_Work.x - m_fLimitMove)
 	{ m_Speed *= -1.0f; }
 
 }
@@ -172,8 +173,8 @@ void CGimmick::UpdateCubeMoveUpDown(void)
 {
 	m_Pos.y += m_Speed;
 
-	if (m_Pos.y > m_Work.y + 300) { m_Speed *= -1.0f; }
-	if (m_Pos.y < m_Work.y - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.y > m_Work.y + m_fLimitMove) { m_Speed *= -1.0f; }
+	if (m_Pos.y < m_Work.y - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 
 void CGimmick::_UpdateCloud(void)
@@ -202,15 +203,15 @@ void CGimmick::UpdateCloudMoveSlide(void)
 {
 	m_Pos.x += m_Speed;
 
-	if (m_Pos.x > m_Work.x + 300){m_Speed *= -1.0f;}
-	if (m_Pos.x < m_Work.x - 300){m_Speed *= -1.0f;}
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::UpdateCloudMoveUpDown(void)
 {
 	m_Pos.y += m_Speed;
 
-	if (m_Pos.y > m_Work.y + 300) { m_Speed *= -1.0f; }
-	if (m_Pos.y < m_Work.y - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.y > m_Work.y + m_fLimitMove) { m_Speed *= -1.0f; }
+	if (m_Pos.y < m_Work.y - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 
 
@@ -242,15 +243,15 @@ void CGimmick::UpdateCrowMoveSlide(void)
 
 
 
-	if (m_Pos.x > m_Work.x + 300){ m_Speed *= -1.0f; }
-	if (m_Pos.x < m_Work.x - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::UpdateCrowMoveUpDown(void)
 {
 	m_Pos.y += m_Speed;
 
-	if (m_Pos.y > m_Work.y + 300) { m_Speed *= -1.0f; }
-	if (m_Pos.y < m_Work.y - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.y > m_Work.y + m_fLimitMove) { m_Speed *= -1.0f; }
+	if (m_Pos.y < m_Work.y - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 
 void CGimmick::_UpdateUFO(void)
@@ -265,6 +266,15 @@ void CGimmick::_UpdateUFO(void)
 		break;
 	case MOVETYPE_SLIDE:
 		UpdateUFOMoveSlide();	//横移動
+		break;
+	case MOVETYPE_SLASH_RIGHT:
+		UpdateUFOMoveSlash_right();		//上下
+		break;
+	case MOVETYPE_SLASH_LEFT:
+		UpdateUFOMoveSlash_left();	//横移動
+		break;
+	case MOVETYPE_SLIDE_Z:
+		UpdateUFOMoveSlide_Z();	//横移動
 		break;
 	}
 	m_Rot.y += 0.01f;
@@ -288,8 +298,48 @@ void CGimmick::UpdateUFOMoveSlide(void)
 	Rot.y += 0.1f;
 	CformX::SetRot(Rot);
 
-	if (m_Pos.x > m_Work.x + 300){ m_Speed *= -1.0f; }
-	if (m_Pos.x < m_Work.x - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
+}
+void CGimmick::UpdateUFOMoveSlash_right(void)
+{
+
+	m_Pos.x += m_Speed;
+	m_Pos.z -= m_Speed;
+
+	D3DXVECTOR3 Rot;
+	Rot = CformX::GetRot();
+	Rot.y += 0.1f;
+	CformX::SetRot(Rot);
+
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
+}
+void CGimmick::UpdateUFOMoveSlide_Z(void)
+{
+	m_Pos.z += m_Speed;
+
+	D3DXVECTOR3 Rot;
+	Rot = CformX::GetRot();
+	Rot.y += 0.1f;
+	CformX::SetRot(Rot);
+
+	if (m_Pos.z > m_Work.z + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.z < m_Work.z - m_fLimitMove){ m_Speed *= -1.0f; }
+
+}
+void CGimmick::UpdateUFOMoveSlash_left(void)
+{
+	m_Pos.x += m_Speed;
+	m_Pos.z += m_Speed;
+
+	D3DXVECTOR3 Rot;
+	Rot = CformX::GetRot();
+	Rot.y += 0.1f;
+	CformX::SetRot(Rot);
+
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::UpdateUFOMoveUpDown(void)
 {
@@ -300,8 +350,8 @@ void CGimmick::UpdateUFOMoveUpDown(void)
 	Rot.y += 0.1f;
 	CformX::SetRot(Rot);
 
-	if (m_Pos.y > m_Work.y + 300) { m_Speed *= -1.0f; }
-	if (m_Pos.y < m_Work.y - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.y > m_Work.y + m_fLimitMove) { m_Speed *= -1.0f; }
+	if (m_Pos.y < m_Work.y - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::_UpdateWind(void)
 {
@@ -329,15 +379,15 @@ void CGimmick::UpdateWindMoveSlide(void)
 {
 	m_Pos.x += m_Speed;
 
-	if (m_Pos.x > m_Work.x + 300){ m_Speed *= -1.0f; }
-	if (m_Pos.x < m_Work.x - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::UpdateWindMoveUpDown(void)
 {
 	m_Pos.y += m_Speed;
 
-	if (m_Pos.y > m_Work.y + 300) { m_Speed *= -1.0f; }
-	if (m_Pos.y < m_Work.y - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.y > m_Work.y + m_fLimitMove) { m_Speed *= -1.0f; }
+	if (m_Pos.y < m_Work.y - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::_UpdateTornado(void)
 {
@@ -365,27 +415,29 @@ void CGimmick::UpdateTornadoMoveStop(void)
 }
 void CGimmick::UpdateTornadoMoveSlide(void)
 {
-	m_Pos.x += m_Speed;
+	m_Pos.x += m_Speed * 2.0f;
 
 	D3DXVECTOR3 Rot;
 	Rot = CformX::GetRot();
-	Rot.y += 0.1f;
+	Rot.y += 100.0f;
+	CformX::SetRot(Rot);
 	CformX::SetRot(Rot);
 
-	if (m_Pos.x > m_Work.x + 300){ m_Speed *= -1.0f; }
-	if (m_Pos.x < m_Work.x - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.x > m_Work.x + m_fLimitMove){ m_Speed *= -1.0f; }
+	if (m_Pos.x < m_Work.x - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 void CGimmick::UpdateTornadoMoveUpDown(void)
 {
-	m_Pos.y += m_Speed;
+	m_Pos.y += m_Speed * 2.0f;
 
 	D3DXVECTOR3 Rot;
 	Rot = CformX::GetRot();
-	Rot.y += 0.1f;
+	Rot.y += 100.0f;
+	CformX::SetRot(Rot);
 	CformX::SetRot(Rot);
 
-	if (m_Pos.y > m_Work.y + 300) { m_Speed *= -1.0f; }
-	if (m_Pos.y < m_Work.y - 300){ m_Speed *= -1.0f; }
+	if (m_Pos.y > m_Work.y + m_fLimitMove) { m_Speed *= -1.0f; }
+	if (m_Pos.y < m_Work.y - m_fLimitMove){ m_Speed *= -1.0f; }
 }
 
 

@@ -39,6 +39,7 @@ class CGoal
 		bool GetGoalFlag(void){ return m_bGoal; };
 
 		D3DXVECTOR3 GetPos(void){ return m_pGoal->GetPos(); };
+		void SetPos(D3DXVECTOR3 pos){ m_pGoal->SetPos(pos); m_pGoalLing->SetPos(pos); };
 		void Sethit(float num){ m_fhit = num; }
 
 		void SetMagnet(NS mag){ m_nsMagnet = mag; };

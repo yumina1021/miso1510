@@ -32,9 +32,12 @@ typedef enum
 
 typedef enum
 {
-	MOVETYPE_STOP=0,	//停止
+	MOVETYPE_STOP=1,	//停止
 	MOVETYPE_UPDOWN,	//上下移動
 	MOVETYPE_SLIDE,		//スライド
+	MOVETYPE_SLASH_RIGHT,		//スライド
+	MOVETYPE_SLASH_LEFT,		//スライド
+	MOVETYPE_SLIDE_Z,		//スライド
 	MOVETYPE_MAX
 }MOVETYPE;
 
@@ -71,6 +74,13 @@ class CGimmick : public CformX
 		void SetMagnet(NS mag){ m_nsMagnet = mag; };
 		NS GetMagnet(void){ return  m_nsMagnet; };
 
+		void SetLimitMove(float num)
+		{ 
+			m_fLimitMove = num; 
+			m_Speed += (m_fLimitMove * 0.01f);
+		}
+		void SetMoveMinus(){ m_Speed *= -1; }
+
 	private:
 		void _UpdateObject(void);
 		void _UpdateCube(void);
@@ -98,6 +108,9 @@ class CGimmick : public CformX
 		//UFOの移動関係
 		void UpdateUFOMoveStop(void);
 		void UpdateUFOMoveSlide(void);
+		void UpdateUFOMoveSlide_Z(void);
+		void UpdateUFOMoveSlash_right(void);
+		void UpdateUFOMoveSlash_left(void);
 		void UpdateUFOMoveUpDown(void);
 
 		//風
@@ -122,6 +135,7 @@ class CGimmick : public CformX
 		float				m_Speed;				//速度
 		D3DXVECTOR3			m_Work;
 		NS					m_nsMagnet;
+		float				m_fLimitMove;
 };
 
 #endif

@@ -54,7 +54,7 @@ HRESULT CDomeU::Init(LPDIRECT3DDEVICE9 pDevice)
 	m_nNumVertex = (nNumBlockX + 1)*(nNumBlockZ + 1);
 
 	//テクスチャの設定
-	m_texid = TEXTURE_SKY004;
+	m_texid = TEXTURE_SKY000;
 	//D3DXCreateTextureFromFile(pDevice, "data/TEXTURE/sky004.jpg", &m_pD3DTex);
 
 	//フィールドの初期化

@@ -507,15 +507,15 @@ void CManager :: Update(void)
 void CManager :: Draw(void)
 {
 
-	if (SUCCEEDED(m_pD3DDevice->BeginScene()))//•`‰æ‚ÌŠJŽn
-	{
+	//if (SUCCEEDED(m_pD3DDevice->BeginScene()))//•`‰æ‚ÌŠJŽn
+	//{
 
-		// Live2D‚Ì•`‰æ
-		l2dManager->Draw(m_pD3DDevice);
+	//	// Live2D‚Ì•`‰æ
+	//	l2dManager->Draw(m_pD3DDevice);
 
-		m_pD3DDevice->EndScene();//•`‰æ‚ÌI—¹
+	//	m_pD3DDevice->EndScene();//•`‰æ‚ÌI—¹
 
-	}
+	//}
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))//•`‰æ‚ÌŠJŽn
 	{
 		

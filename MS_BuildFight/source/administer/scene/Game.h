@@ -112,6 +112,7 @@ class CGame  : public CScene
 		float GetFieldsize(int id){ return m_nStageinfo[id].size; }
 		int GetFieldNum(){ return m_nStagenum; }
 		void SetTimer(int time);
+		static bool	GetBallFlag(int id){ return g_boalflag[id]; };
 
 		static bool SphireHit(D3DXVECTOR3 a, float al, D3DXVECTOR3 b, float bl){
 			return (b.x - a.x) * (b.x - a.x) +
@@ -235,6 +236,7 @@ class CGame  : public CScene
 		int				m_bStageflagcount[2];
 		bool			m_bLilaBlow;
 		bool			m_bLichtBlow;
+		static bool g_boalflag[2];
 };
 
 #endif
